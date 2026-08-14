@@ -1,0 +1,108 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Proyecto Tesis}
+\author{Tomas Sierra Sanchez \\
+\small Advisor: Valérie Gauthier Umaña \\
+\small Co-Advisor: Juan Fernando Perez \\
+\small Universidad de Los Andes, Bogotá, Colombia \\
+\small Bachelor's in Computing and Systems Engineering}
+\date{2026}
+
+\begin{document}
+
+\maketitle
+
+% =====================================================
+\section{State of the Art}
+% =====================================================
+
+\subsection{Differential Privacy}
+% - RSA/ECC security based on integer factoring / discrete log
+% - Shor's algorithm threat, NIST push for PQC standards
+% - SDP definition: find low Hamming weight x such that Hx^T = y^T
+% - SDitH v1.1 standard-form parity check matrix H = (H' | I_{n-k})
+% - Reconstruction from partial vector x = (x_A | x_B)
+
+\subsection{Quantum Computing}
+% - Origin: Ishai et al., converting MPC protocols into ZKPs
+% - Prover simulates protocol among N parties
+% - SDitH v1.1 variants:
+%   - Hypercube variant: D-dimensional geometric structure
+%   - Threshold variant: Shamir-secret-based comparison scheme,
+%     polynomial consistency check S(X)*Q(X) = P(X)*F(X)
+
+\subsection{Quantum Machine Learning}
+% - Cold-boot attacks and DRAM data remanence
+% - Bit decay to a "base" state after power-off
+% - Modelled as an asymmetric binary channel (noisy recovery)
+
+% =====================================================
+\section{Description}
+% =====================================================
+% - Focus: security of SDitH under BBLM, seed recovery for deterministic key expansion
+% - Approach: understand scheme -> understand attack -> adapt attack to SDitH structure
+% - Deliverable: algorithmic model based on BBLM to recover the secret seed
+% - Target audience: specialists (concepts referenced, not re-derived)
+% - Contribution to NIST PQC signature standardization evaluation of SDitH
+
+% =====================================================
+\section{Objectives}
+% =====================================================
+
+\subsection{General Objective}
+
+
+
+\subsection{Specific Objectives}
+\begin{itemize}
+    \item % Understand SDitH (SDP-based signature scheme) and BBLM (seed-recovery attack)
+    \item % Investigate vulnerabilities in SDitH's signature/key-generation from the secret seed
+    \item % Build an attack algorithm to recover the seed generating SDitH's shared vectors/partitions
+    \item % Determine whether SDitH v1.1 is a viable post-quantum signature scheme
+\end{itemize}
+
+% =====================================================
+\section{Expected Results}
+% =====================================================
+% - Article on SDitH's security assessment against BBLM
+% - Possible extension of the recovery algorithm to other MPCitH schemes
+% - Simulation of both the signature scheme and the attack, using/adapting
+%   published algorithms to SDitH's architecture
+% - Two possible outcomes:
+%   1. Attack succeeds -> demonstrate exploitable weakness for future patching
+%   2. Attack fails -> support SDitH's viability as a PQC signature scheme
+
+% =====================================================
+\section{Ethical Considerations}
+% =====================================================
+% - Governed by professional ethics / defensive cybersecurity principles
+% - Perspective of implementer/security evaluator, not attacker in the wild
+% - Goals:
+\begin{enumerate}
+    \item % Strengthen the scheme: provide data for countermeasures/redundancy mitigation
+    \item % Inform standardization: support NIST's PQC selection process
+    \item % Prevent risks: controlled disclosure vs. post-deployment exploitation
+\end{enumerate}
+% - Argument: no harm to end users; standard, recommended cryptanalytic practice
+% - Framed as "Adversary Modeling" to keep trust in new PQC standards conservative
+%   and mathematically grounded
+
+% =====================================================
+\section{Activity Calendar}
+% =====================================================
+% 
+% =====================================================
+\section*{References}
+% =====================================================
+\begin{thebibliography}{}
+\end{thebibliography}
+
+\end{document}
