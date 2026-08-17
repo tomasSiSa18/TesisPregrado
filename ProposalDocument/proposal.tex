@@ -72,7 +72,7 @@ Differential privacy describes a promise that is made by a data holder or curato
 \begin{definition}
     ($\epsilon$, $\delta$)-Differential privacy \cite{dwork2014algorithmic}. A randomized algorithm $\mathcal{M}$ will provide ($\epsilon$, $\delta$)-Differential privacy (henceforth ($\epsilon$, $\delta$)-DP) if for any two outputs on two different databases D and D' differing by at most one record, and for all possible outputs $A$:
 
-    $$Pr[\mathcal{M}(D) \in A] \leq e^{\epsilon}Pr[\mathcal{M}(D') \in A] = \delta$$
+    $$Pr[\mathcal{M}(D) \in A] \leq e^{\epsilon}Pr[\mathcal{M}(D') \in A] + \delta$$
 \end{definition}
 
 In this study we are going to mostly focus around the concept of \textbf{Central differential privacy} which states that it is the responsibility of the curator (i.e a central party that receives all the raw data from the participants and adds privacy to them) to assure that the data is going to be differentially private.
@@ -132,7 +132,7 @@ In the study of Zhou and Ying \cite{zhou2017differential} they define a framewor
 \begin{definition}
     (Quantum differential privacy \cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = {M_m}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
 
-    $$Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] = \delta$$
+    $$Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta$$
 \end{definition}
 
 In \cite{song2025hybrid} and \cite{yang2023improved} they further develop on the idea of the noise profile in the quantum setting in order to further the theory onto how noise affects differential privacy in both simulation and real quantum machines. However in my research it has been clear that no explicit framework has been developed to test these hypothesis, as in both works one can only find numerical and analytical results.
