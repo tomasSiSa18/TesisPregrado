@@ -10,6 +10,7 @@
 \usepackage{physics}
 \usepackage[table]{xcolor}
 \usepackage[ruled,linesnumbered]{algorithm2e}
+\usepackage{enumitem}
 \geometry{margin=1in}
 
 \newtheorem{definition}{Definition}[section]
@@ -190,6 +191,7 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
     }
     \Return{$\ln max$}\;
     \caption{Computing $dPD$}
+    \label{alg:dpd}
 \end{algorithm}
 
 One thing that was apparent during the investigation of the state of the art was that the quantum circuits or simulators used were ambiguous to say the least and I felt there was some possibility to improve on the clarity of the tests towards the user. Secondly it was clear that the theory and experiments by themselves were very solid. But again, I felt there was space for improvements. These improvements became the cornerstones of this project.
@@ -213,19 +215,25 @@ The development of this project will tackle two main objetives: The first will i
 \section{Description of the Experiment}
 % =====================================================
 
-The experiment will follow the following stages:
+The experiment will follow the following steps shown in Figure~\ref{fig:experiment_diagram}:
 
-\begin{enumerate}
-    \item Encode the dataset $D$ with the following rules.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=16.5cm]{imgs/experiment_diagram.png}
+    \caption{Diagram of the experimental setup.}
+    \label{fig:experiment_diagram}
+\end{figure}
+
+\begin{enumerate}[label=Step \arabic*.]
+    \item Encode the dataset $D$ and $D'$ (Which is $D$ without a single participant) with the following rules.
     \begin{enumerate}
         \item For categorical variables a set angle will encode each of the three posible categories.
         \item For non categorical variables each one will be encoded by dense angle encoding thus giving two variables per qbit.
     \end{enumerate}
-    \item Encode the dataset $D'$ which is the same dataset $D$ with one participant removed with the same rules as \textbf{1}
-    \item Simulate a process over the qbits that result from \textbf{1} and \textbf{2} such as aggregation. The result from this process on each qbit are going to be the density matrices called $\rho$ and $\sigma$ respectively.
-    \item Insert noise into $\rho$ and $\sigma$
-    \item Run \textbf{Algorithm 2.}\cite{zhou2017differential} on $\rho$ and $\sigma$  to get the experimental $\epsilon$ for that specific run
-    \item Run the experiment for all $D'$ to get the experimental $\epsilon$ for the whole dataset.
+    \item Run the qbits from step 1 over a quantum circuit (i.e aggregation) The result from this process on each qbit are going to be the density matrices called $\rho$ and $\sigma$ respectively.
+    \item Insert quantum noise into $\rho$ and $\sigma$ resulting in $\rho'$ and $\sigma'$
+    \item Run Algorithm~\ref{alg:dpd} on $\rho$ and $\sigma$  to get the experimental $\epsilon$ for that specific run
+    \item Run the experiment for all $D'$ to get the experimental $\epsilon_{experimental}$ for the whole dataset and compare against the theoretical $\epsilon_{theoretical}$
 \end{enumerate}
 
 % =====================================================
@@ -244,9 +252,7 @@ To achive this the specific results are as follows:
 \section{Ethical Considerations}
 % =====================================================
 
-This investigation will use an adaptation \cite{germancredit2024} of the Statlog German Credit Data dataset \cite{hofmann1994german}, originally compiled by Prof. Hans Hofmann in 1994 which has a public CC BY 4.0 license thus allowing the use of the dataset for any purpose as long as the appropriate credit is provided.
-
-This dataset was selected as it encompasses the exact neccessity that differential privacy is trying to protect: Given sensitive data from individuals (sex/marital status, foreign worker status, etc.), what is the privacy budget that can be offered to the individuals in exchange of the use of their information in the dataset.
+There is no special ethical considerations in this investigation as it will use an adaptation \cite{germancredit2024} of the Statlog German Credit Data dataset \cite{hofmann1994german}, originally compiled by Prof. Hans Hofmann in 1994 which has a public CC BY 4.0 license.
 % =====================================================
 \section{Activity Calendar}
 % =====================================================
