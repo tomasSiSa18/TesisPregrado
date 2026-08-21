@@ -9,6 +9,7 @@
 \usepackage{geometry}
 \usepackage{physics}
 \usepackage[table]{xcolor}
+\usepackage[ruled,linesnumbered]{algorithm2e}
 \geometry{margin=1in}
 
 \newtheorem{definition}{Definition}[section]
@@ -65,6 +66,8 @@
 \section{State of the art}
 % =====================================================
 
+When doing research or working in a field that involves other people's data it is crucial to set clear boundaries as to how that data is going to be collected, managed and distributed. Nowadays our data is one of our most important asset thus it becomes a neccesity to create different tools that allow us to set such boundaries, one of such tools is differential privacy.
+
 \subsection{Differential Privacy}
 
 Differential privacy describes a promise that is made by a data holder or curator to a data subject: "You will not be affected, adversely or otherwise, by allowing your data to be used in any study or analysis, no matter what other studies, data sets, or information sources, are available".\cite{dwork2014algorithmic} In other words differential privacy is the process that either a data curator or a data holder must do in order to ensure that a single individual's data cannot be extracted from the study as a whole.
@@ -80,7 +83,9 @@ In this study we are going to mostly focus around the concept of \textbf{Central
 
 \subsection{Quantum Information and Computation}
 
-Quantum computing significantly advances computational capabilities, performing exponentially faster computation than classical computers.\cite{song2025hybrid} In order to understand some concepts of Quantum differential privacy it is important to define the following notions:
+Quantum information and computation is rapidly becoming mainstream as a response to the growing necessity of larger and faster computation. Quantum computing significantly advances computational capabilities, performing exponentially faster computation than classical computers.\cite{song2025hybrid} 
+
+To preface the state of quantum information these are some important definitions that will be used futher in this proposal:
 
 \begin{definition}
     Quantum states: A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been place in correspondence with the classical state set $\Sigma$
@@ -123,11 +128,30 @@ Quantum channels are important as they are the generalization of an operation ov
 
 When talking about quantum differential privacy below it won't really matter what the quantum state collapses into. Given this liberty we can define a POVM (Positive Operator-Valued Measure) which is a simplification over the measurement where we get that $M = \{M_m\}$ with $M_m = K^{\dagger}_{m}K_{m}$ $\forall m$ since $p_m = Tr(K_{m} \rho K^{\dagger}_{m}) = Tr(M_m\rho)$
 
+\begin{definition}
+    Quantum noise: It is a inherent physical process that occurs on the quantum state that causes it to change in some way.
+\end{definition}
+
+For the purposes of this investigation we are interested in three types of noise: General amplitude dampening, Phase-angle dampening and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. However for this proposal it is only necessary to note that these processes will randomize the quantum state by a certain degree. 
+
 \subsection{Quantum Differential Privacy}
 
-Given the inherent noise of the current quantum framework, one could guess that it is a perfect scenario for differential privacy. The promise that the classical DP curator makes to the data holder does not change when in the quantum setting however the means to reach that promise do.
+Given the inherent noise of the current quantum framework, one could argue that it is a perfect scenario for differential privacy. In fact, the promise that the classical DP curator makes to the data holder does will not change when in the quantum setting. However, the means that the curator will take to reach that promise do. 
 
-In the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting. Moreover they examine how different noise mechanisms change the protection of that privacy budget $\epsilon$.
+With that in mind it was important to figure out what the current investigative and academic situation was with regards to a possible quantum differential privacy application was. 
+
+The results of this investigation are compiled in Figure~\ref{fig:state_of_qdp}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=18cm]{imgs/state_of_qdp.png}
+    \caption{State of the art of quantum differential privacy.}
+    \label{fig:state_of_qdp}
+\end{figure} 
+
+As the reader can observe the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the topic could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own **Lifted** quantum differential privacy, which enhanced the randomness induced in the quantum states. And finally
+in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting. Moreover they examine how different noise mechanisms change the protection of that privacy budget $\epsilon$. Thus giving the following definition:
+
 
 \begin{definition}
     (Quantum differential privacy \cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = {M_m}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
@@ -135,7 +159,40 @@ In the study of Zhou and Ying \cite{zhou2017differential} they define a framewor
     $$Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta$$
 \end{definition}
 
-In \cite{song2025hybrid} and \cite{yang2023improved} they further develop on the idea of the noise profile in the quantum setting in order to further the theory onto how noise affects differential privacy in both simulation and real quantum machines. However in my research it has been clear that no explicit framework has been developed to test these hypothesis, as in both works one can only find numerical and analytical results.
+There are many ways to obtain that epsilon in theory however Zhou and Ying proposed the following algorithm to obtain a quantity called proportional distance which can help obtain $\epsilon$.
+
+\begin{definition}
+    (Proportional Distance \cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$, their proportional distance is defined as:
+
+    $$PD(\rho, \sigma) = \sup_{\{M_m\}, m} \max\left(\ln\frac{q_m}{p_m}, \ln\frac{p_m}{q_m}\right)$$
+
+    where the supremum is over all POVMs $\{M_m\}$ and all possible outcomes $m$,
+
+    $$p_m \equiv Tr[\rho M_m], \quad q_m \equiv Tr[\sigma M_m]$$
+
+    are the probabilities of obtaining outcome $m$ when the measurement is performed on $\rho$, $\sigma$, respectively, and we make the conventions $\frac{0}{0} = 1$, $\frac{1}{0} = +\infty$, $\ln 0 = -\infty$, $\ln{+\infty} = +\infty$.
+\end{definition}
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \textbf{Function} $DPD$ $(\rho, \sigma, \theta)$\;
+    \tcp{$\rho$ and $\sigma$ are two density operators in Hilbert space $\mathcal{H}$ and $\theta$ is the desired accuracy.}
+    Let $n$ be the dimension of the Hilbert space $\mathcal{H}$.\;
+    Set real number $max = 0, \lambda = \infty$.\;
+    \While{$|max - \lambda| > \theta$}{
+        $\lambda = max$\;
+        $max = \max_i(\rho_{ii}/\sigma_{ii})$\;
+        $\eta = \rho - max*\sigma$\;
+        Diagonalize $\eta$: $\eta = PDP^{\dagger}$\;
+        \tcp{$P$ is unitary and $D$ is diagonal matrix.}
+        $\rho = P^{\dagger}\rho P$\;
+        $\sigma = P^{\dagger}\sigma P$\;
+    }
+    \Return{$\ln max$}\;
+    \caption{Computing $dPD$}
+\end{algorithm}
+
+One thing that was apparent during the investigation of the state of the art was that the quantum circuits or simulators used were ambiguous to say the least and I felt there was some possibility to improve on the clarity of the tests towards the user. Secondly it was clear that the theory and experiments by themselves were very solid. But again, I felt there was space for improvements. These improvements became the cornerstones of this project.
 
 % =====================================================
 \section{Objectives}
@@ -174,10 +231,6 @@ The experiment will follow the following stages:
 % =====================================================
 \section{Expected Results}
 % =====================================================
-
-When doing research or working in a field that involves other people's data it is crucial to set clear bounds as to how that data is going to be collected, managed, distributed, among other considerations. As mentioned earlier in the proposal it is exactly due to this necessity that differential privacy exists in the first place. However, as computers become more and more advanced it is important to explore different possibilities to maintain that promise.
-
-Quantum information and computation is rapidly becoming mainstream as a response to the growing necessity of larger and faster computation. In this sense I believe the investigation will allow for a grounded answer as to if the machines we currently have could realistically manage to protect the privacy of individuals or not.
 
 To achive this the specific results are as follows:
 
@@ -266,6 +319,9 @@ H. Hofmann, ``Statlog (German Credit Data),'' \emph{UCI Machine Learning Reposit
 
 \bibitem{germancredit2024}
 jumpingdino, ``German Credit Dataset,'' Kaggle. [Online]. Available: https://www.kaggle.com/datasets/jumpingdino/german-credit-dataset. [Accessed: Aug. 17, 2026].
+
+\bibitem{watkins2023quantum}
+W. M. Watkins, S. Y.-C. Chen and S. Yoo, ``Quantum machine learning with differential privacy,'' \emph{Sci. Rep.}, vol. 13, p. 2453, 2023, doi: 10.1038/s41598-022-24082-z.
 
 \end{thebibliography}
 
