@@ -66,8 +66,7 @@
 % =====================================================
 \section{State of the art}
 % =====================================================
-
-When doing research or working in a field that involves other people's data it is crucial to set clear boundaries as to how that data is going to be collected, managed and distributed. Nowadays our most important asset is data, thus, it becomes a neccesity to create different tools that allow us to set such boundaries, one of such tools is differential privacy.
+When doing research or working in a field that involves other people's data it is crucial to set clear boundaries as to how that data is going to be collected, managed and distributed. Nowadays our most important asset is data, thus, it becomes a necessity to create tools that allow us to set such boundaries, one of those tools is differential privacy. 
 
 \subsection{Differential Privacy}
 
@@ -79,21 +78,21 @@ Differential privacy describes a promise that is made by a data holder or curato
     $$Pr[\mathcal{M}(D) \in A] \leq e^{\epsilon}Pr[\mathcal{M}(D') \in A] + \delta$$
 \end{definition}
 
-In this study we are going to mostly focus around the concept of \textbf{Central differential privacy} which states that it is the responsibility of the curator (i.e a central party that receives all the raw data from the participants and adds privacy to them) to assure that the data is going to be differentially private.
+This project focuses primarily on the concept of \textbf{Central differential privacy} which states that it is the responsibility of the curator (i.e a central party that receives all the raw data from the participants and adds privacy to them) to assure that the data is going to be differentially private.
 
 
 \subsection{Quantum Information and Computation}
 
 Quantum information and computation is rapidly becoming mainstream as a response to the growing necessity of larger and faster computation. Quantum computing significantly advances computational capabilities, outperforming their classical counterparts in certain areas.
 
-To preface the state of quantum information these are some important definitions that will be used futher in this proposal:
+To preface the state of quantum information these are some important definitions that will be used further in this proposal:
 
 \begin{definition}
-    Quantum states: A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been place in correspondence with the classical state set $\Sigma$
+    Quantum states \cite{watrous_quantum_channels}: A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been place in correspondence with the classical state set $\Sigma$
 \end{definition}
 
 \begin{definition}
-    Mixed state: A mixed state of a quantum system is an ensemble
+    Mixed state \cite{zhou2017differential}: A mixed state of a quantum system is an ensemble
 
     $$\mathbb{E} = \{(p_1,\ket{\psi_1}),...,(p_k,\ket{\psi_k})\}$$
 
@@ -108,10 +107,10 @@ To preface the state of quantum information these are some important definitions
     Quantum Channel \cite{watrous_quantum_channels}: A quantum channel describes a linear mapping over density matrices. 
 \end{definition}
 
-Quantum channels are important as they are the generalization of an operation over a quantum state an in the case of this project we need to use operations such as the depolarizing channel which need this general definition of a channel to be understood.
+Quantum channels are important as they are the generalization of an operation over a quantum state and in the case of this project we need to use operations such as the depolarizing channel which is defined thanks to this general definition.
 
 \begin{definition}
-    Trace distance: It is the distance between two density operators and it is defined by:
+    Trace distance \cite{zhou2017differential}: It is the distance between two density operators and it is defined by:
 
     $$\tau(\rho, \sigma) = \frac{1}{2}Tr\abs{\rho - \sigma}$$
 
@@ -119,37 +118,36 @@ Quantum channels are important as they are the generalization of an operation ov
 \end{definition}
 
 \begin{definition}
-    Quantum measurement: It is the way to extract information from a quantum system. Matematically, a measurement is modelled as a set of matrices $M = \{K_m\}$ with the condition of 
+    Quantum measurement \cite{zhou2017differential}: It is the way to extract information from a quantum system. Mathematically, a measurement is modelled as a set of matrices $M = \{K_m\}$ with the condition of 
 
     $$\sum_m K^{\dagger}_{m}K_{m} = I$$
 
-    with $I$ being the identity of the density operator (i.e for a qbit $I = 2\times2$ identity matrix)
+    with $I$ being the identity of the density operator (i.e for a qubit $I = 2\times2$ identity matrix)
 
 \end{definition}
 
 When talking about quantum differential privacy below it won't really matter what the quantum state collapses into. Given this liberty we can define a POVM (Positive Operator-Valued Measure) which is a simplification over the measurement where we get a set of matrices $M = \{M_m\}$ with $M_m = K^{\dagger}_{m}K_{m}$ $\forall m$ this is possible since we only care about the probabilities and so $p_m = Tr(K_{m} \rho K^{\dagger}_{m}) = Tr(M_m\rho)$
 
 \begin{definition}
-    Quantum noise: It is a inherent physical process that occurs on the quantum state that causes it to change in some way.
+    Quantum noise \cite{zhou2017differential}: It is an inherent physical process that occurs on the quantum state that causes it to change in some way.
 \end{definition}
 
-For the purposes of this investigation we are interested in three types of noise: General amplitude dampening, Phase-angle dampening and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. However for this proposal it is only necessary to note that these processes will randomize the quantum state by a certain degree. 
+For the purposes of this investigation we are interested in three types of noise: General amplitude damping, Phase-amplitude damping and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. However for this proposal it is only necessary to note that these processes will randomize the quantum state by a certain degree. 
 
 \subsection{Quantum Differential Privacy}
 
 Given the inherent noise of the current quantum framework, one could argue that it is a perfect scenario for differential privacy. In fact, the promise that the classical DP curator makes to the data holder will not change when in the quantum setting. However, the means that the curator will take to reach that promise do. 
 
-With that in mind it was important to figure out what the current investigative and academic situation was with regards to the fields of Quantum information and computation and differential privacy. The results of this investigation are compiled in Figure~\ref{fig:state_of_qdp}.
+With that in mind it was important to figure out what the current investigative and academic situation was with regards to the fields of quantum information and computation and differential privacy. For this an investigation was made in which we searched different databases to find out the amount of papers that covered the topics mentioned before. The investigation found 61 relevant papers that focused on the topics and the specific distributions of each one are compiled in Figure~\ref{fig:state_of_qdp}. 
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=17cm]{imgs/state_of_qdp.png}
-    \caption{State of the art of quantum differential privacy.}
+    \caption{State of the art of quantum differential privacy. (own elaboration, based on the literature review described above)}
     \label{fig:state_of_qdp}
 \end{figure} 
 
-As shown in \ref{fig:state_of_qdp} the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the topic could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. And finally
-in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
+As shown in Figure~\ref{fig:state_of_qdp} the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the topic could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. \cite{yang2023improved} in which an extended analysis was made to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. And finally in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
 
 
 \begin{definition}
@@ -174,7 +172,7 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
-    \textbf{Function} $DPD$ $(\rho, \sigma, \theta)$\;
+    \textbf{Function} $dPD$ $(\rho, \sigma, \theta)$\;
     \tcp{$\rho$ and $\sigma$ are two density operators in Hilbert space $\mathcal{H}$ and $\theta$ is the desired accuracy.}
     Let $n$ be the dimension of the Hilbert space $\mathcal{H}$.\;
     Set real number $max = 0, \lambda = \infty$.\;
@@ -188,7 +186,7 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
         $\sigma = P^{\dagger}\sigma P$\;
     }
     \Return{$\ln max$}\;
-    \caption{Computing $dPD$}
+    \caption{Computing $dPD$ \cite{zhou2017differential}}
     \label{alg:dpd}
 \end{algorithm}
 
@@ -199,13 +197,13 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
 
 \subsection{General Objective}
 
-The development of this project will tackle two main objetives: The first will involve an adequate understanding of quantum information and computation as well as the theoretical framework of QDP. The second will be to empirically validate the theoretical $(\epsilon, \delta)$-DP guarantees provided by quantum noise mechanisms such as the depolarizing channel, phase-amplitude dampening and GAD, by comparing the privacy budget derived in \cite{zhou2017differential} with the empirical privacy budget measured on a practical quantum simulation on the Pennylane framework.
+The general objective will be to empirically validate the theoretical $(\epsilon, \delta)$-DP guarantees provided by quantum noise mechanisms such as the depolarizing channel, phase-amplitude damping and GAD, by comparing the privacy budget derived in \cite{zhou2017differential} with the empirical privacy budget measured on a practical quantum simulation on the PennyLane framework.
 
 \subsection{Specific Objectives}
 \begin{itemize}
     \item Gain an understanding of the classical definition of differential privacy, as well as quantum information and computation to understand quantum differential privacy and be able to design and implement an experiment which is based on these topics.
-    \item Create an experiment on the quantum simulation framework Pennylane which will test $(\epsilon, \delta)-DP$ over a real dataset \cite{hofmann1994german}. These results will be explored in further detail in the project's paper.
-    \item Establish whether the theoretical budgets proposed in \cite{zhou2017differential} and \cite{song2025hybrid} agrees or disagrees with the results of the experiments in the simulations for each different noise mechanism.
+    \item Create an experiment on the quantum simulation framework PennyLane which will test $(\epsilon, \delta)-DP$ over a real dataset \cite{hofmann1994german}. These results will be explored in further detail in the project's paper.
+    \item Establish whether the theoretical budgets proposed in \cite{zhou2017differential} and \cite{song2025hybrid} agree or disagree with the results of the experiments in the simulations for each different noise mechanism.
 \end{itemize}
 
 % =====================================================
@@ -225,11 +223,11 @@ The experiment to find $\epsilon_{experimental}$ will take the following steps s
     \item Encode the dataset $D$ and $D'$ (Which is $D$ without a single participant) with the following rules.
     \begin{enumerate}
         \item For categorical variables a set angle will encode each of the possible categories.
-        \item For non categorical variables each one will be encoded by dense angle encoding thus giving two variables per qbit.
+        \item For non categorical variables each one will be encoded by dense angle encoding thus giving two variables per qubit.
     \end{enumerate}
-    \item Run the qbits from step 1 over a quantum circuit (i.e aggregation) The result from this process on each qbit are going to be the density matrices called $\rho$ and $\sigma$ respectively.
+    \item Run the qubits from step 1 over a quantum circuit (i.e aggregation) The result from this process on each qubit are going to be the density matrices called $\rho$ and $\sigma$ respectively.
     \item Insert quantum noise into $\rho$ and $\sigma$ resulting in $\rho'$ and $\sigma'$
-    \item Run Algorithm~\ref{alg:dpd} on $\rho$ and $\sigma$  to get the experimental $\epsilon$ for that specific run
+    \item Run Algorithm~\ref{alg:dpd} on $\rho'$ and $\sigma'$  to get the experimental $\epsilon$ for that specific run
     \item Run the experiment for all $D'$ to get the maximum $\epsilon$ which will become $\epsilon_{experimental}$ for the whole dataset and compare against $\epsilon_{theoretical}$
 \end{enumerate}
 
@@ -238,8 +236,8 @@ The experiment to find $\epsilon_{experimental}$ will take the following steps s
 % =====================================================
 
 \begin{enumerate}
-    \item Prove that in practice the privacy budget will be preserved within reasonable proximity to the theoretical budget in an experimental setup for the different noise injections sources and classical data sources.
-    \item Develop the source code for the experimental setup in Pennylane with python.
+    \item Assess whether the privacy budget will be preserved within reasonable proximity to the theoretical budget in an experimental setup for the different quantum noise sources and classical data sources.
+    \item Develop the source code for the experimental setup in PennyLane with Python.
     \item Write a scientific article in IEEE format. The information within this article should demonstrate my understanding of the topic as it will contain the whole process of investigation, creation and result analysis of this project.
     \item Design a poster which will summarize the most important parts of the project.
 \end{enumerate}
@@ -247,7 +245,7 @@ The experiment to find $\epsilon_{experimental}$ will take the following steps s
 \section{Ethical Considerations}
 % =====================================================
 
-It has been concluded that the investigation will not have any ethical risk. The investigation will only deal with an adaptation \cite{germancredit2024} of the Statlog German Credit Data dataset \cite{hofmann1994german}, originally compiled by Prof. Hans Hofmann in 1994 which has a public CC BY 4.0 license.
+It has been concluded that the investigation will not have any ethical risk. The investigation will only deal with an adaptation \cite{germancredit2026} of the Statlog German Credit Data dataset \cite{hofmann1994german}, originally compiled by Prof. Hans Hofmann in 1994 which has a public CC BY 4.0 license which allows for the free use of the dataset as long as it is properly referenced.
 % =====================================================
 \section{Activity Calendar}
 % =====================================================
@@ -274,7 +272,7 @@ Search for the dataset to be used in the experiment and treat it &
 Write the introductory section of the paper (Introduction, Theoretical Framework) & & &
  & & & & \cellcolor{ganttOrangeDark} & \cellcolor{ganttOrangeDark} & & & & & & & & \\
 \hline
-Create the experiment in the pennylane framework with at least one noise mechanism & &
+Create the experiment in the PennyLane framework with at least one noise mechanism & &
  & & & \cellcolor{ganttBrown} & \cellcolor{ganttBrown} & \cellcolor{ganttBrown} & & & & & & & & & \\
 \hline
 Analysis of the first experiment's results and adjustment & &
@@ -300,32 +298,7 @@ Write and design the other deliverables (Poster, Presentation, etc) &
 \end{center}
 
 % =====================================================
-\begin{thebibliography}{9}
-
-\bibitem{dwork2014algorithmic}
-C. Dwork and A. Roth, ``The algorithmic foundations of differential privacy,'' \emph{Found. Trends Theor. Comput. Sci.}, vol. 9, no. 3-4, pp. 211-407, 2014. [Online]. Available: http://dx.doi.org/10.1561/0400000042
-
-\bibitem{song2025hybrid}
-B. Song, S. R. Pokhrel, A. V. Vasilakos, T. Zhu and G. Li, ``Toward a Hybrid Quantum Differential Privacy,'' \emph{IEEE Journal on Selected Areas in Communications}, vol. 43, no. 8, pp. 2890-2897, Aug. 2025, doi: 10.1109/JSAC.2025.3568046.
-
-\bibitem{watrous_quantum_channels}
-J. Watrous \emph{General Formulation of Quantum Information}, IBM Quantum Learning. [Online]. Available: https://quantum.cloud.ibm.com/learning/en/courses/general-formulation-of-quantum-information. [Accessed: Aug. 17, 2026].
-
-\bibitem{zhou2017differential}
-L. Zhou and M. Ying, ``Differential Privacy in Quantum Computation,'' \emph{2017 IEEE 30th Computer Security Foundations Symposium (CSF)}, Santa Barbara, CA, USA, 2017, pp. 249-262, doi: 10.1109/CSF.2017.23.
-
-\bibitem{yang2023improved}
-H. Yang, X. Li, Z. Liu and W. Pedrycz, ``Improved Differential Privacy Noise Mechanism in Quantum Machine Learning,'' \emph{IEEE Access}, vol. 11, pp. 50157-50164, 2023, doi: 10.1109/ACCESS.2023.3274471.
-
-\bibitem{hofmann1994german}
-H. Hofmann, ``Statlog (German Credit Data),'' \emph{UCI Machine Learning Repository}, 1994. [Online]. Available: https://doi.org/10.24432/C5NC77.
-
-\bibitem{germancredit2024}
-jumpingdino, ``German Credit Dataset,'' Kaggle. [Online]. Available: https://www.kaggle.com/datasets/jumpingdino/german-credit-dataset. [Accessed: Aug. 17, 2026].
-
-\bibitem{watkins2023quantum}
-W. M. Watkins, S. Y.-C. Chen and S. Yoo, ``Quantum machine learning with differential privacy,'' \emph{Sci. Rep.}, vol. 13, p. 2453, 2023, doi: 10.1038/s41598-022-24082-z.
-
-\end{thebibliography}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
 
 \end{document}
