@@ -67,7 +67,7 @@
 \section{State of the art}
 % =====================================================
 
-When doing research or working in a field that involves other people's data it is crucial to set clear boundaries as to how that data is going to be collected, managed and distributed. Nowadays our data is one of our most important asset thus it becomes a neccesity to create different tools that allow us to set such boundaries, one of such tools is differential privacy.
+When doing research or working in a field that involves other people's data it is crucial to set clear boundaries as to how that data is going to be collected, managed and distributed. Nowadays our most important asset is data, thus, it becomes a neccesity to create different tools that allow us to set such boundaries, one of such tools is differential privacy.
 
 \subsection{Differential Privacy}
 
@@ -84,7 +84,7 @@ In this study we are going to mostly focus around the concept of \textbf{Central
 
 \subsection{Quantum Information and Computation}
 
-Quantum information and computation is rapidly becoming mainstream as a response to the growing necessity of larger and faster computation. Quantum computing significantly advances computational capabilities, performing exponentially faster computation than classical computers.\cite{song2025hybrid} 
+Quantum information and computation is rapidly becoming mainstream as a response to the growing necessity of larger and faster computation. Quantum computing significantly advances computational capabilities, outperforming their classical counterparts in certain areas.
 
 To preface the state of quantum information these are some important definitions that will be used futher in this proposal:
 
@@ -127,7 +127,7 @@ Quantum channels are important as they are the generalization of an operation ov
 
 \end{definition}
 
-When talking about quantum differential privacy below it won't really matter what the quantum state collapses into. Given this liberty we can define a POVM (Positive Operator-Valued Measure) which is a simplification over the measurement where we get that $M = \{M_m\}$ with $M_m = K^{\dagger}_{m}K_{m}$ $\forall m$ since $p_m = Tr(K_{m} \rho K^{\dagger}_{m}) = Tr(M_m\rho)$
+When talking about quantum differential privacy below it won't really matter what the quantum state collapses into. Given this liberty we can define a POVM (Positive Operator-Valued Measure) which is a simplification over the measurement where we get a set of matrices $M = \{M_m\}$ with $M_m = K^{\dagger}_{m}K_{m}$ $\forall m$ this is possible since we only care about the probabilities and so $p_m = Tr(K_{m} \rho K^{\dagger}_{m}) = Tr(M_m\rho)$
 
 \begin{definition}
     Quantum noise: It is a inherent physical process that occurs on the quantum state that causes it to change in some way.
@@ -137,21 +137,19 @@ For the purposes of this investigation we are interested in three types of noise
 
 \subsection{Quantum Differential Privacy}
 
-Given the inherent noise of the current quantum framework, one could argue that it is a perfect scenario for differential privacy. In fact, the promise that the classical DP curator makes to the data holder does will not change when in the quantum setting. However, the means that the curator will take to reach that promise do. 
+Given the inherent noise of the current quantum framework, one could argue that it is a perfect scenario for differential privacy. In fact, the promise that the classical DP curator makes to the data holder will not change when in the quantum setting. However, the means that the curator will take to reach that promise do. 
 
-With that in mind it was important to figure out what the current investigative and academic situation was with regards to a possible quantum differential privacy application was. 
-
-The results of this investigation are compiled in Figure~\ref{fig:state_of_qdp}.
+With that in mind it was important to figure out what the current investigative and academic situation was with regards to the fields of Quantum information and computation and differential privacy. The results of this investigation are compiled in Figure~\ref{fig:state_of_qdp}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=18cm]{imgs/state_of_qdp.png}
+    \includegraphics[width=17cm]{imgs/state_of_qdp.png}
     \caption{State of the art of quantum differential privacy.}
     \label{fig:state_of_qdp}
 \end{figure} 
 
-As the reader can observe the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the topic could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own **Lifted** quantum differential privacy, which enhanced the randomness induced in the quantum states. And finally
-in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting. Moreover they examine how different noise mechanisms change the protection of that privacy budget $\epsilon$. Thus giving the following definition:
+As shown in \ref{fig:state_of_qdp} the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the topic could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. And finally
+in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
 
 
 \begin{definition}
@@ -194,7 +192,6 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
     \label{alg:dpd}
 \end{algorithm}
 
-One thing that was apparent during the investigation of the state of the art was that the quantum circuits or simulators used were ambiguous to say the least and I felt there was some possibility to improve on the clarity of the tests towards the user. Secondly it was clear that the theory and experiments by themselves were very solid. But again, I felt there was space for improvements. These improvements became the cornerstones of this project.
 
 % =====================================================
 \section{Objectives}
@@ -206,7 +203,7 @@ The development of this project will tackle two main objetives: The first will i
 
 \subsection{Specific Objectives}
 \begin{itemize}
-    \item Gain an understanding of the classical definition of differential privacy, as well as quantum information and computation to understand quantum differential privacy.
+    \item Gain an understanding of the classical definition of differential privacy, as well as quantum information and computation to understand quantum differential privacy and be able to design and implement an experiment which is based on these topics.
     \item Create an experiment on the quantum simulation framework Pennylane which will test $(\epsilon, \delta)-DP$ over a real dataset \cite{hofmann1994german}. These results will be explored in further detail in the project's paper.
     \item Establish whether the theoretical budgets proposed in \cite{zhou2017differential} and \cite{song2025hybrid} agrees or disagrees with the results of the experiments in the simulations for each different noise mechanism.
 \end{itemize}
@@ -215,7 +212,7 @@ The development of this project will tackle two main objetives: The first will i
 \section{Description of the Experiment}
 % =====================================================
 
-The experiment will follow the following steps shown in Figure~\ref{fig:experiment_diagram}:
+The experiment to find $\epsilon_{experimental}$ will take the following steps shown in Figure~\ref{fig:experiment_diagram}:
 
 \begin{figure}[h]
     \centering
@@ -227,24 +224,22 @@ The experiment will follow the following steps shown in Figure~\ref{fig:experime
 \begin{enumerate}[label=Step \arabic*.]
     \item Encode the dataset $D$ and $D'$ (Which is $D$ without a single participant) with the following rules.
     \begin{enumerate}
-        \item For categorical variables a set angle will encode each of the three posible categories.
+        \item For categorical variables a set angle will encode each of the possible categories.
         \item For non categorical variables each one will be encoded by dense angle encoding thus giving two variables per qbit.
     \end{enumerate}
     \item Run the qbits from step 1 over a quantum circuit (i.e aggregation) The result from this process on each qbit are going to be the density matrices called $\rho$ and $\sigma$ respectively.
     \item Insert quantum noise into $\rho$ and $\sigma$ resulting in $\rho'$ and $\sigma'$
     \item Run Algorithm~\ref{alg:dpd} on $\rho$ and $\sigma$  to get the experimental $\epsilon$ for that specific run
-    \item Run the experiment for all $D'$ to get the experimental $\epsilon_{experimental}$ for the whole dataset and compare against the theoretical $\epsilon_{theoretical}$
+    \item Run the experiment for all $D'$ to get the maximum $\epsilon$ which will become $\epsilon_{experimental}$ for the whole dataset and compare against $\epsilon_{theoretical}$
 \end{enumerate}
 
 % =====================================================
 \section{Expected Results}
 % =====================================================
 
-To achive this the specific results are as follows:
-
 \begin{enumerate}
     \item Prove that in practice the privacy budget will be preserved within reasonable proximity to the theoretical budget in an experimental setup for the different noise injections sources and classical data sources.
-    \item Provide the source code for the experimental setup in Pennylane with python.
+    \item Develop the source code for the experimental setup in Pennylane with python.
     \item Write a scientific article in IEEE format. The information within this article should demonstrate my understanding of the topic as it will contain the whole process of investigation, creation and result analysis of this project.
     \item Design a poster which will summarize the most important parts of the project.
 \end{enumerate}
@@ -252,7 +247,7 @@ To achive this the specific results are as follows:
 \section{Ethical Considerations}
 % =====================================================
 
-There is no special ethical considerations in this investigation as it will use an adaptation \cite{germancredit2024} of the Statlog German Credit Data dataset \cite{hofmann1994german}, originally compiled by Prof. Hans Hofmann in 1994 which has a public CC BY 4.0 license.
+It has been concluded that the investigation will not have any ethical risk. The investigation will only deal with an adaptation \cite{germancredit2024} of the Statlog German Credit Data dataset \cite{hofmann1994german}, originally compiled by Prof. Hans Hofmann in 1994 which has a public CC BY 4.0 license.
 % =====================================================
 \section{Activity Calendar}
 % =====================================================
@@ -273,28 +268,30 @@ Investigation on the viability of the project and scope &
 Write the proposal of the project &
  & & \cellcolor{ganttOrange} & \cellcolor{ganttOrange} & & & & & & & & & & & & \\
 \hline
-Search and data analysis of the experimental data to be used in the experiments &
- & & \cellcolor{ganttOrange} & \cellcolor{ganttOrange} & & & & & & & & & & & & \\
+Search for the dataset to be used in the experiment and treat it &
+ \cellcolor{ganttOrange} & \cellcolor{ganttOrange} & & & & & & & & & & & & & & \\
 \hline
-Write the introductory section of the paper (Introduction, Theoretical Framework) &
- & & & & \cellcolor{ganttOrangeDark} & \cellcolor{ganttOrangeDark} & & & & & & & & & & \\
+Write the introductory section of the paper (Introduction, Theoretical Framework) & & &
+ & & & & \cellcolor{ganttOrangeDark} & \cellcolor{ganttOrangeDark} & & & & & & & & \\
 \hline
-Real data experiment development in Pennylane &
- & & & & & & \cellcolor{ganttBrown} & \cellcolor{ganttBrown} & \cellcolor{ganttBrown} & & & & & & & \\
+Create the experiment in the pennylane framework with at least one noise mechanism & &
+ & & & \cellcolor{ganttBrown} & \cellcolor{ganttBrown} & \cellcolor{ganttBrown} & & & & & & & & & \\
 \hline
-Analysis of the first two experiment's results &
- & & & & & & & & & \cellcolor{ganttNavy} & \cellcolor{ganttNavy} & & & & & \\
+Analysis of the first experiment's results and adjustment & &
+ & & & & & & \cellcolor{ganttNavy} & \cellcolor{ganttNavy} & & & & & & & \\
 \hline
-Write the first revision of the paper &
+Create the experiment with the remaining noise mechanisms & & & & & & & & & & \cellcolor{ganttBlue} & \cellcolor{ganttBlue} & & & & & \\
+\hline
+Write the first draft of the paper &
  & & & & & & & & & & & \cellcolor{ganttBlue} & \cellcolor{ganttBlue} & \cellcolor{ganttBlue} & & \\
 \hline
 Adjustments to the experiments with respect to the result of the analysis &
  & & & & & & & & & & & \cellcolor{ganttBlueLight} & \cellcolor{ganttBlueLight} & \cellcolor{ganttBlueLight} & & \\
 \hline
-Write the second revision of the paper &
+Write the second draft of the paper &
  & & & & & & & & & & & & & & \cellcolor{ganttBlueLighter} & \cellcolor{ganttBlueLighter} \\
 \hline
-Write and design the other deliverables (Poster, Project document, etc) &
+Write and design the other deliverables (Poster, Presentation, etc) &
  & & & & & & & & & & & & & & \cellcolor{ganttBlueLightest} & \cellcolor{ganttBlueLightest} \\
 \hline
  & \multicolumn{16}{c|}{\cellcolor{ganttBottom}} \\
