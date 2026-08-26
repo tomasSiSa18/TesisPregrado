@@ -215,20 +215,21 @@ The experiment to find $\epsilon_{experimental}$ will take the following steps s
 \begin{figure}[ht]
     \centering
     \includegraphics[width=16.5cm]{imgs/experiment_diagram.png}
-    \caption{Diagram of the experimental setup.}
+    \caption{Diagram of the experimental setup for \textbf{Step 1 - 4}.}
     \label{fig:experiment_diagram}
 \end{figure}
 
 \begin{enumerate}[label=Step \arabic*.]
-    \item Encode the dataset $D$ and $D'$ (Which is $D$ without a single participant) with the following rules.
+    \item Encode the dataset $D$ and $D'$ (Which is $D$ with one participant (row) removed) with the following rules:
     \begin{enumerate}
         \item For categorical variables a set angle will encode each of the possible categories.
-        \item For non categorical variables each one will be encoded by dense angle encoding thus giving two variables per qubit.
+        \item For non categorical variables each one will be encoded by dense angle encoding, thus giving two variables per qubit.
     \end{enumerate}
-    \item Run the qubits from step 1 over a quantum circuit (i.e aggregation) The result from this process on each qubit are going to be the density matrices called $\rho$ and $\sigma$ respectively.
-    \item Insert quantum noise into $\rho$ and $\sigma$ resulting in $\rho'$ and $\sigma'$
+    The result from this encoding process are going qubits which we will name $Q_{D}$ and $Q_{D'}$ respectively.
+    \item Run $Q_{D}$ and $Q_{D'}$ from \textbf{Step 1} over a quantum circuit (i.e aggregation). We are going to call the density matrices that result from this process $\rho$ and $\sigma$ respectively.
+    \item Insert quantum noise into $\rho$ and $\sigma$ resulting in $\rho'$ and $\sigma'$.
     \item Run Algorithm~\ref{alg:dpd} on $\rho'$ and $\sigma'$  to get the experimental $\epsilon$ for that specific run
-    \item Run the experiment for all $D'$ to get the maximum $\epsilon$ which will become $\epsilon_{experimental}$ for the whole dataset and compare against $\epsilon_{theoretical}$
+    \item Run the \textbf{Steps 1 - 4} for all pairs of $D$ and $D'$ to get the maximum $\epsilon$ which will become $\epsilon_{experimental}$ for the whole dataset and compare against $\epsilon_{theoretical}$
 \end{enumerate}
 
 % =====================================================
