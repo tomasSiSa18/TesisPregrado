@@ -80,7 +80,7 @@ It was important to figure out what the current investigative and academic situa
     \label{fig:state_of_qdp}
 \end{figure} 
 
-As shown in Figure~\ref{fig:state_of_qdp} the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the topic could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. \cite{yang2023improved} in which an extended analysis was made to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. And finally in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
+As shown in Figure~\ref{fig:state_of_qdp} the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the project could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. \cite{yang2023improved} in which an extended analysis was made to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. And finally in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
 
 % =====================================================
 \section{Theorical Framework}
@@ -224,7 +224,7 @@ The experiment to find $\epsilon_{experimental}$ will take the following steps s
     The result from this encoding process are going qubits which we will name $Q_{D}$ and $Q_{D'}$ respectively.
     \item Run $Q_{D}$ and $Q_{D'}$ from \textbf{Step 1} over a quantum circuit (i.e aggregation). We are going to call the density matrices that result from this process $\rho$ and $\sigma$ respectively.
     \item Insert quantum noise into $\rho$ and $\sigma$ resulting in $\rho'$ and $\sigma'$.
-    \item Run Algorithm~\ref{alg:dpd} on $\rho'$ and $\sigma'$  to get the experimental $\epsilon$ for that specific run
+    \item Run Algorithm~\ref{alg:dpd} on $\rho'$ and $\sigma'$  to get the $\epsilon_{experimental}$ for that specific run
     \item Run the \textbf{Steps 1 - 4} for all pairs of $D$ and $D'$ to get the maximum $\epsilon$ which will become $\epsilon_{experimental}$ for the whole dataset and compare against $\epsilon_{theoretical}$
 \end{enumerate}
 
