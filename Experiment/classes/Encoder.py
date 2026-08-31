@@ -1,6 +1,7 @@
 import pandas as pd
 import math
 import pennylane as qp
+import numpy as np
 
 class Encoder:
     
@@ -32,9 +33,18 @@ class Encoder:
         return qp.density_matrix([0,1,2,3,4,5,6])
         
     
-    def encodeMany(self):
+    def encodeAll(self) -> np.ndarray:
         
+        density_matrices = []
         dict_df = self.dataset.to_dict(orient="records")
         for row in dict_df:
-            self.encodeOne(row)
+            rho = self.circuit(row)
+            density_matrices.append(rho)
+         
+        return np.stack(density_matrices)
+    
+    def encodeExcludeOne(self, i: int, matrices: np.ndarray):
+        return np.delete(matrices, i, axis=0)
+        
+        
             
