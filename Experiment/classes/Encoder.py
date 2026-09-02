@@ -8,8 +8,6 @@ class Encoder:
     def __init__(self, device, dataset: pd.DataFrame):
         self.device = device
         self.dataset = dataset
-        #self.categorical_rows = categorical_rows
-        #self.numerical_rows = numerical_rows
         
         self.circuit = qp.QNode(self.encodeOne, self.device)
     
