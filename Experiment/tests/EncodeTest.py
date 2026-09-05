@@ -3,24 +3,31 @@ import pennylane as qp
 import matplotlib as plt
 import numpy as np
 
+from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses
 from Experiment.classes.Encoder import Encoder
-from Experiment.classes.NoiseMechanisms import NoiseMechanisms
-from Experiment.classes.ProportionalDistance import ProportionalDistance
-from Experiment.classes.QuantProcess import QuantProcess
 
-dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregrado/ProcesamientoDataset/german_credit_data_for_quant.csv")
-
+#Creo el dispositivo cuantico
 device = qp.device('default.mixed', wires=7)
 
-encoding_circuit = Encoder(device, dataset)
-process = QuantProcess()
-noise = NoiseMechanisms()
-proportional_distance = ProportionalDistance(0.1)
+#Leo el German Credit Dataset
+dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregrado/ProcesamientoDataset/german_credit_data_for_quant.csv")
 
-Qa = encoding_circuit.encodeAll()
-Qb = encoding_circuit.encodeExcludeOne(0, Qa)
-rho = process.Aggregate(Qa)
-sigma = process.Aggregate(Qb)
-print(qp.math.trace_distance(rho, sigma))
-rho_dep, sigma_dep = noise.DepolarizingNoise(rho, sigma, 0.6)
-print(proportional_distance.dPD(rho_dep, sigma_dep))
+#Creo una lista para todas las distancias de traza d entre rho y sigma
+d_list = []
+
+#Creo el circuito de codificacion
+encoding_circuit = Encoder(device, dataset)
+
+#Codifico D
+Qd = encoding_circuit.encodeAll()
+rho = QuantProcesses.Aggregate(Qd)
+rho_dep = NoiseMechanisms.DepolarizingNoise(rho, 0.6)
+
+#Codifico
+for i in range(1):
+    Qd_prime = encoding_circuit.encodeExcludeOne(i, Qd)
+    sigma = QuantProcesses.Aggregate(Qd_prime)
+    sigma_dep = NoiseMechanisms.DepolarizingNoise(sigma, 0.6)
+    d_list.append(qp.math.trace_distance(rho, sigma))
+    rho_to_sigma_dPD = ProportionalDistance.dPD(rho_dep, sigma_dep)
+    sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_dep, rho_dep)
