@@ -26,6 +26,7 @@ rho_dep = NoiseMechanisms.DepolarizingNoise(rho, 0.6)
 
 #Codifico
 total_max = 0
+i_max = -1
 for i in tqdm(range(1000)):
     Qd_prime = encoding_circuit.encodeExcludeOne(i, Qd)
     sigma = QuantProcesses.Aggregate(Qd_prime)
@@ -38,8 +39,9 @@ for i in tqdm(range(1000)):
     
     if iter_max > total_max:
         total_max = iter_max
+        i_max = i
 
 max_trace = max(d_list)
-
+print(f"The max trace is {max_trace}")
 print(f"The theorical epsilon is: {NoiseMechanisms.DepolarizingNoiseTeo(0.6, max_trace, 128)}")
 print(f"The experimental epsilon is:{total_max}")

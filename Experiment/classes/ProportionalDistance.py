@@ -30,8 +30,8 @@ def dPD(rho: np.ndarray, sigma: np.ndarray, accuracy: float, iter: int = None):
         r = P_t @ r @ P
         s = P_t @ s @ P
         
-    if iter is not None:
-        print(f"Iteration {iter} DONE")
+    #if iter is not None:
+        #print(f"Iteration {iter} DONE")
     return math.log(max_ratio)
             
             
