@@ -23,7 +23,7 @@ def dPD(rho: np.ndarray, sigma: np.ndarray, accuracy: float, iter: int = None):
                     max_i = div 
         max_ratio = max_i
         
-        eta = r.copy() - max_ratio * s.copy()
+        eta = r.copy() - (max_ratio * s.copy())
         _, P = np.linalg.eigh(eta)
         P_t = np.conjugate(P).T
         
