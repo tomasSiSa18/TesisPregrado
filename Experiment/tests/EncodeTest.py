@@ -32,8 +32,8 @@ for i in tqdm(range(1000)):
     sigma = QuantProcesses.Aggregate(Qd_prime)
     sigma_dep = NoiseMechanisms.DepolarizingNoise(sigma, 0.6)
     d_list.append(qp.math.trace_distance(rho, sigma))
-    rho_to_sigma_dPD = ProportionalDistance.dPD(rho_dep, sigma_dep, 0.001, i)
-    sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_dep, rho_dep, 0.001, i)
+    rho_to_sigma_dPD = ProportionalDistance.dPD(rho_dep.copy(), sigma_dep.copy(), 0.001, i)
+    sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_dep.copy(), rho_dep.copy(), 0.001, i)
     
     iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
     
