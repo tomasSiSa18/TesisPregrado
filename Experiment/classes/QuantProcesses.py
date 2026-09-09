@@ -1,6 +1,6 @@
 import numpy as np
 
-def Aggregate(density_matrices: np.ndarray):
+def Aggregate(density_matrices: np.ndarray) -> np.ndarray:
     
     rho = np.zeros((128,128), dtype=complex)
     for matrix in density_matrices:
