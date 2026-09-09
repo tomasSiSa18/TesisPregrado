@@ -1,6 +1,6 @@
 import pandas as pd
 import pennylane as qp
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import numpy as np
 
 from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses
@@ -16,6 +16,9 @@ dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregr
 #Creo una lista para todas las distancias de traza d entre rho y sigma
 d_list = []
 
+#Creo una lista para todos los epsilon
+e_list = []
+
 #Creo el circuito de codificacion
 encoding_circuit = Encoder(device, dataset)
 
@@ -25,8 +28,6 @@ rho = QuantProcesses.Aggregate(Qd)
 rho_dep = NoiseMechanisms.DepolarizingNoise(rho, 0.6)
 
 #Codifico
-total_max = 0
-i_max = -1
 for i in tqdm(range(1000)):
     Qd_prime = encoding_circuit.encodeExcludeOne(i, Qd)
     sigma = QuantProcesses.Aggregate(Qd_prime)
@@ -36,12 +37,25 @@ for i in tqdm(range(1000)):
     sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_dep.copy(), rho_dep.copy(), 0.001, i)
     
     iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
-    
-    if iter_max > total_max:
-        total_max = iter_max
-        i_max = i
+    e_list.append(iter_max)
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+
+axes[0].plot(range(1000), e_list)
+axes[0].set_xlabel("Iteration (excluded record index)")
+axes[0].set_ylabel("Epsilon")
+axes[0].set_title("Epsilon per iteration")
+
+axes[1].plot(range(1000), d_list)
+axes[1].set_xlabel("Iteration (excluded record index)")
+axes[1].set_ylabel("Trace distance")
+axes[1].set_title("Trace distance per iteration")
+
+plt.tight_layout()
+plt.show()
 
 max_trace = max(d_list)
+max_epsilon = max(e_list)
 print(f"The max trace is {max_trace}")
 print(f"The theorical epsilon is: {NoiseMechanisms.DepolarizingNoiseTeo(0.6, max_trace, 128)}")
-print(f"The experimental epsilon is:{total_max}")
+print(f"The experimental epsilon is:{max_epsilon}")
