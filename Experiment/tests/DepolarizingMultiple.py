@@ -5,8 +5,7 @@ import pennylane as qp
 import matplotlib.pyplot as plt
 import numpy as np
 
-from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses
-from Experiment.classes.Encoder import Encoder
+from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses, Encoder
 from tqdm import tqdm
 
 #Creo el dispositivo cuantico
@@ -18,13 +17,13 @@ dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregr
 e_list_per_p = []
 e_teo_per_p = []
 
-#Creo el circuito de codificacion
-encoding_circuit = Encoder(device, dataset)
-
 probs = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 
+#Creo el circuito de codificacion
+circuit = qp.QNode(Encoder.encodeOne, device)
+
 #Codifico D
-Qd = encoding_circuit.encodeAll()
+Qd = Encoder.encodeAll(device, dataset, circuit)
 rho = QuantProcesses.Aggregate(Qd)
 for p in tqdm(probs):
     
@@ -37,7 +36,7 @@ for p in tqdm(probs):
     rho_dep = NoiseMechanisms.DepolarizingNoise(rho.copy(), p)
     
     for i in tqdm(range(1000)):
-        Qd_prime = encoding_circuit.encodeExcludeOne(i, Qd)
+        Qd_prime = Encoder.encodeExcludeOne(i, Qd)
         sigma = QuantProcesses.Aggregate(Qd_prime)
         sigma_dep = NoiseMechanisms.DepolarizingNoise(sigma, p)
         d_list.append(qp.math.trace_distance(rho, sigma))

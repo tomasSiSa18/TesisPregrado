@@ -3,8 +3,7 @@ import pennylane as qp
 import matplotlib.pyplot as plt
 import numpy as np
 
-from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses
-from Experiment.classes.Encoder import Encoder
+from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses, Encoder
 from tqdm import tqdm
 
 #Creo el dispositivo cuantico
@@ -20,16 +19,16 @@ d_list = []
 e_list = []
 
 #Creo el circuito de codificacion
-encoding_circuit = Encoder(device, dataset)
+circuit = qp.QNode(Encoder.encodeOne, device)
 
 #Codifico D
-Qd = encoding_circuit.encodeAll()
+Qd = Encoder.encodeAll(device, dataset, circuit)
 rho = QuantProcesses.Aggregate(Qd)
 rho_dep = NoiseMechanisms.DepolarizingNoise(rho, 0.6)
 
 #Codifico
 for i in tqdm(range(1000)):
-    Qd_prime = encoding_circuit.encodeExcludeOne(i, Qd)
+    Qd_prime = Encoder.encodeExcludeOne(i, Qd)
     sigma = QuantProcesses.Aggregate(Qd_prime)
     sigma_dep = NoiseMechanisms.DepolarizingNoise(sigma, 0.6)
     d_list.append(qp.math.trace_distance(rho, sigma))
