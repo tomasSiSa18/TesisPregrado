@@ -1,3 +1,5 @@
+import math
+
 import pandas as pd
 import pennylane as qp
 import matplotlib.pyplot as plt
@@ -52,18 +54,33 @@ for p in tqdm(probs):
     e_list_per_p.append(max_epsilon)
     e_teo_per_p.append(e_teo)
 
-fig2, ax2 = plt.subplots(figsize=(8, 5))
+
+ratio_list = []
+
+for i in range(len(probs)):
+    if e_list_per_p[i] != 0:
+        ratio_list.append(e_teo_per_p[i]/e_list_per_p[i])
+    else:
+        ratio_list.append(0)
+
+fig, axes = plt.subplots(1, 2, figsize=(8, 5))
 
 for p_i, theo, real in zip(probs, e_teo_per_p, e_list_per_p):
-    ax2.plot([p_i, p_i], [theo, real], color="gray", linewidth=1, zorder=1)
+    axes[0].plot([p_i, p_i], [theo, real], color="gray", linewidth=1, zorder=1)
 
-ax2.scatter(probs, e_teo_per_p, color="tab:blue", marker="o", label="Theoretical epsilon", zorder=2)
-ax2.scatter(probs, e_list_per_p, color="tab:orange", marker="s", label="Real epsilon", zorder=2)
+axes[0].scatter(probs, e_teo_per_p, color="tab:blue", marker="o", label="Theoretical epsilon", zorder=2)
+axes[0].scatter(probs, e_list_per_p, color="tab:orange", marker="s", label="Real epsilon", zorder=2)
+axes[0].set_yscale("log")
 
-ax2.set_xlabel("Probability of Depolarization")
-ax2.set_ylabel("Epsilon")
-ax2.set_title("Theoretical vs real epsilon per probability")
-ax2.legend()
+axes[0].set_xlabel("Probability of Depolarization")
+axes[0].set_ylabel("Epsilon")
+axes[0].set_title("Theoretical vs real epsilon per probability")
+axes[0].legend()
+
+axes[1].plot(probs, ratio_list)
+axes[1].set_xlabel("Probabilities")
+axes[1].set_ylabel("Teo/Exp ratio")
+axes[1].set_title("Teorethical vs Experimental Ratio")
 
 plt.tight_layout()
 plt.show()
