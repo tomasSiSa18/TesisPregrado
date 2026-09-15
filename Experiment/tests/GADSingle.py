@@ -17,7 +17,7 @@ circuit = qp.QNode(Encoder.encodeOne, device)
 
 
 #Codifico D
-Qd = Encoder.encodeAll(device, dataset, circuit)
+Qd = Encoder.encodeAll(dataset, circuit)
 rho = QuantProcesses.Aggregate(Qd)
 rho_gad = NoiseMechanisms.GADNoiseMultiQubit(rho, 0.5, 0.5)
 

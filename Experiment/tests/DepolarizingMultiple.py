@@ -23,7 +23,7 @@ probs = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 circuit = qp.QNode(Encoder.encodeOne, device)
 
 #Codifico D
-Qd = Encoder.encodeAll(device, dataset, circuit)
+Qd = Encoder.encodeAll(dataset, circuit)
 rho = QuantProcesses.Aggregate(Qd)
 for p in tqdm(probs):
     

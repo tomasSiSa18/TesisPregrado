@@ -12,6 +12,11 @@ def encodeNumerical(wire: int, valueY: int, valueZ: int = 0):
     qp.RY(valueY, wires=wire)
     qp.RZ(valueZ, wires=wire)
 
+def encodeOneCol(row: dict):
+    encodeCategorical(0, row["collateral_enc"], 4.0)
+    return qp.density_matrix([0])
+    
+
 def encodeOne(row: dict):
     encodeCategorical(0, row["collateral_enc"], 4.0)
     encodeCategorical(1, row["purpose_enc"], 10.0)
@@ -23,7 +28,7 @@ def encodeOne(row: dict):
     return qp.density_matrix([0,1,2,3,4,5,6])
     
 
-def encodeAll(device, dataset: pd.DataFrame, circuit) -> np.ndarray:
+def encodeAll(dataset: pd.DataFrame, circuit) -> np.ndarray:
     
     density_matrices = []
     dict_df = dataset.to_dict(orient="records")
