@@ -28,6 +28,14 @@ def GADtest(row: dict, depolarize: bool):
     Encoder.encodeNumerical(5, row["status_savings_ord"], row["years_employment_ord"])
     Encoder.encodeNumerical(6, row["credit_amount"])
     if depolarize:
+        
+        qp.PhaseDamping(0.4, wires=0)
+        qp.PhaseDamping(0.4, wires=1)
+        qp.PhaseDamping(0.4, wires=2)
+        qp.PhaseDamping(0.4, wires=3)
+        qp.PhaseDamping(0.4, wires=4)
+        qp.PhaseDamping(0.4, wires=5)
+        qp.PhaseDamping(0.4, wires=6)
         qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=0)
         qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=1)
         qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=2)
@@ -35,7 +43,20 @@ def GADtest(row: dict, depolarize: bool):
         qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=4)
         qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=5)
         qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=6)
+        
     return qp.density_matrix([0,1,2,3,4,5,6])
+
+'''
+if depolarize:
+        qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=0)
+        qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=1)
+        qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=2)
+        qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=3)
+        qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=4)
+        qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=5)
+        qp.GeneralizedAmplitudeDamping(0.5, 0.6, wires=6)
+
+'''
 
 circuit = qp.QNode(GADtest, device)
 
@@ -47,7 +68,7 @@ dict_df = dataset.to_dict(orient="records")
 
 matrix = circuit(dict_df[0], False)
 
-dep = NoiseMechanisms.GADNoiseMultiQubit(matrix, 0.6, 0.5)
+dep = NoiseMechanisms.PhaseAmplitudeNoiseMultiQubit(matrix, 0.4, 0.5, 0.6)
 #dep = NoiseMechanisms.DepolarizingNoise(matrix, 0.5)
 
 dep_penny = circuit(dict_df[0], True)
