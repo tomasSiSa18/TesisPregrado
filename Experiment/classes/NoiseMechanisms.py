@@ -32,10 +32,15 @@ def GADNoiseSingleQubit(density_matrix: np.ndarray, p: float, g: float, wire: in
     
     dep_rho = np.zeros_like(density_matrix)
     
-    E_0 = math.sqrt(p) * np.array([[1,0],[0, math.sqrt(1-g)]])
-    E_1 = math.sqrt(p) * np.array([[0,math.sqrt(g)],[0, 0]])
-    E_2 = math.sqrt(1 - p) * np.array([[math.sqrt(1-g),0],[0, 1]])
-    E_3 = math.sqrt(1 - p) * np.array([[0,0],[math.sqrt(g), 0]]) 
+    #E_0 = math.sqrt(p) * np.array([[1,0],[0, math.sqrt(1-g)]])
+    #E_1 = math.sqrt(p) * np.array([[0,math.sqrt(g)],[0, 0]])
+    #E_2 = math.sqrt(1 - p) * np.array([[math.sqrt(1-g),0],[0, 1]])
+    #E_3 = math.sqrt(1 - p) * np.array([[0,0],[math.sqrt(g), 0]]) 
+
+    E_0 = math.sqrt(1-p) * np.array([[1,0],[0, math.sqrt(1-g)]])
+    E_1 = math.sqrt(1-p) * np.array([[0,math.sqrt(g)],[0, 0]])
+    E_2 = math.sqrt(p) * np.array([[math.sqrt(1-g),0],[0, 1]])
+    E_3 = math.sqrt(p) * np.array([[0,0],[math.sqrt(g), 0]]) 
     
     krauss = [E_0, E_1, E_2, E_3]
     
