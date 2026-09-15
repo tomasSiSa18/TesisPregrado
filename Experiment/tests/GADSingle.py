@@ -19,19 +19,21 @@ circuit = qp.QNode(Encoder.encodeOne, device)
 #Codifico D
 Qd = Encoder.encodeAll(device, dataset, circuit)
 rho = QuantProcesses.Aggregate(Qd)
-rho_dep = NoiseMechanisms.DepolarizingNoise(rho, 0.6)
+rho_gad = NoiseMechanisms.GADNoiseMultiQubit(rho, 0.5, 0.5)
 
 #Codifico
 for i in tqdm(range(1000)):
-    Qd_prime = encoding_circuit.encodeExcludeOne(i, Qd)
+    
+    Qd_prime = Encoder.encodeExcludeOne(i, Qd)
     sigma = QuantProcesses.Aggregate(Qd_prime)
-    sigma_dep = NoiseMechanisms.DepolarizingNoise(sigma, 0.6)
+    sigma_gad = NoiseMechanisms.GADNoiseMultiQubit(sigma, 0.5, 0.5)
     d_list.append(qp.math.trace_distance(rho, sigma))
-    rho_to_sigma_dPD = ProportionalDistance.dPD(rho_dep.copy(), sigma_dep.copy(), 0.001, i)
-    sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_dep.copy(), rho_dep.copy(), 0.001, i)
+    rho_to_sigma_dPD = ProportionalDistance.dPD(rho_gad.copy(), sigma_gad.copy(), 0.001, i)
+    sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_gad.copy(), rho_gad.copy(), 0.001, i)
     
     iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
     e_list.append(iter_max)
+    
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
 
@@ -51,5 +53,5 @@ plt.show()
 max_trace = max(d_list)
 max_epsilon = max(e_list)
 print(f"The max trace is {max_trace}")
-print(f"The theorical epsilon is: {NoiseMechanisms.DepolarizingNoiseTeo(0.6, max_trace, 128)}")
+print(f"The theorical epsilon is: {NoiseMechanisms.GADNoiseTeo(max_trace, 0.5)}")
 print(f"The experimental epsilon is:{max_epsilon}")
