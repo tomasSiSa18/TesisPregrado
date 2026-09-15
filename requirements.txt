@@ -7,3 +7,4 @@ ipykernel
 phik
 pennylane
 tqdm
+qiskit-aer
