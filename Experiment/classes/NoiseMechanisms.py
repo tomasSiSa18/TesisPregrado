@@ -11,7 +11,24 @@ def DepolarizingNoise(density_matrix: np.ndarray, p: float):
 def DepolarizingNoiseTeo(p: float, d: float, D: int):
     return math.log(1+(((1-p)/p) * d * D))
 
-def GADNoiseSingleQubit(density_matrix: np.ndarray, p: float, g: float):
+def getTensorEtoRho(E: np.ndarray, D: int, wire: int, num_qbits: int):
+    
+    I = np.identity(2)
+    if wire == 0:
+        result = E.copy()
+    else:
+        result = I.copy()
+    
+    for i in range(1, num_qbits):
+        
+        if i == wire:
+            result = np.kron(result.copy(), E.copy())
+        else:
+            result = np.kron(result.copy(), I.copy())
+    
+    return result
+
+def GADNoiseSingleQubit(density_matrix: np.ndarray, p: float, g: float, wire: int, D: int, num_qbits: int):
     
     dep_rho = np.zeros_like(density_matrix)
     
@@ -23,9 +40,21 @@ def GADNoiseSingleQubit(density_matrix: np.ndarray, p: float, g: float):
     krauss = [E_0, E_1, E_2, E_3]
     
     for E in krauss:
-        dep_rho += E @ density_matrix.copy() @ np.conjugate(E.copy()).T  
+        tensor_E = getTensorEtoRho(E, D, wire, num_qbits)
+        dep_rho += tensor_E.copy() @ density_matrix.copy() @ np.conjugate(tensor_E.copy()).T  
         
     return dep_rho
+
+def GADNoiseMultiQubit(density_matrix: np.ndarray, p: float, g: float):
+    
+    D = density_matrix.shape[0]
+    num_qbits = round(math.log2(D))
+    result = density_matrix.copy()
+    
+    for wire in range(num_qbits):
+        result = GADNoiseSingleQubit(result.copy(), p, g, wire, D, num_qbits)
+        
+    return result
 
 def GADNoiseTeo(d: float, g: float):
     return math.log(1+((2*d*math.sqrt(1-g))/(1-math.sqrt(1-g)))) 
