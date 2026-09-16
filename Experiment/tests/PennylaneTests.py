@@ -62,9 +62,9 @@ circuit = qp.QNode(GADtest, device)
 
 dict_df = dataset.to_dict(orient="records")
 
-#qp.drawer.use_style("black_white")
-#fig, ax = qp.draw_mpl(circuit)(dict_df[0], False)
-#plt.show()
+qp.drawer.use_style("black_white")
+fig, ax = qp.draw_mpl(circuit)(dict_df[0], True)
+plt.show()
 
 matrix = circuit(dict_df[0], False)
 

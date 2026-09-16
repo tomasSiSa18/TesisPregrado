@@ -10,29 +10,39 @@ device = qp.device('default.mixed', wires=1)
 
 dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregrado/ProcesamientoDataset/german_credit_data_for_quant.csv")
 
-d_list = []
-e_list = []
+max_epsilon=0
+max_trace = 0
+teo_ep = 0
 
-dict_df = dataset.to_dict(orient="records")
-circuit = qp.QNode(Encoder.encodeOneCol, device)
-
-#Codifico D
-Qd = Encoder.encodeAll(dataset, circuit)
-rho = QuantProcesses.Aggregate(Qd)
-rho_gad = NoiseMechanisms.PhaseAmplitudeNoiseMultiQubit(rho, 0.4, 0.5, 0.6)
-
-#Codifico
-for i in tqdm(range(1000)):
+for k in tqdm(range(7)):
     
-    Qd_prime = Encoder.encodeExcludeOne(i, Qd)
-    sigma = QuantProcesses.Aggregate(Qd_prime)
-    sigma_gad = NoiseMechanisms.PhaseAmplitudeNoiseMultiQubit(sigma, 0.4, 0.5, 0.6)
-    d_list.append(qp.math.trace_distance(rho, sigma))
-    rho_to_sigma_dPD = ProportionalDistance.dPD(rho_gad.copy(), sigma_gad.copy(), 0.001, i)
-    sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_gad.copy(), rho_gad.copy(), 0.001, i)
+    d_list = []
+    e_list = []
+
+    dict_df = dataset.to_dict(orient="records")
+    circuit = qp.QNode(Encoder.encodeOneCol, device)
+
+    #Codifico D
+    Qd = Encoder.encodeAllSingle(dataset, circuit, k)
+    rho = QuantProcesses.Aggregate(Qd)
+    rho_gad = NoiseMechanisms.PhaseAmplitudeNoiseMultiQubit(rho, 0.4, 0.5, 0.6)
+
+    #Codifico
+    for i in tqdm(range(1000)):
+        
+        Qd_prime = Encoder.encodeExcludeOne(i, Qd)
+        sigma = QuantProcesses.Aggregate(Qd_prime)
+        sigma_gad = NoiseMechanisms.PhaseAmplitudeNoiseMultiQubit(sigma, 0.4, 0.5, 0.6)
+        d_list.append(qp.math.trace_distance(rho, sigma))
+        rho_to_sigma_dPD = ProportionalDistance.dPD(rho_gad.copy(), sigma_gad.copy(), 0.001, i)
+        sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_gad.copy(), rho_gad.copy(), 0.001, i)
+        
+        iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
+        e_list.append(iter_max)
     
-    iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
-    e_list.append(iter_max)
+    max_trace += max(d_list)
+    teo_ep += NoiseMechanisms.PhaseAmplitudeNoiseTeo(max_trace, 0.5, 0.4)
+    max_epsilon += max(e_list)
     
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
