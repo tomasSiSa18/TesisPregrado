@@ -11,6 +11,7 @@ device = qp.device('default.mixed', wires=7)
 dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregrado/ProcesamientoDataset/german_credit_data_for_quant.csv")
 
 d_list = []
+d_r_list= []
 e_list = []
 
 circuit = qp.QNode(Encoder.encodeOne, device)
@@ -28,6 +29,7 @@ for i in tqdm(range(1000)):
     sigma = QuantProcesses.Aggregate(Qd_prime)
     sigma_gad = NoiseMechanisms.GADNoiseMultiQubit(sigma, 0.5, 0.5)
     d_list.append(qp.math.trace_distance(rho, sigma))
+    d_r_list.append(qp.math.trace_distance(rho_gad, sigma_gad))
     rho_to_sigma_dPD = ProportionalDistance.dPD(rho_gad.copy(), sigma_gad.copy(), 0.001, i)
     sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_gad.copy(), rho_gad.copy(), 0.001, i)
     
@@ -35,17 +37,28 @@ for i in tqdm(range(1000)):
     e_list.append(iter_max)
     
 
-fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+fig, axes = plt.subplots(1, 3, figsize=(18, 5))
 
 axes[0].plot(range(1000), e_list)
+axes[0].scatter(np.argmax(e_list), max(e_list), color="red", zorder=3)
+axes[0].annotate(f"({np.argmax(e_list)}, {max(e_list):.4f})", (np.argmax(e_list), max(e_list)))
 axes[0].set_xlabel("Iteration (excluded record index)")
 axes[0].set_ylabel("Epsilon")
 axes[0].set_title("Epsilon per iteration")
 
 axes[1].plot(range(1000), d_list)
+axes[1].scatter(np.argmax(d_list), max(d_list), color="red", zorder=3)
+axes[1].annotate(f"({np.argmax(d_list)}, {max(d_list):.4f})", (np.argmax(d_list), max(d_list)))
 axes[1].set_xlabel("Iteration (excluded record index)")
 axes[1].set_ylabel("Trace distance")
 axes[1].set_title("Trace distance per iteration")
+
+axes[2].plot(range(1000), d_r_list)
+axes[2].scatter(np.argmax(d_r_list), max(d_r_list), color="red", zorder=3)
+axes[2].annotate(f"({np.argmax(d_r_list)}, {max(d_r_list):.4f})", (np.argmax(d_r_list), max(d_r_list)))
+axes[2].set_xlabel("Iteration")
+axes[2].set_ylabel("Trace distance")
+axes[2].set_title("Trace distance after noise per iteration")
 
 plt.tight_layout()
 plt.show()
