@@ -35,3 +35,6 @@
 
 # Python
 __pycache__
+
+# PowerPoint lock files
+~$*.pptx
