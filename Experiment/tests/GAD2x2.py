@@ -40,8 +40,8 @@ for k in tqdm(range(7)):
         
         iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
         e_list.append(iter_max)
-        
-    max_trace += max(d_list)
+    
+    max_trace = max(d_list)
     teo_ep += NoiseMechanisms.GADNoiseTeo(max_trace, 0.5)
     max_epsilon += max(e_list)
     
