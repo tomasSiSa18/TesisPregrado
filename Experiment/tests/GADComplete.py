@@ -2,6 +2,7 @@ import pandas as pd
 import pennylane as qp
 import matplotlib.pyplot as plt
 import numpy as np
+from tabulate import tabulate
 
 from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses, Encoder
 from tqdm import tqdm
@@ -45,16 +46,17 @@ for k in tqdm(range(7)):
     
     
     max_trace = max(d_list)
-    teo_ep += NoiseMechanisms.GADNoiseTeo(max_trace, 0.5)
+    teo_run = NoiseMechanisms.GADNoiseTeo(max_trace, 0.5)
+    teo_ep += teo_run
     
-    exp_ep = max(e_list)
-    max_epsilon += exp_ep
+    exp_run = max(e_list)
+    max_epsilon += exp_run
     
-    epsilons[cols[k]] = (teo_ep, exp_ep)
+    epsilons[cols[k]] = [cols[k],str(max_trace),str(teo_run), str(exp_run),  str(teo_run/exp_run)]
     
 print(f"Teo {teo_ep}")
 print(f"Exp {max_epsilon}")
-#print(epsilons)    
+print(tabulate(epsilons.values(), tablefmt="grid"))   
     
 """
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
