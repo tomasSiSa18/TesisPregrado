@@ -13,7 +13,7 @@ def encodeNumerical(wire: int, valueY: int, valueZ: int = 0):
     qp.RZ(valueZ, wires=wire)
 
 def min_max(x: float, min: float, max: float):
-    return (x-min)/max-min
+    return math.pi * ((x-min)/(max-min))
 
 def encodeOneCol(row: dict, row_num: int):
     if row_num == 0:

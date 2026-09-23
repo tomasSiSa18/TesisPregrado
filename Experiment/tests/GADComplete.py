@@ -14,6 +14,8 @@ dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregr
 max_epsilon=0
 max_trace = 0
 teo_ep = 0
+epsilons = {}
+cols=["collateral_enc", "purpose_enc", "housing_enc", "status_account_ord", "month_duration", "status_savings_ord", "years_employment_ord", "credit_amount"]
 
 for k in tqdm(range(7)):
     
@@ -41,12 +43,18 @@ for k in tqdm(range(7)):
         iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
         e_list.append(iter_max)
     
+    
     max_trace = max(d_list)
     teo_ep += NoiseMechanisms.GADNoiseTeo(max_trace, 0.5)
-    max_epsilon += max(e_list)
+    
+    exp_ep = max(e_list)
+    max_epsilon += exp_ep
+    
+    epsilons[cols[k]] = (teo_ep, exp_ep)
     
 print(f"Teo {teo_ep}")
-print(f"Exp {max_epsilon}")    
+print(f"Exp {max_epsilon}")
+#print(epsilons)    
     
 """
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
