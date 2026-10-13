@@ -68,15 +68,17 @@ FH = avg_dep_corrected_values
 ancho = 0.004
 bordes = np.arange(min(FB.min(), FH.min()) - 0.0005, max(FB.max(), FH.max()) + ancho, ancho)
 
-plt.hist(FB, bins=bordes, alpha=0.6, label=f"FB, std = {FB.std():.3f}")
-plt.hist(FH, bins=bordes, alpha=0.6, label=f"F^, std = {FH.std():.3f}")
-plt.axvline(0.45, color="black", linestyle="--", label="valor real")
+plt.hist(FB, bins=bordes, alpha=0.6, label=f"{r"${F}_{B}$"} (sin ruido), std = {FB.std():.3f}")
+plt.hist(FH, bins=bordes, alpha=0.6, label=f"{r"$\hat{F} $"} (con ruido, corregido), std = {FH.std():.3f}")
+plt.axvline(0.45, color="black", linestyle="--", label="valor esperado sin ruido (0.45)")
 
-plt.xlabel("Fraccion de + en cada mundo")
-plt.ylabel("Cantidad de muestras")
-plt.title(f"Comparativo entre F_B y {r"$\hat{F}$"} para {r"$\varepsilon$"} = 1.10 y p = 0.5 en varios mundos")
-plt.legend()
+plt.xlabel("Fracción de + en cada mundo")
+plt.ylabel("Cantidad de mundos")
+plt.ylim(0, 400)
+plt.title(f"Comparativo entre {r"${F}_{B}$"} y {r"$\hat{F}$"} para {r"$\varepsilon$"} = 1.10 y p = 0.5 en varios mundos")
+plt.legend(loc="upper left")
+plt.savefig("Experiment/imgs/histograma_collateral")
 plt.show()
-plt.savefig("histograma_collateral")
+
     
     
