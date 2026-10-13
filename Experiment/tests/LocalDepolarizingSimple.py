@@ -30,5 +30,14 @@ e_exp_neighbor = max(ProportionalDistance.dPD(plusStateDep, iStateDep, 0.001), P
 print(e_exp_orthogonal)
 print(e_exp_neighbor)
 
+#K=5
+
+aState = NoiseMechanisms.DepolarizingNoise(state(0), 0.5)
+bState = NoiseMechanisms.DepolarizingNoise(state((2*math.pi)/3), 0.5)
+
+e_exp_5 = max(ProportionalDistance.dPD(aState, bState, 0.001), ProportionalDistance.dPD(bState, aState, 0.001))
+
+print(e_exp_5)
+
 
 
