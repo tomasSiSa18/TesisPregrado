@@ -54,6 +54,8 @@ for k in tqdm(range(7)):
     
     epsilons[cols[k]] = [cols[k],str(max_trace),str(teo_run), str(exp_run),  str(teo_run/exp_run)]
     
+    
+colsTabulate = ["Variable", "Max Trace", "E Teo", "E Exp", "Ratio"]
 print(f"Teo {teo_ep}")
 print(f"Exp {max_epsilon}")
-print(tabulate(epsilons.values(), tablefmt="grid"))
+print(tabulate(epsilons.values(), tablefmt="grid", headers=colsTabulate))
