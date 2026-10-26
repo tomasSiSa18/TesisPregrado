@@ -12,11 +12,9 @@ vars_params = {
 def encodeCategorical(wire: int, value: float, k: float):
     qp.H(wires=wire)
     angle = (2*math.pi*value)/k
-    assert(0 <= angle <= math.pi)
     qp.RZ(angle, wires=wire)
 
 def encodeNumerical(wire: int, valueY: int, valueZ: int = 0):
-    
     qp.RY(valueY, wires=wire)
     qp.RZ(valueZ, wires=wire)
 
@@ -36,13 +34,16 @@ def encodeOneColOneCable(row: dict, col: int, wire: int):
         
         status_account_norm = min_max(row["status_account_ord"], vars_params["status_account_ord"][0], vars_params["status_account_ord"][1])
         month_norm = min_max(row["month_duration"], vars_params["month_duration"][0], vars_params["month_duration"][1])
+        assert(0 < status_account_norm < math.pi)
         encodeNumerical(wire, status_account_norm, month_norm)
     elif col == 5:
         status_saving_norm = min_max(row["status_savings_ord"], vars_params["status_savings_ord"][0], vars_params["status_savings_ord"][1])
         years_employment_norm = min_max(row["years_employment_ord"], vars_params["years_employment_ord"][0], vars_params["years_employment_ord"][1])
+        assert(0 < status_saving_norm < math.pi)
         encodeNumerical(wire, status_saving_norm, years_employment_norm)
     elif col == 6:
         credit_norm = min_max(row["credit_amount"], vars_params["credit_amount"][0], vars_params["credit_amount"][1])
+        assert(0 <= credit_norm <= math.pi)
         encodeNumerical(wire, credit_norm)
     
 def encodeOneCol(row: dict, col: int):
@@ -52,7 +53,7 @@ def encodeOneCol(row: dict, col: int):
 
 def encodeOneRow(row: dict):
    
-    for i in range(0, 6):
+    for i in range(0, 7):
         encodeOneColOneCable(row, i, i)
     
     return qp.density_matrix([0,1,2,3,4,5,6])
