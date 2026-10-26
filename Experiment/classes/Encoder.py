@@ -2,10 +2,18 @@ import pandas as pd
 import math
 import pennylane as qp
 import numpy as np
+
+vars_params = {
+    
+    "collateral_enc": [4], "purpose_enc": [10], "credit_history_enc": [5], "housing_enc": [3], "status_account_ord": [-0.5, 3.5], "month_duration": [4, 72], "status_savings_ord": [-0.5, 4.5], "years_employment_ord": [0,4], "credit_amount": [250, 18424]
+    
+}
     
 def encodeCategorical(wire: int, value: float, k: float):
     qp.H(wires=wire)
-    qp.RZ((2*math.pi*value)/k, wires=wire)
+    angle = (2*math.pi*value)/k
+    assert(0 <= angle <= math.pi)
+    qp.RZ(angle, wires=wire)
 
 def encodeNumerical(wire: int, valueY: int, valueZ: int = 0):
     
@@ -15,45 +23,38 @@ def encodeNumerical(wire: int, valueY: int, valueZ: int = 0):
 def min_max(x: float, min: float, max: float):
     return math.pi * ((x-min)/(max-min))
 
-def encodeOneCol(row: dict, row_num: int):
-    if row_num == 0:
-        encodeCategorical(0, row["collateral_enc"], 4.0)
-    elif row_num == 1:
-        encodeCategorical(0, row["purpose_enc"], 10.0)
-    elif row_num == 2:
-        encodeCategorical(0, row["credit_history_enc"], 5.0)
-    elif row_num == 3:
-        encodeCategorical(0, row["housing_enc"], 3.0)
-    elif row_num == 4:
+def encodeOneColOneCable(row: dict, col: int, wire: int):
+    if col == 0:
+        encodeCategorical(wire, row["collateral_enc"], vars_params["collateral_enc"][0])
+    elif col == 1:
+        encodeCategorical(wire, row["purpose_enc"], vars_params["purpose_enc"][0])
+    elif col == 2:
+        encodeCategorical(wire, row["credit_history_enc"], vars_params["credit_history_enc"][0])
+    elif col == 3:
+        encodeCategorical(wire, row["housing_enc"], vars_params["housing_enc"][0])
+    elif col == 4:
         
-        status_account_norm = min_max(row["status_account_ord"], 0, 3)
-        month_norm = min_max(row["month_duration"], 4, 72)
-        
-        encodeNumerical(0, status_account_norm, month_norm)
-    elif row_num == 5:
-        status_saving_norm = min_max(row["status_savings_ord"], 1, 5)
-        years_employment_norm = min_max(row["years_employment_ord"], 1, 5)
-        encodeNumerical(0, status_saving_norm, years_employment_norm)
-    elif row_num == 6:
-        credit_norm = min_max(row["credit_amount"], 250, 18400)
-        encodeNumerical(0, credit_norm)
-    return qp.density_matrix([0])
+        status_account_norm = min_max(row["status_account_ord"], vars_params["status_account_ord"][0], vars_params["status_account_ord"][1])
+        month_norm = min_max(row["month_duration"], vars_params["month_duration"][0], vars_params["month_duration"][1])
+        encodeNumerical(wire, status_account_norm, month_norm)
+    elif col == 5:
+        status_saving_norm = min_max(row["status_savings_ord"], vars_params["status_savings_ord"][0], vars_params["status_savings_ord"][1])
+        years_employment_norm = min_max(row["years_employment_ord"], vars_params["years_employment_ord"][0], vars_params["years_employment_ord"][1])
+        encodeNumerical(wire, status_saving_norm, years_employment_norm)
+    elif col == 6:
+        credit_norm = min_max(row["credit_amount"], vars_params["credit_amount"][0], vars_params["credit_amount"][1])
+        encodeNumerical(wire, credit_norm)
     
+def encodeOneCol(row: dict, col: int):
 
-def encodeOne(row: dict):
-    encodeCategorical(0, row["collateral_enc"], 4.0)
-    encodeCategorical(1, row["purpose_enc"], 10.0)
-    encodeCategorical(2, row["credit_history_enc"], 5.0)
-    encodeCategorical(3, row["housing_enc"], 3.0)
-    status_account_norm = min_max(row["status_account_ord"], 0, 3)
-    month_norm = min_max(row["month_duration"], 4, 72)
+    encodeOneColOneCable(row, col, 0)
+    return qp.density_matrix([0])
+
+def encodeOneRow(row: dict):
+   
+    for i in range(0, 6):
+        encodeOneColOneCable(row, i, i)
     
-    encodeNumerical(4, status_account_norm, month_norm)
-    status_saving_norm = min_max(row["status_savings_ord"], 1, 5)
-    years_employment_norm = min_max(row["years_employment_ord"], 1, 5)
-    encodeNumerical(5, status_saving_norm, years_employment_norm)
-    credit_norm = min_max(row["credit_amount"], 250, 18400)
-    encodeNumerical(6, credit_norm)
     return qp.density_matrix([0,1,2,3,4,5,6])
     
 

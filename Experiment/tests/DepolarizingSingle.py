@@ -14,7 +14,7 @@ d_list = []
 d_r_list = []
 e_list = []
 
-circuit = qp.QNode(Encoder.encodeOne, device)
+circuit = qp.QNode(Encoder.encodeOneRow, device)
 
 
 Qd = Encoder.encodeAll(dataset, circuit)

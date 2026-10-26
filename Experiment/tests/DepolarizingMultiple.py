@@ -20,7 +20,7 @@ e_teo_per_p = []
 probs = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 
 #Creo el circuito de codificacion
-circuit = qp.QNode(Encoder.encodeOne, device)
+circuit = qp.QNode(Encoder.encodeOneRow, device)
 
 #Codifico D
 Qd = Encoder.encodeAll(dataset, circuit)
