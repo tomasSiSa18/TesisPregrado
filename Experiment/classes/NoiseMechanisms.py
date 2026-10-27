@@ -66,7 +66,7 @@ def GADNoiseMultiQubit(density_matrix: np.ndarray, p: float, g: float):
 def GADNoiseTeo(d: float, g: float):
     return math.log(1+((2*d*math.sqrt(1-g))/(1-math.sqrt(1-g)))) 
 
-def PhaseAmplitudeNoiseSingleQubit(density_matrix: np.ndarray, l: float, g: float, p: float, wire: int, num_qbits: int):
+def PADNoiseSingleQubit(density_matrix: np.ndarray, l: float, g: float, p: float, wire: int, num_qbits: int):
     
     E_0 = np.array([[1, 0], [0, math.sqrt(1-l)]])
     E_1 = np.array([[0, 0], [0, math.sqrt(l)]]) 
@@ -81,16 +81,16 @@ def PhaseAmplitudeNoiseSingleQubit(density_matrix: np.ndarray, l: float, g: floa
         
     return GADNoiseSingleQubit(dep_rho.copy(), p, g, wire, num_qbits)
 
-def PhaseAmplitudeNoiseMultiQubit(density_matrix: np.ndarray, l: float, g: float, p: float):
+def PADNoiseMultiQubit(density_matrix: np.ndarray, p: float, g: float, l: float):
     
     D = density_matrix.shape[0]
     num_qbits = round(math.log2(D))
     result = density_matrix.copy()
     
     for wire in range(num_qbits):
-        result = PhaseAmplitudeNoiseSingleQubit(result.copy(), l, g, p, wire, num_qbits)
+        result = PADNoiseSingleQubit(result.copy(), l, g, p, wire, num_qbits)
         
     return result
 
-def PhaseAmplitudeNoiseTeo(d: float, g: float, l: float):
+def PADNoiseTeo(d: float, g: float, l: float):
     return math.log(1+((2*d*math.sqrt(1-g)*math.sqrt(1-l))/(1-(math.sqrt(1-g)*math.sqrt(1-l)))))
