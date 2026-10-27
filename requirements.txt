@@ -8,3 +8,4 @@ phik
 pennylane
 tqdm
 qiskit-aer
+tabulate
