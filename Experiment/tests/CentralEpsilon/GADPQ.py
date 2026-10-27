@@ -3,10 +3,8 @@ import pennylane as qp
 from tabulate import tabulate
 
 from Experiment.classes import Encoder
+from Experiment.classes.CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
 from tqdm import tqdm
-
-from CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
-
 device = qp.device('default.mixed', wires=1)
 
 dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregrado/ProcesamientoDataset/german_credit_data_for_quant.csv")

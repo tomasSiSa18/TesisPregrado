@@ -5,7 +5,7 @@ from tabulate import tabulate
 from Experiment.classes import Encoder
 from tqdm import tqdm
 
-from CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
+from Experiment.classes.CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
 
 device = qp.device('default.mixed', wires=1)
 

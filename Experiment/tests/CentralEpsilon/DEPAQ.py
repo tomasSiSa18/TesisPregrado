@@ -3,8 +3,8 @@ import pennylane as qp
 import matplotlib.pyplot as plt
 import numpy as np
 
-from Experiment.classes import NoiseMechanisms, Encoder
-from CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
+from Experiment.classes import Encoder
+from Experiment.classes.CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
 
 device = qp.device('default.mixed', wires=7)
 
@@ -14,7 +14,7 @@ circuit = qp.QNode(Encoder.encodeOneRow, device)
 
 rhoListK = Encoder.encodeAll(dataset, circuit)
 
-experimentalEpsilon, theoreticalEpsilon, epsilonList, distanceList, distanceNoiseList = CentralEpsilonExperiment(rhoListK, NoiseType.DEP, {"p": 0.5}, 0.1)
+experimentalEpsilon, theoreticalEpsilon, epsilonList, distanceList, distanceNoiseList = CentralEpsilonExperiment(rhoListK, NoiseType.DEP, {"p": 0.5}, 0.0000000001)
 
 fig, axes = plt.subplots(1, 3, figsize=(18, 5))
 
