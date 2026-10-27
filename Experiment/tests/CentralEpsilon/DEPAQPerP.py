@@ -1,12 +1,10 @@
-import math
-
 import pandas as pd
 import pennylane as qp
 import matplotlib.pyplot as plt
-import numpy as np
 
-from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses, Encoder
+from Experiment.classes import NoiseMechanisms, Encoder
 from tqdm import tqdm
+from CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
 
 #Creo el dispositivo cuantico
 device = qp.device('default.mixed', wires=7)
@@ -19,39 +17,18 @@ e_teo_per_p = []
 
 probs = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]
 
-#Creo el circuito de codificacion
 circuit = qp.QNode(Encoder.encodeOneRow, device)
+rhoListK = Encoder.encodeAll(dataset, circuit)
 
-#Codifico D
-Qd = Encoder.encodeAll(dataset, circuit)
-rho = QuantProcesses.Aggregate(Qd)
 for p in tqdm(probs):
     
-    #Creo una lista para todas las distancias de traza d entre rho y sigma
-    d_list = []
-
-    #Creo una lista para todos los epsilon
-    e_list = []
-
-    rho_dep = NoiseMechanisms.DepolarizingNoise(rho.copy(), p)
+    experimentalEpsilon, theoreticalEpsilon, epsilonList, distanceList, _ = CentralEpsilonExperiment(rhoListK, NoiseType.DEP, {"p": p}, 0.1)
     
-    for i in tqdm(range(1000)):
-        Qd_prime = Encoder.encodeExcludeOne(i, Qd)
-        sigma = QuantProcesses.Aggregate(Qd_prime)
-        sigma_dep = NoiseMechanisms.DepolarizingNoise(sigma, p)
-        d_list.append(qp.math.trace_distance(rho, sigma))
-        rho_to_sigma_dPD = ProportionalDistance.dPD(rho_dep.copy(), sigma_dep.copy(), 0.001, i)
-        sigma_to_rho_dPD = ProportionalDistance.dPD(sigma_dep.copy(), rho_dep.copy(), 0.001, i)
-        
-        iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
-        e_list.append(iter_max)
-        
-    max_trace = max(d_list)
-    max_epsilon = max(e_list)
-    e_teo = NoiseMechanisms.DepolarizingNoiseTeo(p, max_trace, 128)
+    #Creo una lista para todas las distancias de traza d 
+    max_trace = max(distanceList)
     
-    e_list_per_p.append(max_epsilon)
-    e_teo_per_p.append(e_teo)
+    e_list_per_p.append(experimentalEpsilon)
+    e_teo_per_p.append(theoreticalEpsilon)
 
 
 ratio_list = []

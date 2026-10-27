@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-def dPD(rho: np.ndarray, sigma: np.ndarray, accuracy: float, iter: int = None):
+def dPD(rho: np.ndarray, sigma: np.ndarray, accuracy: float):
 
     r = rho.copy()
     s = sigma.copy()
@@ -30,8 +30,6 @@ def dPD(rho: np.ndarray, sigma: np.ndarray, accuracy: float, iter: int = None):
         r = P_t @ r @ P
         s = P_t @ s @ P
         
-    #if iter is not None:
-        #print(f"Iteration {iter} DONE")
     return math.log(max_ratio)
             
             
