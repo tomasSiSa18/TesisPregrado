@@ -22,7 +22,7 @@ rhoListK = Encoder.encodeAll(dataset, circuit)
 
 for p in tqdm(probs):
     
-    experimentalEpsilon, theoreticalEpsilon, epsilonList, distanceList, _ = CentralEpsilonExperiment(rhoListK, NoiseType.DEP, {"p": p}, 0.1)
+    experimentalEpsilon, theoreticalEpsilon, epsilonList, distanceList, _ = CentralEpsilonExperiment(rhoListK, NoiseType.DEP, {"p": p}, 0.0000000001)
     
     #Creo una lista para todas las distancias de traza d 
     max_trace = max(distanceList)
