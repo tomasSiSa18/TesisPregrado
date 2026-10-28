@@ -1,6 +1,9 @@
 import numpy as np
 import math
 
+def getEpsilonExperimental(rho, sigma, acc):
+    return max(dPD(rho, sigma, acc), dPD(sigma, rho, acc))
+
 def dPD(rho: np.ndarray, sigma: np.ndarray, accuracy: float):
 
     r = rho.copy()

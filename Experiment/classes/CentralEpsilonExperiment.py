@@ -1,28 +1,15 @@
 from enum import Enum
 import pennylane as qp
 
-from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses, Encoder
+from Experiment.classes import NoiseMechanisms, QuantProcesses, Encoder
 from tqdm import tqdm
 
-class NoiseType(Enum):
-    DEP = 1
-    GAD = 2
-    PAD = 3
+from Experiment.classes.NoiseMechanisms import NoiseType, ApplyNoise
 
-def ApplyNoise(density_matrix, noise: NoiseType, noiseParams):
-    
-    result = None
-    
-    if(noise == NoiseType.DEP):
-        result = NoiseMechanisms.DepolarizingNoise(density_matrix, noiseParams["p"])
-    elif(noise == NoiseType.GAD):
-        result = NoiseMechanisms.GADNoiseMultiQubit(density_matrix, noiseParams["p"], noiseParams["g"])
-    elif(noise == NoiseType.PAD):
-        result = NoiseMechanisms.PADNoiseMultiQubit(density_matrix, noiseParams["p"], noiseParams["g"], noiseParams["l"])
-        
-    return result
+from Experiment.classes.ProportionalDistance import getEpsilonExperimental
 
-def CentralEpsilonExperiment(setRho, noise: NoiseType, noiseParams: dict, tolerance: float):
+
+def CentralEpsilonExperiment(setRho, noise: NoiseType, noiseParams: dict, tolerance: float, accuracy: float = 0.001):
         
     if noise == NoiseType.PAD:
             assert noiseParams["p"] == 0.5 and noiseParams["l"] <= noiseParams["g"]
@@ -44,15 +31,14 @@ def CentralEpsilonExperiment(setRho, noise: NoiseType, noiseParams: dict, tolera
         sigmaKPrime = ApplyNoise(sigmaK, noise, noiseParams)
         distanceList.append(qp.math.trace_distance(rhoK, sigmaK))
         distanceNoiseList.append(qp.math.trace_distance(rhoKPrime, sigmaKPrime))
-        rho_to_sigma_dPD = ProportionalDistance.dPD(rhoKPrime.copy(), sigmaKPrime.copy(), 0.001)
-        sigma_to_rho_dPD = ProportionalDistance.dPD(sigmaKPrime.copy(), rhoKPrime.copy(), 0.001)
         
-        iter_max = max(rho_to_sigma_dPD, sigma_to_rho_dPD)
+        
+        iter_max = getEpsilonExperimental(rhoKPrime, sigmaKPrime, accuracy)
         epsilonList.append(iter_max)
     
     
     max_trace = max(distanceList)
-    theoreticalEpsilon = None
+    
     if(noise == NoiseType.DEP):
         theoreticalEpsilon = NoiseMechanisms.DepolarizingNoiseTeo(noiseParams["p"], max_trace, rhoK.shape[0])
     elif(noise == NoiseType.GAD):

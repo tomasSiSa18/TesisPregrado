@@ -1,5 +1,25 @@
+from enum import Enum
+
 import numpy as np
 import math
+
+class NoiseType(Enum):
+    DEP = 1
+    GAD = 2
+    PAD = 3
+
+def ApplyNoise(density_matrix, noise: NoiseType, noiseParams):
+    
+    result = None
+    
+    if(noise == NoiseType.DEP):
+        result = DepolarizingNoise(density_matrix, noiseParams["p"])
+    elif(noise == NoiseType.GAD):
+        result = GADNoiseMultiQubit(density_matrix, noiseParams["p"], noiseParams["g"])
+    elif(noise == NoiseType.PAD):
+        result = PADNoiseMultiQubit(density_matrix, noiseParams["p"], noiseParams["g"], noiseParams["l"])
+        
+    return result
 
 def DepolarizingNoise(density_matrix: np.ndarray, p: float):
         
