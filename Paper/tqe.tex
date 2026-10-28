@@ -36,7 +36,7 @@ Differential privacy, Quantum computing, Quantum noise
 
 \section{Introduction}
 \label{sec:introduction}
-\PARstart{E}{sta} va a ser la introduccion a la tesis.
+\PARstart{E}{sta} va a ser la introduccion a la tesis. En esta sección pienso hablar de la motivación, la importancia de la privacidad diferencial, basicamente muy similar al documento de propuesta
 
 \section{Background}
 \label{sec:background}
@@ -44,27 +44,49 @@ Differential privacy, Quantum computing, Quantum noise
 En esta seccion se va a introducir todos los conceptos, ecuaciones y conocimiento necesario para entender el paper. Siguiendo el documento de propuesta propuesta vamos a tener:
 
 \subsection{Differential Privacy}
+
+Las definiciones clasicas de privacidad diferencial
+
 \subsection{Quantum Information and Computation}
+
+Las definiciones necesarias para entender el paper desde informacion cuantica: (estado, matriz de densidad, ruido cuantico, etc)
 \subsection{Quantum Differential Privacy}
+
+Las definiciones de la privacidad diferencial cuantica y las de los algoritmos del paper de Zing para encontrar epsilon (dPD, PD)
 
 
 \section{State of the Art}
 \label{sec:state_of_the_Art}
 
-El estado del arte muy similar a la propuesta 
+El estado del arte muy similar a la propuesta donde se establece cual es el entorno de investigacion de la privacidad diferencial cuantica. En especial sobre la privacidad diferencial usando el ruido de decoherencia que es la forma que la estamos aplicando en el paper.
 
 \section{Proposal Methodology}
 \label{sec:proposal_methodology}
 
 \subsection{Dataset exploration and variable selection}
+
+Una explicación a los datos que se utilizaron en el paper junto con la exploración de los datos en terminos de completitud, unicidad, etccon los analisis de PHIK y documentación de porque se tomó el trade off de menos variables a favor de poder tener un número menor de qubits.
+
 \subsection{Encoding of classical variables into quantum}
+
+La explicación de la metodologia de codificación de variables categoricas y númericas en qubits y los tradeoff que este proceso conlleva.
+
 \subsection{Noise parameters selection for each noise mechanism}
+
+Un pequeño parrafo que sustente porque se utilizaron los parametros de ruido dado (i.e p = 0.5, gamma = 0.5 etc) esto basicamente hace referencia al paper de Zhou.
 
 \subsection{Finding the experimental privacy budget}
 \subsubsection{Central Setting}
+
+La explicacion del experimento central, es basicamente puesto en texto la presentacion de semana 8
+
 \subsubsection{Local Setting}
 
+La explicacion del experimento loca, es basicamente puesto en texto la presentacion de semana 10
+
 \subsection{Measurement and Classical release of categorical variables}
+
+La explicación de la medicion de las variables categoricas como forma de mostrar el ruido en acción. Es el resto de la presentación de semana 10 puesto en texto
 
 
 \section{Experimental Results}
@@ -72,18 +94,34 @@ El estado del arte muy similar a la propuesta
 
 \subsection{Finding the experimental privacy budget}
 \subsubsection{Central Setting}
+
+Resultados del experimento central
+
 \subsubsection{Local Setting}
 
+Resultados del experimento local
+
 \subsection{Measurement and Classical release of categorical variables}
+
+Resultados de las mediciones con las distribuciones de probabilidad
 
 
 \section{Discussion and Conclusion}
 \label{sec:discussion_and_conclusion}
 
-En esta seccion voy a hablar de limitaciones encontradas dentro de los experimentos. Tambien el analisis de los resultados de los mismos y que implicaciones tienen estos frente a la privacidad diferencial tanto clasica como cuantica.
+En esta seccion voy a hablar de limitaciones encontradas dentro de los experimentos.
 
-\section*{Acknowledgment}
+Entre ellas:
+
+La dualidad entre C y L para la privacidad. (pros y contras)
+Que limitaciones tiene el experimento (analisis conjunto)
+
+Tambien el analisis de los resultados de los mismos y que implicaciones tienen estos frente a la privacidad diferencial tanto clasica como cuantica.
+
+\section*{Acknowledgments}
 \label{sec:acknowledgment}
+
+Esta seccion solo para la tesis o no se si pueda ir en el paper tambien
 
 \section*{References}
 \label{sec:references}
