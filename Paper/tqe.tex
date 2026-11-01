@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \graphicspath{{imgs/}}
 \usepackage{textcomp}
+\usepackage{booktabs}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -13,7 +14,7 @@
 
 \title{A study of experimental privacy budget quantification in quantum differential privacy simulations}
 \author{\uppercase{Tomas Sierra Sanchez}\authorrefmark{1},
-\uppercase{Valerie E. Gauthier Umaña\authorrefmark{2}, and Juan F. Perez Bernal}.\authorrefmark{3}}
+\uppercase{Valérie E. Gauthier-Umaña\authorrefmark{2}, and Juan F. Perez Bernal}.\authorrefmark{3}}
 \address[1]{Department of Systems and Computing Engineering, Universidad de los Andes  (email: t.sierras@uniandes.edu.co)}
 \address[2]{Department of Systems and Computing Engineering, Universidad de los Andes, Bogotá D.C, Colombia (email: ve.gauthier@uniandes.edu.co)}
 \address[3]{Department of Industrial Engineering, Universidad de los Andes, Bogotá D.C, Colombia (email: jf.perez33@uniandes.edu.co)}
@@ -60,33 +61,77 @@ Las definiciones de la privacidad diferencial cuantica y las de los algoritmos d
 
 El estado del arte muy similar a la propuesta donde se establece cual es el entorno de investigacion de la privacidad diferencial cuantica. En especial sobre la privacidad diferencial usando el ruido de decoherencia que es la forma que la estamos aplicando en el paper.
 
-\section{Proposed Methodology}
-\label{sec:proposed_methodology}
+\section{Data Processing and Analysis}
+\label{sec:data_processing_and_analysis}
 
-Breve introduccion a la seccion 
+This section details the data processing and analysis methodology that was used in order to prepare the classical Statlog (German Credit Data) dataset \cite{hofmann1994german} \cite{germancredit2026} for use in the quantum setting. Firstly we outline the dataset characteristics, variable selection procedures and lastly quantum encoding procedures for the selected data. 
 
-\subsection{Dataset exploration and variable selection}
+\subsection{Dataset description}
 
-Una explicación a los datos que se utilizaron en el paper junto con la exploración de los datos en terminos de completitud, unicidad, etccon los analisis de PHIK y documentación de porque se tomó el trade off de menos variables a favor de poder tener un número menor de qubits.
+The selected dataset for this investigation is the Statlog (German Credit Data) dataset created by Professor Hans Hofmann \cite{hofmann1994german}. This multivariate dataset aims to classify people as a good or bad credit risk. The orginal dataset is composed of 1000 instances that span 21 variables (7 numerical, 13 categorical, and the target). 
+
+In the original dataset created by Professor Hofmann, all non numerical variables use labels to define their characteristics (e.g The status of a person whose checking account is less than 0 Deutsche Marks (DM) is A11) for that reason it was decided to use a curated version of the dataset \cite{germancredit2026} which transforms all the labels to their definition as a means of simplifying the readers understanding of the dataset by eliminating that intermediate layer of label and category.
+
+Neither the original dataset nor the curated version have any problem in terms of completeness as all rows include all 21 variables nor uniqueness as there is no instance of an exact duplicate. For these reasons no special cleaning procedure was done.
+
+\subsection{Variable selection with PhiK}
+
+As the primary objective of this investigation was not to make a clasiffier but rather explore the capabilities that quantum computing could offer in terms protecting the input data, coupled with the fact that the simulation would at a maximum store 1000 $2^n \times 2^n$ density matrices (with $n$ being the number of variables) and thus a larger $n$ would likely need higher computational capabilities it was decided to select a subset of variables that in a true classifier setting would likely have the most incidence on training. 
+
+As mentioned previously however, most of the variables in this dataset are not numeric and thus a popular correlation such as the Pearson correlation analysis would be fruitless. For this reason it was decided to use a PhiK correlation coeficient \cite{BAAK2020107043PHIK} which is a stronger candidate to measure the association between a pair of variables that are not necessarily numerical.
+
+The PhiK correlation test gives for a pair of variables their $\phi_{K}$ which is how strong the association is and a significance $Z$ which states how statitically relevant that association really is. We used Baak et al. PhiK library to make this analysis between the 20 features of the dataset agains the objective variable and these were the results:
+
+\begin{table}[htbp]
+  \centering
+  \caption{$\phi_K$ correlation of each feature with the target and its statistical significance.}
+  \label{tab:phik}
+  \begin{tabular}{lrrc}
+    \toprule
+    Feature & $\phi_K$ & Significance ($z$) & Significant \\
+    \midrule
+    \texttt{status\_account\_ord}      & 0.512 & 10.951       & Yes \\
+    \texttt{month\_duration}           & 0.285 & 5.648        & Yes \\
+    \texttt{credit\_amount}            & 0.241 & 4.324        & Yes \\
+    \texttt{collateral}                & 0.217 & 4.015        & Yes \\
+    \texttt{purpose}                   & 0.204 & 3.713        & Yes \\
+    \texttt{credit\_history}           & 0.197 & 6.900        & Yes \\
+    \texttt{status\_savings\_ord}      & 0.147 & 5.297        & Yes \\
+    \texttt{age}                       & 0.142 & 2.172        & No  \\
+    \texttt{status\_and\_sex}          & 0.123 & 1.945        & No  \\
+    \texttt{is\_foreign\_worker}       & 0.109 & 2.529        & No  \\
+    \texttt{years\_employment\_ord}    & 0.098 & 3.047        & Yes \\
+    \texttt{housing}                   & 0.077 & 3.587        & Yes \\
+    \texttt{payment\_to\_income\_ratio}& 0.075 & 1.045        & No  \\
+    \texttt{other\_installment\_plans} & 0.063 & 2.901        & No  \\
+    \texttt{secondary\_obligor}        & 0.041 & 1.843        & No  \\
+    \texttt{telephone}                 & 0.021 & 0.663        & No  \\
+    \texttt{n\_credits}                & 0.000 & 0.051        & No  \\
+    \texttt{job}                       & 0.000 & $-0.291$     & No  \\
+    \texttt{n\_guarantors}             & 0.000 & $-\infty$    & No  \\
+    \texttt{residence\_since}          & 0.000 & $-1.090$     & No  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Encoding of classical variables into quantum}
 
 La explicación de la metodologia de codificación de variables categoricas y númericas en qubits y los tradeoff que este proceso conlleva.
 
-\subsection{Noise parameters selection for each noise mechanism}
+\section{Noise parameters selection for each noise mechanism}
 
 Un pequeño parrafo que sustente porque se utilizaron los parametros de ruido dado (i.e p = 0.5, gamma = 0.5 etc) esto basicamente hace referencia al paper de Zhou.
 
-\subsection{Finding the experimental privacy budget}
-\subsubsection{Central Setting}
+\section{Finding the experimental privacy budget}
+\subsection{Central Setting}
 
 La explicacion del experimento central, es basicamente puesto en texto la presentacion de semana 8
 
-\subsubsection{Local Setting}
+\subsection{Local Setting}
 
 La explicacion del experimento loca, es basicamente puesto en texto la presentacion de semana 10
 
-\subsection{Measurement and Classical release of categorical variables}
+\section{Measurement and Classical release of categorical variables}
 
 La explicación de la medicion de las variables categoricas como forma de mostrar el ruido en acción. Es el resto de la presentación de semana 10 puesto en texto
 
@@ -125,10 +170,8 @@ Tambien el analisis de los resultados de los mismos y que implicaciones tienen e
 
 Esta seccion solo para la tesis o no se si pueda ir en el paper tambien
 
-\section*{References}
-\label{sec:references}
-
-\subsection{References}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
 
 \EOD
 
