@@ -6,7 +6,7 @@ import numpy as np
 from Experiment.classes import Encoder
 from Experiment.classes.CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
 
-device = qp.device('default.mixed', wires=7)
+device = qp.device('default.mixed', wires=8)
 
 dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregrado/ProcesamientoDataset/german_credit_data_for_quant.csv")
 

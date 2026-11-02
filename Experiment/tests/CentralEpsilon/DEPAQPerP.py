@@ -7,7 +7,7 @@ from tqdm import tqdm
 from Experiment.classes.CentralEpsilonExperiment import CentralEpsilonExperiment, NoiseType
 
 #Creo el dispositivo cuantico
-device = qp.device('default.mixed', wires=7)
+device = qp.device('default.mixed', wires=8)
 
 #Leo el German Credit Dataset
 dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregrado/ProcesamientoDataset/german_credit_data_for_quant.csv")

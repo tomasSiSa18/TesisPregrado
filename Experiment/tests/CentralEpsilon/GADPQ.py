@@ -13,9 +13,9 @@ experimentalEpsilon=0
 max_trace = 0
 theoreticalEpsilon = 0
 epsilons = {}
-cols=["collateral", "purpose", "credit_history", "housing", "status_savings and month_duration", "years_employment and credit_amount", "status_account"]
+cols=["collateral", "purpose", "credit_history", "housing", "status_savings and month_duration", "years_employment and credit_amount", "status_account", "other_installment_plans"]
 
-for k in tqdm(range(7)):
+for k in tqdm(range(8)):
     
     d_list = []
     e_list = []
