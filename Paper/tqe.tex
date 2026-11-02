@@ -70,55 +70,64 @@ This section details the data processing and analysis methodology that was used 
 
 The selected dataset for this investigation is the Statlog (German Credit Data) dataset created by Professor Hans Hofmann \cite{hofmann1994german}. This multivariate dataset aims to classify people as a good or bad credit risk. The orginal dataset is composed of 1000 instances that span 21 variables (7 numerical, 13 categorical, and the target). 
 
-In the original dataset created by Professor Hofmann, all non numerical variables use labels to define their characteristics (e.g The status of a person whose checking account is less than 0 Deutsche Marks (DM) is A11) for that reason it was decided to use a curated version of the dataset \cite{germancredit2026} which transforms all the labels to their definition as a means of simplifying the readers understanding of the dataset by eliminating that intermediate layer of label and category.
+In the original dataset created by Professor Hofmann, all non numerical variables use labels to define their characteristics (e.g The status of a person whose checking account is less than 0 Deutsche Marks (DM) is A11) for that reason it was decided that the investigation was going to use a curated version of the dataset \cite{germancredit2026} which transforms all the labels to their definition as a means of simplifying the readers' understanding of the dataset by eliminating that intermediate layer of label and category. Every mention to the dataset henceforth will refer to this curated version and not the original compiled by Professor Hofmann
 
-Neither the original dataset nor the curated version have any problem in terms of completeness as all rows include all 21 variables nor uniqueness as there is no instance of an exact duplicate. For these reasons no special cleaning procedure was done.
+A simple data analysis concluded that the dataset didn't have any problem in terms of completeness (as all rows include all 21 variables) nor uniqueness (as there is no instance of an exact duplicate). For these reasons no special cleaning procedure was done prior to variable selection.
 
 \subsection{Variable selection with PhiK}
 
-As the primary objective of this investigation was not to make a clasiffier but rather explore the capabilities that quantum computing could offer in terms protecting the input data, coupled with the fact that the simulation would at a maximum store 1000 $2^n \times 2^n$ density matrices (with $n$ being the number of variables) and thus a larger $n$ would likely need higher computational capabilities it was decided to select a subset of variables that in a true classifier setting would likely have the most incidence on training. 
+In order to hold quantum data for a dataset that contains 1000 instances of 20 variables each, the simulation would, at a maximum, store 1000 $2^n \times 2^n$ density matrices, with $n$ being the number of qubits used. This means that using the full 20 variables, one per qubit, would imply $2^{20} \times 2^{20} \approx 1.1 \times 10^{12}$ complex entries, and at 16 bytes each, that is about 16 TiB per matrix. It was decided that a correlation study over the target variable would be an adequate way to reduce this load. The reasons for this decision are: First, the investigation did not aim to produce a classifier and thus could use a smaller number of variables in the experiments. Second, the variables selected from a correlation study would be the most likely candidates to be chosen as significant by a classifier.
 
-As mentioned previously however, most of the variables in this dataset are not numeric and thus a popular correlation such as the Pearson correlation analysis would be fruitless. For this reason it was decided to use a PhiK correlation coeficient \cite{BAAK2020107043PHIK} which is a stronger candidate to measure the association between a pair of variables that are not necessarily numerical.
+As mentioned previously however, most of the variables in this dataset are not numeric and thus a popular correlation analysis such as the Pearson correlation is not an adequate choice to evaluate variable correlation. For starters, for a nominal variable the Pearson's coefficient relies on an arbitrary choice for the label and since the proportions of the target variable in the dataset for each category are not the same across the board, a change in category label implies a change in the coefficient. Moreover the Pearson coefficient identifies well the linear relationships of variables but lacks for nonlinear cases.
 
-The PhiK correlation test gives for a pair of variables their $\phi_{K}$ which is how strong the association is and a significance $Z$ which states how statitically relevant that association really is. We used Baak et al. PhiK library to make this analysis between the 20 features of the dataset agains the objective variable and these were the results:
+For these reasons it was decided to use the PhiK method \cite{BAAK2020107043PHIK} to select the variables which show a consistent stronger correlation with the target variable. PhiK is a stronger candidate as it works well for both numerical and categorical variables correlations and it is able to identify nonlinear relationships between them.
+
+We used Baak et al. PhiK library to measure the correlation and significance between each variable and the target and recorded the results in Table~\ref{tab:phik}. It is important to note that the library returns, for a pair of variables, two results: the first is $\phi_{K}$ which is the measurement of how strong the relationship between the two variables is. This result is calculated by calibrating a $\chi^2$ test statistic to a contingency table (populated with the categorical variables or a bin distributed numerical variables) with respect to a bivariate normal distribution. This calibration returns a $\phi_{K}$ with range of 0 (no association) to 1 (complete association). Since $\phi_{K}$ depends on the counting of the contingency table renumbering the categories no longer affects the end result. The second result is $Z$ which is a conversion of the p-value from the independence test into a number of standard deviations. A higher $Z$ provides more evidence that the variable is not independent from the target.
 
 \begin{table}[htbp]
   \centering
-  \caption{$\phi_K$ correlation of each feature with the target and its statistical significance.}
+  \caption{$\phi_K$ correlation of each feature with the target and its statistical significance with a cutoff of $Z > 2.81$.}
   \label{tab:phik}
   \begin{tabular}{lrrc}
     \toprule
-    Feature & $\phi_K$ & Significance ($z$) & Significant \\
+    Feature & $\phi_K$ & $Z$ & Significant \\
     \midrule
-    \texttt{status\_account\_ord}      & 0.512 & 10.951       & Yes \\
+    \texttt{status\_account}           & 0.512 & 10.965       & Yes \\
+    \texttt{credit\_history}           & 0.197 & 6.912        & Yes \\
     \texttt{month\_duration}           & 0.285 & 5.648        & Yes \\
-    \texttt{credit\_amount}            & 0.241 & 4.324        & Yes \\
-    \texttt{collateral}                & 0.217 & 4.015        & Yes \\
-    \texttt{purpose}                   & 0.204 & 3.713        & Yes \\
-    \texttt{credit\_history}           & 0.197 & 6.900        & Yes \\
-    \texttt{status\_savings\_ord}      & 0.147 & 5.297        & Yes \\
-    \texttt{age}                       & 0.142 & 2.172        & No  \\
-    \texttt{status\_and\_sex}          & 0.123 & 1.945        & No  \\
-    \texttt{is\_foreign\_worker}       & 0.109 & 2.529        & No  \\
-    \texttt{years\_employment\_ord}    & 0.098 & 3.047        & Yes \\
-    \texttt{housing}                   & 0.077 & 3.587        & Yes \\
+    \texttt{status\_savings}           & 0.147 & 5.283        & Yes \\
+    \texttt{credit\_amount}            & 0.241 & 4.388        & Yes \\
+    \texttt{collateral}                & 0.217 & 4.009        & Yes \\
+    \texttt{purpose}                   & 0.204 & 3.715        & Yes \\
+    \texttt{housing}                   & 0.077 & 3.601        & Yes \\
+    \texttt{years\_employment}         & 0.098 & 3.053        & Yes \\
+    \texttt{other\_installment\_plans} & 0.063 & 2.891        & Yes \\
+    \texttt{is\_foreign\_worker}       & 0.109 & 2.545        & No  \\
+    \texttt{age}                       & 0.142 & 2.177        & No  \\
+    \texttt{status\_and\_sex}          & 0.123 & 1.953        & No  \\
+    \texttt{secondary\_obligor}        & 0.041 & 1.835        & No  \\
     \texttt{payment\_to\_income\_ratio}& 0.075 & 1.045        & No  \\
-    \texttt{other\_installment\_plans} & 0.063 & 2.901        & No  \\
-    \texttt{secondary\_obligor}        & 0.041 & 1.843        & No  \\
-    \texttt{telephone}                 & 0.021 & 0.663        & No  \\
-    \texttt{n\_credits}                & 0.000 & 0.051        & No  \\
-    \texttt{job}                       & 0.000 & $-0.291$     & No  \\
+    \texttt{telephone}                 & 0.021 & 0.689        & No  \\
+    \texttt{n\_credits}                & 0.000 & 0.043        & No  \\
+    \texttt{job}                       & 0.000 & $-0.390$     & No  \\
+    \texttt{residence\_since}          & 0.000 & $-1.070$     & No  \\
     \texttt{n\_guarantors}             & 0.000 & $-\infty$    & No  \\
-    \texttt{residence\_since}          & 0.000 & $-1.090$     & No  \\
     \bottomrule
   \end{tabular}
 \end{table}
 
+For the variable selection we chose to use $Z$ as although the $\phi_{K}$ measures the correlation between variables, the significance $Z$ of that correlation explains if that correlation is significant enough to be told apart from chance. The Bonferroni method states that, to ensure that the probability of at least one false positive across $k$ tests (in our case $k = 20$ for $20$ variables against the target) is at most $\alpha = 0.05$, each individual test must use a significance level of $\alpha' = \alpha/k = 0.05/20 = 0.0025$ \cite{bland1995multiple}. Here a false positive is a variable that is independent of the target but is selected anyway. Since $\alpha' = 0.0025$ corresponds to $Z \approx 2.81$, we used $Z > 2.81$ as the cutoff for the selection of the variables.
+
+%Table~\ref{tab:phik} has the values that the PhiK method returned for all 20 variables with regards to the target sorted by $Z$. As an example the reader can observe that the variable \textbf{housing} has a small correlation with target yet a strong significance. On the contrary \textbf{age} has a higher correlation than \textbf{housing} with target yet a small enough significance to not merit its selection
+
+As the reader can observe in Table~\ref{tab:phik} the selection took 10 out of the 20 variables which as mentioned before now leaves a maximum of 1000 $2^{10} \times 2^{10}$ matrices as opposed to 1000 $2^{20} \times 2^{20}$ should we use one qubit per variable, we will show how we lowered that number in Section~\ref{subsec:encoding_variables}. The definition and type of each variable is recorded in Appendix~\ref{ap:selected_features}
+
 \subsection{Encoding of classical variables into quantum}
+\label{subsec:encoding_variables}
 
 La explicación de la metodologia de codificación de variables categoricas y númericas en qubits y los tradeoff que este proceso conlleva.
 
-\section{Noise parameters selection for each noise mechanism}
+\subsection{Noise parameters selection for each noise mechanism}
 
 Un pequeño parrafo que sustente porque se utilizaron los parametros de ruido dado (i.e p = 0.5, gamma = 0.5 etc) esto basicamente hace referencia al paper de Zhou.
 
@@ -165,6 +174,33 @@ Que limitaciones tiene el experimento (analisis conjunto)
 
 Tambien el analisis de los resultados de los mismos y que implicaciones tienen estos frente a la privacidad diferencial tanto clasica como cuantica.
 
+\appendices
+
+\section{Description of selected features}
+\label{ap:selected_features}
+
+\begin{table*}[!t]
+  \centering
+  \caption{Description of the selected features.}
+  \label{tab:feature_descriptions}
+  \begin{tabular}{llp{0.5\textwidth}}
+    \toprule
+    Feature & Type & Description \\
+    \midrule
+    \texttt{status\_account}           & Ordinal     & Status of the existing checking account, in DM (Deutsche Marks) \\
+    \texttt{month\_duration}           & Numerical   & Duration of the credit in months \\
+    \texttt{credit\_amount}            & Numerical   & Credit amount \\
+    \texttt{collateral}                & Categorical & Possible collateral for the loan \\
+    \texttt{purpose}                   & Categorical & Purpose of the credit \\
+    \texttt{credit\_history}           & Categorical & Credit history of the applicant \\
+    \texttt{housing}                   & Categorical & Current housing situation (rented, owned, or free) \\
+    \texttt{years\_employment}         & Ordinal     & Length of time in current employment \\
+    \texttt{status\_savings}           & Ordinal     & Status of the savings account, in DM (Deutsche Marks) \\
+    \texttt{other\_installment\_plans} & Categorical & Whether the client has other installment plans \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
 \section*{Acknowledgments}
 \label{sec:acknowledgment}
 
@@ -172,6 +208,8 @@ Esta seccion solo para la tesis o no se si pueda ir en el paper tambien
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}
+
+
 
 \EOD
 
