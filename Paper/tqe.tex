@@ -7,6 +7,8 @@
 \usepackage{textcomp}
 \usepackage{booktabs}
 \usepackage{physics}
+\usepackage{multirow}
+
 \newtheorem{definition}{Definition}[section]
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
@@ -72,6 +74,10 @@ En esta seccion se va a introducir todos los conceptos, ecuaciones y conocimient
 Quantum channels are important as they are the generalization of an operation over a quantum state and in the case of this project we need to use operations such as the depolarizing channel which is defined thanks to this general definition.
 
 \begin{definition}
+    Bloch spehere \cite{watrous_quantum_channels}: The Bloch sphere is a useful geometrical representation for a single qubit. 
+\end{definition}
+
+\begin{definition}
   \label{def:trace_distance}
     Trace distance \cite{zhou2017differential}: It is the distance between two density operators and it is defined by:
 
@@ -79,6 +85,17 @@ Quantum channels are important as they are the generalization of an operation ov
 
     where $Tr(x)$ is the trace of the density matrix $x$
 \end{definition}
+
+another useful form to define the trace distance in terms of vectors by Nielsen $\&$ Chuang \cite{Nielsen_Chuang_2010} is 
+
+\begin{definition}
+  \label{def:trace_distance_vector}
+    Trace distance \cite{Nielsen_Chuang_2010}: It is the distance between two qubit vectors $u$ and $v$ defined by:
+
+    $$\tau(u, v) = \frac{1}{2}\norm{u - v}$$
+\end{definition}
+
+
 
 \begin{definition}
     Quantum measurement \cite{zhou2017differential}: It is the way to extract information from a quantum system. Mathematically, a measurement is modelled as a set of matrices $M = \{K_m\}$ with the condition of 
@@ -143,7 +160,7 @@ This section details the data processing and analysis methodology that was used 
 
 The selected dataset for this investigation is the Statlog (German Credit Data) dataset created by Professor Hans Hofmann \cite{hofmann1994german}. This multivariate dataset aims to classify people as a good or bad credit risk. The orginal dataset is composed of 1000 instances that span 21 variables (7 numerical, 13 categorical, and the target). 
 
-In the original dataset created by Professor Hofmann, all non numerical variables use labels to define their characteristics (e.g The status of a person whose checking account is less than 0 Deutsche Marks (DM) is A11) for that reason it was decided that the investigation was going to use a curated version of the dataset \cite{germancredit2026} which transforms all the labels to their definition as a means of simplifying the readers' understanding of the dataset by eliminating that intermediate layer of label and category. Every mention to the dataset henceforth will refer to this curated version and not the original compiled by Professor Hofmann
+In the original dataset created by Professor Hofmann, all non numerical variables use a attribute code to define their characteristics (e.g The status of a person whose checking account is less than 0 Deutsche Marks (DM) is A11) for that reason it was decided that the investigation was going to use a curated version of the dataset \cite{germancredit2026} which transforms all the labels to their definition as a means of simplifying the readers' understanding of the dataset by eliminating that intermediate layer of label and category. Every mention to the dataset henceforth will refer to this curated version and not the original compiled by Professor Hofmann
 
 A simple data analysis concluded that the dataset didn't have any problem in terms of completeness (as all rows include all 21 variables) nor uniqueness (as there is no instance of an exact duplicate). For these reasons no special cleaning procedure was done prior to variable selection.
 
@@ -202,20 +219,23 @@ Having chosen a reduced set of variables from the dataset (10 from the original 
 
 \subsubsection{Categorical Variables}
 
-These are categorical variables whose categories do not follow a particular order. An example for this is the variable $\texttt{collateral}$ which has four categories (none, real estate, car, and savings agreement/life insurance). As the reader can observe these categories don't follow a specific order as there is no way to tell if say a car is better or goes after real estate or none.
+These are categorical variables whose categories do not follow a natural ranking. An example for this is the variable $\texttt{purpose}$ which has ten categories (car(new), vacation, education, among others). As the reader can observe these categories don't follow a natural order as there is no way to tell if say car goes after or before education. Due to this it was decided to separate them from the categorical (ordinal) variablese that will be mentioned later on
 
 The proposed encoding for these types of variables is given by Definition~\ref{def:encoding_categorical}
 
 \begin{definition}
  \label{def:encoding_categorical} 
   (Method for encoding categorical variables)
-  For a categorical variable with $K$ categories of category $c$ and an angle $\phi = \frac{2\pi c}{K}$ the resulting encoded qubit $\ket{\psi}$ is given by the equation
+  For a categorical variable with $K$ categories. When ecoding the label $c \in \{0, \dots, K - 1\}$ the resulting encoded qubit state $\ket{\psi}$ is given by the equation
 
-  $$\ket{\psi} = RZ(\phi)H\ket{0}$$
+  $$\ket{\psi} = RZ(\phi)H\ket{0} \text{with, } \phi = \frac{2\pi c}{K}$$
+
 \end{definition}
 
 
-This encoding ends up with a qubit state in one of $K$ equally distributed points across the equator of the Bloch Sphere. Since the resulting qubit state is pure and thus has a length equal to the radius of the Bloch sphere (i.e 1) $\tau$ from Definition~\ref{def:trace_distance} between any two states that result from this encoding becomes $\tau = \sin(\frac{\Delta}{2})$ with $\Delta$ being the angle between the two states. This method assures then that $\tau$ between two categories is at least $\sin(\frac{\pi}{K})$. What this means in theory is that the privacy in the local setting won't change the final $\epsilon$ as regardless of the labels given to any category, the angle between the labels themselves might change but the possible angles between different categories will remain the same. However, what this encoding doesn't prevent is the fact that different categories can have different proportions. Depending on the labels given to each category than can impact the distance $\tau$ between the dataset and that same dataset without a person included, which, as will be explained in Section~\ref{sec:finding_epsilon} is crucial when computing $\epsilon_{exp}$ and $\epsilon_{theo}$ which can lead to different results. In Appendix~\ref{ap:label_categorical} we compiled the $c$ value given to the variable's categories.
+This encoding ends up with a qubit state in one of $K$ equally distributed points across the equator of the Bloch sphere. We choose to place the qubit on the equator as because from Definition~\ref{def:trace_distance_vector} we can express $\tau$ in terms of the angle between to points of a circle $\Delta$ and the radius of that circle as $r\sin{\frac{\Delta}{2}}$. With this expression the reader can note that the minimum distance $\tau$ is maximized for all other angles on the sphere when the radius is maximum which happens in the equator of the sphere. More over one could argue that having a smaller $\theta$ (i.e the angle of rotation with regards to the y-axis of the Bloch sphere) would reduce $\epsilon$, and one would be right if not for the fact that it comes with the tradeoff of making the categories less distinguishable. In the case where $\theta = 0$ any rotation over the z-axis would invalidate since no rotation over the y-axis would make it a global phase.
+
+This method assures then that $\tau$ between two categories is at least $\sin(\frac{\pi}{K})$. What this means in theory is that the privacy in the local setting won't change the final $\epsilon$ as regardless of the labels given to any category, the angle between the labels themselves might change but the possible angles between different categories will remain the same. However, what this encoding doesn't prevent is the fact that different categories can have different proportions. The labels given to each category can impact the distance $\tau$ between the dataset and that same dataset without a person included, which, as will be explained in Section~\ref{sec:finding_epsilon} is crucial when computing $\epsilon_{exp}$ and $\epsilon_{theo}$ and then in theory can lead to different results. In Appendix~\ref{ap:label_categorical} we compiled the $c$ value given to the variable's categories.
 
 \subsubsection{Numerical and ordinal variables}
 
@@ -302,15 +322,15 @@ Tambien el analisis de los resultados de los mismos y que implicaciones tienen e
     \toprule
     Feature & Type & Description \\
     \midrule
-    \texttt{status\_account}           & Ordinal     & Status of the existing checking account, in DM (Deutsche Marks) \\
+    \texttt{status\_account}           & Categorical (Ordinal)     & Status of the existing checking account, in DM (Deutsche Marks) \\
     \texttt{month\_duration}           & Numerical   & Duration of the credit in months \\
     \texttt{credit\_amount}            & Numerical   & Credit amount \\
     \texttt{collateral}                & Categorical & Possible collateral for the loan \\
     \texttt{purpose}                   & Categorical & Purpose of the credit \\
     \texttt{credit\_history}           & Categorical & Credit history of the applicant \\
     \texttt{housing}                   & Categorical & Current housing situation (rented, owned, or free) \\
-    \texttt{years\_employment}         & Ordinal     & Length of time in current employment \\
-    \texttt{status\_savings}           & Ordinal     & Status of the savings account, in DM (Deutsche Marks) \\
+    \texttt{years\_employment}         & Categorical (Ordinal)     & Length of time in current employment \\
+    \texttt{status\_savings}           & Categorical (Ordinal)     & Status of the savings account, in DM (Deutsche Marks) \\
     \texttt{other\_installment\_plans} & Categorical & Whether the client has other installment plans \\
     \bottomrule
   \end{tabular}
@@ -326,7 +346,42 @@ Tambien el analisis de los resultados de los mismos y que implicaciones tienen e
   \begin{tabular}{llp{0.5\textwidth}}
     \toprule
     Variable & Category & Label \\
-    
+    \midrule
+    \multirow{4}{*}{collateral} 
+      & car & 0 \\
+      & none & 1 \\
+      & real estate & 2 \\
+      & savings agreement/life insurance & 3 \\
+    \midrule
+    \multirow{10}{*}{purpose} 
+      & business & 0 \\
+      & car (new) & 1 \\
+      & car (used) & 2 \\
+      & domestic appliances & 3 \\
+      & education & 4 \\
+      & furniture/equipment & 5 \\
+      & others & 6 \\
+      & radio/television & 7 \\
+      & repairs & 8 \\
+      & retraining & 9 \\
+    \midrule
+    \multirow{5}{*}{credit\_history} 
+      & all credits at this bank paid back duly & 0 \\
+      & critical account/ other credits existing (not at this bank) & 1 \\
+      & delay in paying off in the past & 2 \\
+      & existing credits paid back duly till now & 3 \\
+      & no credits taken/ all credits paid back duly & 4 \\
+    \midrule
+    \multirow{3}{*}{housing} 
+      & for free & 0 \\
+      & own & 1 \\
+      & rent & 2 \\
+    \midrule
+    \multirow{3}{*}{other\_installment\_plans} 
+      & bank & 0 \\
+      & none & 1 \\
+      & stores & 2 \\
+    \bottomrule
   \end{tabular}
 \end{table*}
 
@@ -357,7 +412,7 @@ status\_savings & status\_account , years\_employment & credit\_amount , month\_
 years\_employment & status\_account , status\_savings & credit\_amount , month\_duration & 0.199786 & 0.688622 & 0.688622 \\
 \hline
 \end{tabular}
-\end{table*}
+\end{table*} 
 
 \section*{Acknowledgments}
 \label{sec:acknowledgment}
