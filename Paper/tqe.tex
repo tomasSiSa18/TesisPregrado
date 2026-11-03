@@ -6,6 +6,9 @@
 \graphicspath{{imgs/}}
 \usepackage{textcomp}
 \usepackage{booktabs}
+\usepackage{physics}
+\newtheorem{definition}{Definition}[section]
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -44,16 +47,86 @@ Differential privacy, Quantum computing, Quantum noise
 
 En esta seccion se va a introducir todos los conceptos, ecuaciones y conocimiento necesario para entender el paper. Siguiendo el documento de propuesta propuesta vamos a tener:
 
-\subsection{Differential Privacy}
-
-Las definiciones clasicas de privacidad diferencial
-
 \subsection{Quantum Information and Computation}
 
-Las definiciones necesarias para entender el paper desde informacion cuantica: (estado, matriz de densidad, ruido cuantico, etc)
+\begin{definition}
+    Quantum states \cite{watrous_quantum_channels}: A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been place in correspondence with the classical state set $\Sigma$
+\end{definition}
+
+\begin{definition}
+    Mixed state \cite{zhou2017differential}: A mixed state of a quantum system is an ensemble
+
+    $$\mathbb{E} = \{(p_1,\ket{\psi_1}),...,(p_k,\ket{\psi_k})\}$$
+
+    which in turn can be represented by the density operator
+
+    $$\rho_{\mathbb{E}} = \sum_{i}p_i\ket{\psi_i}\bra{\psi_i}$$
+
+    thus the resulting $\rho_{\mathbb{E}}$ will be the density matrix representation of the ensemble.
+\end{definition}
+
+\begin{definition}
+    Quantum Channel \cite{watrous_quantum_channels}: A quantum channel describes a linear mapping over density matrices. 
+\end{definition}
+
+Quantum channels are important as they are the generalization of an operation over a quantum state and in the case of this project we need to use operations such as the depolarizing channel which is defined thanks to this general definition.
+
+\begin{definition}
+  \label{def:trace_distance}
+    Trace distance \cite{zhou2017differential}: It is the distance between two density operators and it is defined by:
+
+    $$\tau(\rho, \sigma) = \frac{1}{2}Tr\abs{\rho - \sigma}$$
+
+    where $Tr(x)$ is the trace of the density matrix $x$
+\end{definition}
+
+\begin{definition}
+    Quantum measurement \cite{zhou2017differential}: It is the way to extract information from a quantum system. Mathematically, a measurement is modelled as a set of matrices $M = \{K_m\}$ with the condition of 
+
+    $$\sum_m K^{\dagger}_{m}K_{m} = I$$
+
+    with $I$ being the identity of the density operator (i.e for a qubit $I = 2\times2$ identity matrix)
+
+\end{definition}
+
+When talking about quantum differential privacy below it won't really matter what the quantum state collapses into. Given this liberty we can define a POVM (Positive Operator-Valued Measure) which is a simplification over the measurement where we get a set of matrices $M = \{M_m\}$ with $M_m = K^{\dagger}_{m}K_{m}$ $\forall m$ this is possible since we only care about the probabilities and so $p_m = Tr(K_{m} \rho K^{\dagger}_{m}) = Tr(M_m\rho)$
+
+\begin{definition}
+    Quantum noise \cite{zhou2017differential}: It is an inherent physical process that occurs on the quantum state that causes it to change in some way.
+\end{definition}
+
+For the purposes of this investigation we are interested in three types of noise: General amplitude damping, Phase-amplitude damping and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. However for this proposal it is only necessary to note that these processes will randomize the quantum state by a certain degree. 
+
+\subsection{Differential Privacy}
+
+\begin{definition}
+    ($\epsilon$, $\delta$)-Differential privacy \cite{dwork2014algorithmic}. A randomized algorithm $\mathcal{M}$ will provide ($\epsilon$, $\delta$)-Differential privacy (henceforth ($\epsilon$, $\delta$)-DP) if for any two outputs on two different databases D and D' differing by at most one record, and for all possible outputs $A$:
+
+    $$Pr[\mathcal{M}(D) \in A] \leq e^{\epsilon}Pr[\mathcal{M}(D') \in A] + \delta$$
+\end{definition}
+
 \subsection{Quantum Differential Privacy}
 
-Las definiciones de la privacidad diferencial cuantica y las de los algoritmos del paper de Zing para encontrar epsilon (dPD, PD)
+\begin{definition}
+    (Quantum differential privacy \cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = {M_m}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
+
+    $$Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta$$
+\end{definition}
+
+There are many ways to obtain that epsilon in theory however Zhou and Ying proposed the following algorithm to obtain a quantity called proportional distance which can help obtain $\epsilon$.
+
+\begin{definition}
+    (Proportional Distance \cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$, their proportional distance is defined as:
+
+    $$PD(\rho, \sigma) = \sup_{\{M_m\}, m} \max\left(\ln\frac{q_m}{p_m}, \ln\frac{p_m}{q_m}\right)$$
+
+    where the supremum is over all POVMs $\{M_m\}$ and all possible outcomes $m$,
+
+    $$p_m \equiv Tr[\rho M_m], \quad q_m \equiv Tr[\sigma M_m]$$
+
+    are the probabilities of obtaining outcome $m$ when the measurement is performed on $\rho$, $\sigma$, respectively, and we make the conventions $\frac{0}{0} = 1$, $\frac{1}{0} = +\infty$, $\ln 0 = -\infty$, $\ln{+\infty} = +\infty$.
+\end{definition}
+
 
 
 \section{Related Work}
@@ -125,13 +198,54 @@ As the reader can observe in Table~\ref{tab:phik} the selection took 10 out of t
 \subsection{Encoding of classical variables into quantum}
 \label{subsec:encoding_variables}
 
-La explicación de la metodologia de codificación de variables categoricas y númericas en qubits y los tradeoff que este proceso conlleva.
+Having chosen a reduced set of variables from the dataset (10 from the original 20), the next step was to encode the classical information from each variable into qubits which could be used in the quantum simulation. For this it is important to note that the variables were divided into two groups each with their own encoding:
+
+\subsubsection{Categorical Variables}
+
+These are categorical variables whose categories do not follow a particular order. An example for this is the variable $\texttt{collateral}$ which has four categories (none, real estate, car, and savings agreement/life insurance). As the reader can observe these categories don't follow a specific order as there is no way to tell if say a car is better or goes after real estate or none.
+
+The proposed encoding for these types of variables is given by Definition~\ref{def:encoding_categorical}
+
+\begin{definition}
+ \label{def:encoding_categorical} 
+  (Method for encoding categorical variables)
+  For a categorical variable with $K$ categories of category $c$ and an angle $\phi = \frac{2\pi c}{K}$ the resulting encoded qubit $\ket{\psi}$ is given by the equation
+
+  $$\ket{\psi} = RZ(\phi)H\ket{0}$$
+\end{definition}
+
+
+This encoding ends up with a qubit state in one of $K$ equally distributed points across the equator of the Bloch Sphere. Since the resulting qubit state is pure and thus has a length equal to the radius of the Bloch sphere (i.e 1) $\tau$ from Definition~\ref{def:trace_distance} between any two states that result from this encoding becomes $\tau = \sin(\frac{\Delta}{2})$ with $\Delta$ being the angle between the two states. This method assures then that $\tau$ between two categories is at least $\sin(\frac{\pi}{K})$. What this means in theory is that the privacy in the local setting won't change the final $\epsilon$ as regardless of the labels given to any category, the angle between the labels themselves might change but the possible angles between different categories will remain the same. However, what this encoding doesn't prevent is the fact that different categories can have different proportions. Depending on the labels given to each category than can impact the distance $\tau$ between the dataset and that same dataset without a person included, which, as will be explained in Section~\ref{sec:finding_epsilon} is crucial when computing $\epsilon_{exp}$ and $\epsilon_{theo}$ which can lead to different results. In Appendix~\ref{ap:label_categorical} we compiled the $c$ value given to the variable's categories.
+
+\subsubsection{Numerical and ordinal variables}
+
+These are variables which do follow a specific order and that order should be taken into account in order to preserve characteristics that might be inherent to them. An example of these variables is $\texttt{month\_duration}$ which explains the loan's duration in months. A loan that goes for 4 months is clearly smaller than that of a loan that goes for 72, thus it is important to preserve that order.
+
+The selected method to encode these variables is Dense Angle Encoding \cite{ibm_encoding}
+
+\begin{definition}
+  
+  Method for encoding numerical and ordinal variables: For a pair of angles $\theta$ and $\phi$ the resulting dense angle encoding is
+  
+  $$\ket{\psi} = RZ(\phi)RY(\theta)\ket{0}$$
+
+\end{definition}
+
+The angles $\theta$ and $\phi$ are the normalization of the values of each variable from $0$ to $\pi$.
+
+As the reader can observe thanks to dense angle encoding we can actually reduce the number of qubits neccesary for encoding the full 10 variables to 8 which helps reduce the computational toll the resulting qubits take overall. 
+
+The question that remained however was, which variables were going to be encoded togheter? To answer this question we first created all 15 possible arrangements of the 5 numerical and ordinal variables into two pairs and a single variable. Then, we once again used the PhiK method to analyze the correlation between each pair of variables which is documented in Annex~\ref{tab:phik_numerical_ordinal}. From this small investigation it was concluded that the combination of variables that yielded the smallest correlation in the worst case was \texttt{status\_account} as the lone variable \texttt{status\_savings} and \texttt{month\_duration} as the first pair and \texttt{years\_employment} and \texttt{credit\_amount} as the second pair.
+
+With the pairing concluded the next thing to tackle was the issue with the global phase that could be induced in this encoding. The problem lies in the fact that if we normalize the variable from $0$ to $\pi$ then there is a change that the initial RY leaves the value at either pole of the sphere, which in turn would make the RZ gate useless loosing the information of the second variable. The solution was to make the variables which use the RY gate and then a RZ gate be divided into bins of equal sizing. That way we assured that no matter the value of the first variable in either pair the second variable won't be lost to a global phase.
+
 
 \subsection{Noise parameters selection for each noise mechanism}
 
 Un pequeño parrafo que sustente porque se utilizaron los parametros de ruido dado (i.e p = 0.5, gamma = 0.5 etc) esto basicamente hace referencia al paper de Zhou.
 
 \section{Finding the experimental privacy budget}
+\label{sec:finding_epsilon}
 \subsection{Central Setting}
 
 La explicacion del experimento central, es basicamente puesto en texto la presentacion de semana 8
@@ -149,6 +263,7 @@ La explicación de la medicion de las variables categoricas como forma de mostra
 \label{sec:experimental_results}
 
 \subsection{Finding the experimental privacy budget}
+
 \subsubsection{Central Setting}
 
 Resultados del experimento central
@@ -199,6 +314,49 @@ Tambien el analisis de los resultados de los mismos y que implicaciones tienen e
     \texttt{other\_installment\_plans} & Categorical & Whether the client has other installment plans \\
     \bottomrule
   \end{tabular}
+\end{table*}
+
+\section{Description of label assigned to each categorical variable}
+\label{ap:label_categorical}
+
+\begin{table*}[!t]
+  \centering
+  \caption{Assignment of the label given to each categorical variable's category}
+  \label{tab:label_categorical}
+  \begin{tabular}{llp{0.5\textwidth}}
+    \toprule
+    Variable & Category & Label \\
+    
+  \end{tabular}
+\end{table*}
+
+\section{$\phi_{K}$ correlation for all combinations of numerical and ordinal variables}
+
+\begin{table*}[htbp]
+\centering
+\caption{Comparison of Variable Pairs and PhiK Metrics}
+\label{tab:phik_numerical_ordinal}
+\begin{tabular}{llrrrl}
+\hline
+\textbf{alone} & \textbf{first\_pair} & \textbf{second\_pair} & \textbf{PhiK\_FP} & \textbf{PhiK\_SP} & \textbf{Worst\_PhiK} \\
+\hline
+status\_account & status\_savings , month\_duration & years\_employment , credit\_amount & 0.000000 & 0.043490 & 0.043490 \\
+credit\_amount & status\_account , years\_employment & status\_savings , month\_duration & 0.087513 & 0.000000 & 0.087513 \\
+status\_savings & status\_account , month\_duration & years\_employment , credit\_amount & 0.090516 & 0.043490 & 0.090516 \\
+status\_account & status\_savings , credit\_amount & years\_employment , month\_duration & 0.092004 & 0.064720 & 0.092004 \\
+years\_employment & status\_account , month\_duration & status\_savings , credit\_amount & 0.090516 & 0.092004 & 0.092004 \\
+month\_duration & status\_account , years\_employment & status\_savings , credit\_amount & 0.087513 & 0.092004 & 0.092004 \\
+status\_savings & status\_account , credit\_amount & years\_employment , month\_duration & 0.114109 & 0.064720 & 0.114109 \\
+years\_employment & status\_account , credit\_amount & status\_savings , month\_duration & 0.114109 & 0.000000 & 0.114109 \\
+credit\_amount & status\_account , month\_duration & status\_savings , years\_employment & 0.090516 & 0.149811 & 0.149811 \\
+month\_duration & status\_account , credit\_amount & status\_savings , years\_employment & 0.114109 & 0.149811 & 0.149811 \\
+credit\_amount & status\_account , status\_savings & years\_employment , month\_duration & 0.199786 & 0.064720 & 0.199786 \\
+month\_duration & status\_account , status\_savings & years\_employment , credit\_amount & 0.199786 & 0.043490 & 0.199786 \\
+status\_account & status\_savings , years\_employment & credit\_amount , month\_duration & 0.149811 & 0.688622 & 0.688622 \\
+status\_savings & status\_account , years\_employment & credit\_amount , month\_duration & 0.087513 & 0.688622 & 0.688622 \\
+years\_employment & status\_account , status\_savings & credit\_amount , month\_duration & 0.199786 & 0.688622 & 0.688622 \\
+\hline
+\end{tabular}
 \end{table*}
 
 \section*{Acknowledgments}
