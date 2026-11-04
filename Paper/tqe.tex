@@ -404,11 +404,25 @@ As the reader can observe thanks to dense angle encoding we can actually reduce 
   \label{fig:quantum_encoding_circuit}
 \end{figure}
 
-\subsection{Noise parameters selection for each noise mechanism}
-
-Un pequeño parrafo que sustente porque se utilizaron los parametros de ruido dado (i.e p = 0.5, gamma = 0.5 etc) esto basicamente hace referencia al paper de Zhou.
-
 \section{Finding the experimental privacy budget}
+
+Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters choosen for all the different mechanisms mentioned in Section~\ref{sec:background} these are compiled in Table~\ref{tab:noise_params}. All of these parameters are just that, parameters, so the selection was made mainly as a way to lock the reproducibility of the experiments and abide by the restrictions imposed on Theorem~\ref{thm:epsilon_pad} and Theorem~\ref{thm:epsilon_pad}. Further more due to the nature of the PAD mechanism it was important to choose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP.
+
+\begin{table}[!t]
+  \centering
+  \caption{Description of the selected variables.}
+  \label{tab:noise_params}
+  \begin{tabular}{llp{0.5\textwidth}}
+    \toprule
+    Mechanism & Parameters\\
+    \midrule
+    DEP & p = 0.5 \\
+    GAD & $\eta = 0.5$, $\gamma = 0.5$ \\
+    PAD & $\eta = 0.5$, $\gamma = 0.5$, $\lambda = 0.25$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \label{sec:finding_epsilon}
 \subsection{Central Setting}
 
