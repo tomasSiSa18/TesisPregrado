@@ -1,3 +1,4 @@
+\let\texyear\year % ieeeaccess.cls redefines \year, which breaks TikZ (quantikz)
 \documentclass{ieeeaccess}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
@@ -8,6 +9,29 @@
 \usepackage{booktabs}
 \usepackage{physics}
 \usepackage{multirow}
+\let\accessyear\year \let\year\texyear
+\usepackage{quantikz}
+\let\year\accessyear
+\definecolor{accessblue}{cmyk}{1,0.3,0,0.2} % class defines it as a spot color, which xcolor (loaded by TikZ) can't use
+\definecolor{greycolor}{cmyk}{0,0,0,.8}
+\def\xfigwd{0pt} % class captions expect \xfigwd, normally set only by its \Figure macro
+\def\headerlogo{}\def\headerlogoall{} % university draft: no journal logo in the header
+% university draft: footer shows only the page number, title block drops the history/DOI lines
+\usepackage{etoolbox}
+\makeatletter
+\let\accessps@headings\ps@headings
+\def\ps@headings{\accessps@headings
+  \def\@oddfoot{\hfill\raisebox{8pt}{\footerpagefont\thepage}}%
+  \def\@evenfoot{\raisebox{8pt}{\footerpagefont\thepage}\hfill}}
+\let\accessps@titlepage\ps@titlepage
+\def\ps@titlepage{\accessps@titlepage
+  \def\@oddhead{}\def\@evenhead{}%
+  \def\@oddfoot{\hfill\raisebox{3pt}{\footerpagefont\thepage}}%
+  \def\@evenfoot{\raisebox{3pt}{\footerpagefont\thepage}\hfill}}
+\pagestyle{headings}
+\patchcmd{\@maketitle}{{\vss\historyfont\@history\vss}\vspace*{2mm}\par}{}{}{}
+\patchcmd{\@maketitle}{{\vss\doifont Digital Object Identifier\space\@doi\vss}\vspace*{7.4mm}\par}{}{}{}
+\makeatother
 
 \newtheorem{definition}{Definition}[section]
 
@@ -25,8 +49,8 @@
 \address[3]{Department of Industrial Engineering, Universidad de los Andes, Bogotá D.C, Colombia (email: jf.perez33@uniandes.edu.co)}
 
 \markboth
-{Author \headeretal: Preparation of Papers for IEEE Transactions on Quantum Engineering}
-{Author \headeretal: Preparation of Papers for IEEE Transactions on Quantum Engineering}
+{Sierra Sanchez \headeretal: A study of experimental privacy budget quantification in quantum differential privacy simulations}
+{Sierra Sanchez \headeretal: A study of experimental privacy budget quantification in quantum differential privacy simulations}
 
 \begin{abstract}
 150-250 palabras
@@ -112,7 +136,7 @@ When talking about quantum differential privacy below it won't really matter wha
     Quantum noise \cite{zhou2017differential}: It is an inherent physical process that occurs on the quantum state that causes it to change in some way.
 \end{definition}
 
-For the purposes of this investigation we are interested in three types of noise: General amplitude damping, Phase-amplitude damping and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. However for this proposal it is only necessary to note that these processes will randomize the quantum state by a certain degree. 
+For the purposes of this investigation we are interested in three types of noise: General amplitude damping, Phase-amplitude damping and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. However for this proposal it is only necessary to note that these processes will randomize the quantum state by a certain degree.  
 
 \subsection{Differential Privacy}
 
@@ -148,8 +172,16 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
 
 \section{Related Work}
 \label{sec:related_work}
+It was important to figure out what the current investigative and academic situation was with regards to the fields of quantum information and computation and differential privacy. For this an investigation was made in which different databases were searched and analized to find out the amount of papers that covered the topics mentioned before. The investigation found 61 relevant papers that focused on the topics and the specific distributions of each one are compiled in Figure~\ref{fig:state_of_qdp}.  
 
-El estado del arte muy similar a la propuesta donde se establece cual es el entorno de investigacion de la privacidad diferencial cuantica. En especial sobre la privacidad diferencial usando el ruido de decoherencia que es la forma que la estamos aplicando en el paper.
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[width=\textwidth]{state_of_qdp.png}
+    \caption{State of the art of quantum differential privacy. (own elaboration, based on the literature review described above)}
+    \label{fig:state_of_qdp}
+\end{figure*}
+
+As shown in Figure~\ref{fig:state_of_qdp} the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the project could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. \cite{yang2023improved} in which an extended analysis was made to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. And finally in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
 
 \section{Data Processing and Analysis}
 \label{sec:data_processing_and_analysis}
@@ -239,26 +271,52 @@ This method assures then that $\tau$ between two categories is at least $\sin(\f
 
 \subsubsection{Numerical and ordinal variables}
 
-These are variables which do follow a specific order and that order should be taken into account in order to preserve characteristics that might be inherent to them. An example of these variables is $\texttt{month\_duration}$ which explains the loan's duration in months. A loan that goes for 4 months is clearly smaller than that of a loan that goes for 72, thus it is important to preserve that order.
+These are variables which are either ranges of an amount (ordinal) or numerical. An example of these variables is $\texttt{month\_duration}$ which explains the loan's duration in months. A loan that goes for 4 months is clearly smaller than that of a loan that goes for 72, thus it is important to preserve that order. The encoding method which we believed would be able to preserve this order was Dense angle encoding \cite{ibm_encoding}.
 
-The selected method to encode these variables is Dense Angle Encoding \cite{ibm_encoding}
+The question that remained however was, which variables were going to be encoded together? To answer this question we first created all 15 possible arrangements of the 5 numerical and ordinal variables into two pairs and a single variable. Then, we once again used the PhiK method to analyze the correlation between each pair of variables which is documented in Annex~\ref{tab:phik_numerical_ordinal}. From this small investigation it was concluded that the combination of variables that yielded the smallest correlation in the worst case was \texttt{status\_account} as the lone variable \texttt{status\_savings} and \texttt{month\_duration} as the first pair and \texttt{years\_employment} and \texttt{credit\_amount} as the second pair. We chose this combination as the smallest correlation between the worst pair would imply that the qubits carried as little redundant information within each qubit as possible.
+
+Before the encoding definition we defined a function \textbf{minmax}(a, min, max) which normalizes a value $a \in [min , max]$ to $a \in [0 , \pi ]$ 
 
 \begin{definition}
-  
-  Method for encoding numerical and ordinal variables: For a pair of angles $\theta$ and $\phi$ the resulting dense angle encoding is
-  
-  $$\ket{\psi} = RZ(\phi)RY(\theta)\ket{0}$$
+  Given a value $a \in [min , max]$ with $min, max \in \mathbb{R}$ we define the function \textbf{minmax} as
+
+  $$\textbf{minmax(min, max, a)} = \pi \times \frac{a-min}{max-min}$$
 
 \end{definition}
 
-The angles $\theta$ and $\phi$ are the normalization of the values of each variable from $0$ to $\pi$.
+With this definition the method to encode numerical and ordinal variables is Dense Angle Encoding \cite{ibm_encoding} which we define as:
 
-As the reader can observe thanks to dense angle encoding we can actually reduce the number of qubits neccesary for encoding the full 10 variables to 8 which helps reduce the computational toll the resulting qubits take overall. 
+\begin{definition}
+  (Method for encoding numerical and ordinal variables with dense angle encoding). For an ordinal variable with $K$ categories and a numerical variable with range $[n_{Min}, n_{Max}]$. When encoding the ordinal variable with label $c \in \{0, \dots, K-1\}$ and a numerical variable with value $n \in [n_{Min}, n_{Max}]$. The resulting dense angle encoding is given by
+  
+  \begin{align*}
+    \ket{\psi} &= RZ(\phi)RY(\theta)\ket{0},\\
+    \text{with } \phi &= minmax(n_{Min}, n_{Max}, n),\\
+    \text{and } \theta &= minmax(-0.5, K - 0.5, c)
+  \end{align*}
 
-The question that remained however was, which variables were going to be encoded togheter? To answer this question we first created all 15 possible arrangements of the 5 numerical and ordinal variables into two pairs and a single variable. Then, we once again used the PhiK method to analyze the correlation between each pair of variables which is documented in Annex~\ref{tab:phik_numerical_ordinal}. From this small investigation it was concluded that the combination of variables that yielded the smallest correlation in the worst case was \texttt{status\_account} as the lone variable \texttt{status\_savings} and \texttt{month\_duration} as the first pair and \texttt{years\_employment} and \texttt{credit\_amount} as the second pair.
+\end{definition}
 
-With the pairing concluded the next thing to tackle was the issue with the global phase that could be induced in this encoding. The problem lies in the fact that if we normalize the variable from $0$ to $\pi$ then there is a change that the initial RY leaves the value at either pole of the sphere, which in turn would make the RZ gate useless loosing the information of the second variable. The solution was to make the variables which use the RY gate and then a RZ gate be divided into bins of equal sizing. That way we assured that no matter the value of the first variable in either pair the second variable won't be lost to a global phase.
+Because of pairing selection the definition only needs to cover the case for when an ordinal variable is paired with a numerical one. Thus it is important to note that the reason \textbf{minmax} is calibrated from $-0.5$ to $K-0.5$ for the ordinal variables is so that the resulting categories cannot reach the poles which would result in the gate RZ being invalidated. This calibration then sets each category into the middle of a bin of length $\frac{\pi}{K}$. An exception to this definition is the lone variable \texttt{status\_account} since it doesn't need this calibration as there is no RZ gate to invalidate so the range for \textbf{minmax} is $[0, K-1]$ 
 
+As the reader can observe thanks to dense angle encoding we can actually reduce the number of qubits necessary for encoding the full 10 variables to 8 which helps reduce the computational toll from the original $2^{10}\times 2^{10}$ matrices with 1:1 qubit to  variables encoding to $2^{8}\times 2^{8}$ matrices. The final quantum circuit can be seen on Figure~\ref{fig:quantum_encoding_circuit}
+
+\begin{figure}[!t]
+  \centering
+  \footnotesize
+  \begin{quantikz}[row sep=0.25cm, column sep=0.3cm]
+    \lstick{\texttt{collateral}~~$\ket{0}$}              & \gate{H}          & \gate{R_Z(2\pi c/K)} & \qw \\
+    \lstick{\texttt{purpose}~~$\ket{0}$}                 & \gate{H}          & \gate{R_Z(2\pi c/K)} & \qw \\
+    \lstick{\texttt{credit\_history}~~$\ket{0}$}         & \gate{H}          & \gate{R_Z(2\pi c/K)} & \qw \\
+    \lstick{\texttt{housing}~~$\ket{0}$}                 & \gate{H}          & \gate{R_Z(2\pi c/K)} & \qw \\
+    \lstick{\texttt{other\_installment\_plans}~~$\ket{0}$} & \gate{H}        & \gate{R_Z(2\pi c/K)} & \qw \\
+    \lstick{\shortstack[r]{\texttt{status\_savings}\\\texttt{month\_duration}}~~$\ket{0}$}     & \gate{R_Y(\theta)} & \gate{R_Z(\phi)} & \qw \\
+    \lstick{\shortstack[r]{\texttt{years\_employment}\\\texttt{credit\_amount}}~~$\ket{0}$}    & \gate{R_Y(\theta)} & \gate{R_Z(\phi)} & \qw \\
+    \lstick{\texttt{status\_account}~~$\ket{0}$}         & \gate{R_Y(\theta)} & \qw                 & \qw
+  \end{quantikz}
+  \caption{8 qubit encoding circuit for the 10 selected variables}
+  \label{fig:quantum_encoding_circuit}
+\end{figure}
 
 \subsection{Noise parameters selection for each noise mechanism}
 
@@ -309,18 +367,21 @@ Que limitaciones tiene el experimento (analisis conjunto)
 
 Tambien el analisis de los resultados de los mismos y que implicaciones tienen estos frente a la privacidad diferencial tanto clasica como cuantica.
 
+\clearpage
 \appendices
 
 \section{Description of selected features}
 \label{ap:selected_features}
 
+Table~\ref{tab:variables_descriptions} compiles the name, type and description that were selected to use in the quantum experiments.
+
 \begin{table*}[!t]
   \centering
-  \caption{Description of the selected features.}
-  \label{tab:feature_descriptions}
+  \caption{Description of the selected variables.}
+  \label{tab:variables_descriptions}
   \begin{tabular}{llp{0.5\textwidth}}
     \toprule
-    Feature & Type & Description \\
+    Name & Type & Description \\
     \midrule
     \texttt{status\_account}           & Categorical (Ordinal)     & Status of the existing checking account, in DM (Deutsche Marks) \\
     \texttt{month\_duration}           & Numerical   & Duration of the credit in months \\
@@ -339,21 +400,23 @@ Tambien el analisis de los resultados de los mismos y que implicaciones tienen e
 \section{Description of label assigned to each categorical variable}
 \label{ap:label_categorical}
 
+Table~\ref{tab:label_categorical} compiles labels given to each variable using the scikit-learn python library.
+
 \begin{table*}[!t]
   \centering
   \caption{Assignment of the label given to each categorical variable's category}
   \label{tab:label_categorical}
-  \begin{tabular}{llp{0.5\textwidth}}
+  \begin{tabular}{llc}
     \toprule
     Variable & Category & Label \\
     \midrule
-    \multirow{4}{*}{collateral} 
+    \multirow{4}{*}{\texttt{collateral}}
       & car & 0 \\
       & none & 1 \\
       & real estate & 2 \\
       & savings agreement/life insurance & 3 \\
     \midrule
-    \multirow{10}{*}{purpose} 
+    \multirow{10}{*}{\texttt{purpose}}
       & business & 0 \\
       & car (new) & 1 \\
       & car (used) & 2 \\
@@ -365,19 +428,19 @@ Tambien el analisis de los resultados de los mismos y que implicaciones tienen e
       & repairs & 8 \\
       & retraining & 9 \\
     \midrule
-    \multirow{5}{*}{credit\_history} 
+    \multirow{5}{*}{\texttt{credit\_history}}
       & all credits at this bank paid back duly & 0 \\
       & critical account/ other credits existing (not at this bank) & 1 \\
       & delay in paying off in the past & 2 \\
       & existing credits paid back duly till now & 3 \\
       & no credits taken/ all credits paid back duly & 4 \\
     \midrule
-    \multirow{3}{*}{housing} 
+    \multirow{3}{*}{\texttt{housing}}
       & for free & 0 \\
       & own & 1 \\
       & rent & 2 \\
     \midrule
-    \multirow{3}{*}{other\_installment\_plans} 
+    \multirow{3}{*}{\texttt{other\_installment\_plans}}
       & bank & 0 \\
       & none & 1 \\
       & stores & 2 \\
@@ -387,33 +450,40 @@ Tambien el analisis de los resultados de los mismos y que implicaciones tienen e
 
 \section{$\phi_{K}$ correlation for all combinations of numerical and ordinal variables}
 
+Table~\ref{tab:phik_numerical_ordinal} shows the results for all the $\phi_{K}$ correlation between all combinations of numerical and ordinal variables, as well as their worst correlation between the two pairs.
+
 \begin{table*}[htbp]
 \centering
 \caption{Comparison of Variable Pairs and PhiK Metrics}
 \label{tab:phik_numerical_ordinal}
-\begin{tabular}{llrrrl}
-\hline
-\textbf{alone} & \textbf{first\_pair} & \textbf{second\_pair} & \textbf{PhiK\_FP} & \textbf{PhiK\_SP} & \textbf{Worst\_PhiK} \\
-\hline
-status\_account & status\_savings , month\_duration & years\_employment , credit\_amount & 0.000000 & 0.043490 & 0.043490 \\
-credit\_amount & status\_account , years\_employment & status\_savings , month\_duration & 0.087513 & 0.000000 & 0.087513 \\
-status\_savings & status\_account , month\_duration & years\_employment , credit\_amount & 0.090516 & 0.043490 & 0.090516 \\
-status\_account & status\_savings , credit\_amount & years\_employment , month\_duration & 0.092004 & 0.064720 & 0.092004 \\
-years\_employment & status\_account , month\_duration & status\_savings , credit\_amount & 0.090516 & 0.092004 & 0.092004 \\
-month\_duration & status\_account , years\_employment & status\_savings , credit\_amount & 0.087513 & 0.092004 & 0.092004 \\
-status\_savings & status\_account , credit\_amount & years\_employment , month\_duration & 0.114109 & 0.064720 & 0.114109 \\
-years\_employment & status\_account , credit\_amount & status\_savings , month\_duration & 0.114109 & 0.000000 & 0.114109 \\
-credit\_amount & status\_account , month\_duration & status\_savings , years\_employment & 0.090516 & 0.149811 & 0.149811 \\
-month\_duration & status\_account , credit\_amount & status\_savings , years\_employment & 0.114109 & 0.149811 & 0.149811 \\
-credit\_amount & status\_account , status\_savings & years\_employment , month\_duration & 0.199786 & 0.064720 & 0.199786 \\
-month\_duration & status\_account , status\_savings & years\_employment , credit\_amount & 0.199786 & 0.043490 & 0.199786 \\
-status\_account & status\_savings , years\_employment & credit\_amount , month\_duration & 0.149811 & 0.688622 & 0.688622 \\
-status\_savings & status\_account , years\_employment & credit\_amount , month\_duration & 0.087513 & 0.688622 & 0.688622 \\
-years\_employment & status\_account , status\_savings & credit\_amount , month\_duration & 0.199786 & 0.688622 & 0.688622 \\
-\hline
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lllrrr@{}}
+\toprule
+ & & & \multicolumn{3}{c}{$\phi_K$} \\
+\cmidrule(l){4-6}
+Alone & First pair & Second pair & First pair & Second pair & Worst \\
+\midrule
+\texttt{status\_account} & \texttt{status\_savings}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.000 & 0.043 & 0.043 \\
+\texttt{credit\_amount} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{month\_duration} & 0.088 & 0.000 & 0.088 \\
+\texttt{status\_savings} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.091 & 0.043 & 0.091 \\
+\texttt{status\_account} & \texttt{status\_savings}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.092 & 0.065 & 0.092 \\
+\texttt{years\_employment} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.091 & 0.092 & 0.092 \\
+\texttt{month\_duration} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.088 & 0.092 & 0.092 \\
+\texttt{status\_savings} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.114 & 0.065 & 0.114 \\
+\texttt{years\_employment} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{month\_duration} & 0.114 & 0.000 & 0.114 \\
+\texttt{credit\_amount} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{years\_employment} & 0.091 & 0.150 & 0.150 \\
+\texttt{month\_duration} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{years\_employment} & 0.114 & 0.150 & 0.150 \\
+\texttt{credit\_amount} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{month\_duration} & 0.200 & 0.065 & 0.200 \\
+\texttt{month\_duration} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.200 & 0.043 & 0.200 \\
+\texttt{status\_account} & \texttt{status\_savings}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.150 & 0.689 & 0.689 \\
+\texttt{status\_savings} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.088 & 0.689 & 0.689 \\
+\texttt{years\_employment} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.200 & 0.689 & 0.689 \\
+\bottomrule
 \end{tabular}
-\end{table*} 
+\end{table*}
 
+\clearpage
+\raggedbottom
 \section*{Acknowledgments}
 \label{sec:acknowledgment}
 
@@ -423,7 +493,6 @@ Esta seccion solo para la tesis o no se si pueda ir en el paper tambien
 \bibliography{references}
 
 
-
-\EOD
+\EOD 
 
 \end{document}
