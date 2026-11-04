@@ -34,6 +34,7 @@
 \makeatother
 
 \newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -136,7 +137,70 @@ When talking about quantum differential privacy below it won't really matter wha
     Quantum noise \cite{zhou2017differential}: It is an inherent physical process that occurs on the quantum state that causes it to change in some way.
 \end{definition}
 
-For the purposes of this investigation we are interested in three types of noise: General amplitude damping, Phase-amplitude damping and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. However for this proposal it is only necessary to note that these processes will randomize the quantum state by a certain degree.  
+For the purposes of this investigation we are interested in three types of noise: Generalized amplitude damping, Phase-amplitude damping and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. The definition of each noise channel are
+
+\begin{definition}
+    (Generalized amplitude damping mechanism\cite{zhou2017differential}). The generalized amplitude channel operation ($\mathcal{E}_{GAD}$) over a density matrix $\rho$ is defined as 
+
+    $$\mathcal{E}_{GAD}(\rho) = \sum_{k = 0}^{3}E_{k}\rho E_{k}^{\dagger}$$
+
+    in the 2-dimensional hilbert space
+
+    where
+
+    \begin{align*}
+      E_0 &= \sqrt{\eta}\begin{pmatrix} 1 & 0 \\ 0 & \sqrt{1-\gamma} \end{pmatrix}, &
+      E_1 &= \sqrt{\eta}\begin{pmatrix} 0 & \sqrt{\gamma} \\ 0 & 0 \end{pmatrix}, \\
+      E_2 &= \sqrt{1-\eta}\begin{pmatrix} \sqrt{1-\gamma} & 0 \\ 0 & 1 \end{pmatrix}, &
+      E_3 &= \sqrt{1-\eta}\begin{pmatrix} 0 & 0 \\ \sqrt{\gamma} & 0 \end{pmatrix}
+    \end{align*}
+
+    and $\eta$ and $\gamma$ are two parameters
+
+    and the Generalized amplitude damping mechanism ($\mathcal{M}_{GAD}$) is the mapping
+
+    $$ \rho \mapsto \mathcal{M}_{GAD} = \mathcal{E}_{GAD}(\rho)$$ 
+
+\end{definition}
+
+\begin{definition}
+    (Phase damping channel\cite{zhou2017differential}). The phase damping channel operation ($\mathcal{E}_{PD}$) over a density matrix $\rho$ is defined as
+
+    $$\mathcal{E}_{PD}(\rho) = \sum_{k = 0}^{1}E_{k}\rho E_{k}^{\dagger}$$
+
+    in the 2-dimensional hilbert space 
+
+    where
+
+    \[
+      E_0 = \begin{pmatrix} 1 & 0 \\ 0 & \sqrt{1-\lambda} \end{pmatrix}, \quad
+      E_1 = \begin{pmatrix} 0 & 0 \\ 0 & \sqrt{\lambda} \end{pmatrix}
+    \]
+
+    with $\lambda$ being a parameter
+
+\end{definition}
+
+\begin{definition}
+    (Phase-amplitude channel mechanism \cite{zhou2017differential}). The phase-amplitude channel operation ($\mathcal{E}_{PAD}$) over a density matrix $\rho$ in the hilbert space $\mathcal{H}_2$ is defined as the mapping
+
+    $$\rho \mapsto \mathcal{M}_{PAD} = \mathcal{E}_{GAD}(\mathcal{E}_{PD}(\rho))$$
+    
+\end{definition}
+
+\begin{definition}
+  (Depolarizing channel mechanism\cite{zhou2017differential}). The depolarizing channel operation ($\mathcal{E}_{DEP}$) over a density matrix $\rho$ with a hilbert space dimension $D$ and $I$ the identity matrix of $D \times D$ can be represented by the quantum operation
+  
+  $$\mathcal{E}_{DEP}(\rho) = \frac{pI}{D} + (1-p)\rho$$
+
+  where p is the probability parameter
+
+  and the Depolarizing mechanism ($\mathcal{M}_{DEP}$) is the mapping
+
+  $$ \rho \mapsto \mathcal{M}_{DEP} = \mathcal{E}_{DEP}(\rho)$$
+
+\end{definition}
+
 
 \subsection{Differential Privacy}
 
@@ -149,7 +213,7 @@ For the purposes of this investigation we are interested in three types of noise
 \subsection{Quantum Differential Privacy}
 
 \begin{definition}
-    (Quantum differential privacy \cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = {M_m}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
+    (Quantum differential privacy \cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
 
     $$Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta$$
 \end{definition}
@@ -168,7 +232,29 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
     are the probabilities of obtaining outcome $m$ when the measurement is performed on $\rho$, $\sigma$, respectively, and we make the conventions $\frac{0}{0} = 1$, $\frac{1}{0} = +\infty$, $\ln 0 = -\infty$, $\ln{+\infty} = +\infty$.
 \end{definition}
 
+\begin{theorem}[Zhou and Ying~\cite{zhou2017differential}]
+    Let $\eta = 0.5$ in $\mathcal{E}_{GAD}$. For all inputs $\rho$ and $\sigma$ with $\tau(\rho, \sigma) \leq d$, the generalized amplitude damping mechanism $\mathcal{M}_{GAD}$ provides $\epsilon$-differential privacy where
+    \[
+      \epsilon = \ln\left[1 + \frac{2d\sqrt{1-\gamma}}{1-\sqrt{1-\gamma}}\right]
+    \]
+    \label{thm:epsilon_gad}
+\end{theorem}
 
+\begin{theorem}[Zhou and Ying~\cite{zhou2017differential}]
+    Let $\eta = 0.5$ in $\mathcal{E}_{GAD}$. If the parameter $\gamma$ in $\mathcal{E}_{GAD}$ and $\lambda$ in $\mathcal{E}_{PD}$ satisfy $\lambda \leq \gamma$, then for all inputs $\rho$ and $\sigma$ such that $\tau(\rho, \sigma) \leq d$, the phase-amplitude damping mechanism $\mathcal{M}_{PAD}$ provides $\epsilon$-differential privacy where
+    \[
+      \epsilon = \ln\left[1 + \frac{2d\sqrt{1-\gamma}\sqrt{1-\lambda}}{1-\sqrt{1-\gamma}\sqrt{1-\lambda}}\right]
+    \]
+    \label{thm:epsilon_pad}
+\end{theorem}
+
+\begin{theorem}[Zhou and Ying~\cite{zhou2017differential}]
+    For all inputs $\rho$ and $\sigma$ such that $\tau(\rho, \sigma) \leq d$, the depolarizing mechanism $\mathcal{M}_{DEP}$ in the $D$-dimension Hilbert space provides $\epsilon$-differential privacy where
+    \[
+      \epsilon = \ln\left[1 + \frac{1-p}{p}\, dD\right]
+    \]
+    \label{thm:epsilon_dep}
+\end{theorem}
 
 \section{Related Work}
 \label{sec:related_work}
