@@ -30,7 +30,7 @@ for k in k_list:
         stateList.append(new_state)
     
     
-    experimentalEpsilon, theoreticalEpsilon, epsilonList, distanceList, distanceNoiseList, bestPair, delta_ang, max_angle = LocalEpsilonCategoricalExperiment(stateList, NoiseType.GAD, {"p": 0.5, "g": 0.5, "l": 0.25}, 0.001, 1e-9)
+    experimentalEpsilon, theoreticalEpsilon, epsilonList, distanceList, distanceNoiseList, bestPair, delta_ang, max_angle = LocalEpsilonCategoricalExperiment(stateList, NoiseType.PAD, {"p": 0.5, "g": 0.5, "l": 0.25}, 0.001, 1e-9)
     
     results.append([f"{k}", f"{bestPair[0]}, {bestPair[1]}", f"{max_angle}", f"{experimentalEpsilon}", f"{theoreticalEpsilon}"])
 
