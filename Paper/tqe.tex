@@ -7,6 +7,7 @@
 \graphicspath{{imgs/}}
 \usepackage{textcomp}
 \usepackage{booktabs}
+\usepackage{float} % [H] placement: float stays exactly where it is in the source
 \usepackage{physics}
 \usepackage{multirow}
 \let\accessyear\year \let\year\texyear
@@ -405,25 +406,25 @@ As the reader can observe thanks to dense angle encoding we can actually reduce 
 \end{figure}
 
 \section{Finding the experimental privacy budget}
+\label{sec:finding_epsilon}
 
-Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters choosen for all the different mechanisms mentioned in Section~\ref{sec:background} these are compiled in Table~\ref{tab:noise_params}. All of these parameters are just that, parameters, so the selection was made mainly as a way to lock the reproducibility of the experiments and abide by the restrictions imposed on Theorem~\ref{thm:epsilon_pad} and Theorem~\ref{thm:epsilon_pad}. Further more due to the nature of the PAD mechanism it was important to choose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP.
+Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters chosen for all the different mechanisms mentioned in Section~\ref{sec:background} these are compiled in Table~\ref{tab:noise_params}. All of these parameters are just that, parameters, so the selection was made mainly as a way to: firstly excecute all the tests with the same parameters and thus allow for a comparison between experiments. And second, in abide by the restrictions imposed on $\lambda$ and $ \gamma$ by Theorem~\ref{thm:epsilon_pad} and for $\eta$ in Theorem~\ref{thm:epsilon_gad}. Further more due to the nature of the PAD mechanism it was important to chose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP.
 
-\begin{table}[!t]
+\begin{table}[H]
   \centering
-  \caption{Description of the selected variables.}
+  \caption{Selection of parameters for noise mechanisms}
   \label{tab:noise_params}
-  \begin{tabular}{llp{0.5\textwidth}}
+  \begin{tabular}{ll}
     \toprule
     Mechanism & Parameters\\
     \midrule
-    DEP & p = 0.5 \\
-    GAD & $\eta = 0.5$, $\gamma = 0.5$ \\
-    PAD & $\eta = 0.5$, $\gamma = 0.5$, $\lambda = 0.25$ \\
+    Depolarizing & $p = 0.5$ \\
+    Generalized Amplitude Damping & $\eta = 0.5$, $\gamma = 0.5$ \\
+    Phase-Amplitude Damping & $\eta = 0.5$, $\gamma = 0.5$, $\lambda = 0.25$ \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\label{sec:finding_epsilon}
 \subsection{Central Setting}
 
 La explicacion del experimento central, es basicamente puesto en texto la presentacion de semana 8
