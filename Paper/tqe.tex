@@ -3,6 +3,7 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
+\usepackage{algorithm}
 \usepackage{graphicx}
 \graphicspath{{imgs/}}
 \usepackage{textcomp}
@@ -36,6 +37,8 @@
 
 \newtheorem{definition}{Definition}[section]
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{corollary}{Corollary}[section]
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -45,10 +48,10 @@
 
 \title{A study of experimental privacy budget quantification in quantum differential privacy simulations}
 \author{\uppercase{Tomas Sierra Sanchez}\authorrefmark{1},
-\uppercase{Valérie E. Gauthier-Umaña\authorrefmark{2}, and Juan F. Perez Bernal}.\authorrefmark{3}}
+\uppercase{Valérie E. Gauthier-Umaña\authorrefmark{2}, and Juan F. Perez}.\authorrefmark{3}}
 \address[1]{Department of Systems and Computing Engineering, Universidad de los Andes  (email: t.sierras@uniandes.edu.co)}
-\address[2]{Department of Systems and Computing Engineering, Universidad de los Andes, Bogotá D.C, Colombia (email: ve.gauthier@uniandes.edu.co)}
-\address[3]{Department of Industrial Engineering, Universidad de los Andes, Bogotá D.C, Colombia (email: jf.perez33@uniandes.edu.co)}
+\address[2]{Advisor, Department of Systems and Computing Engineering, Universidad de los Andes, Bogotá D.C, Colombia}
+\address[3]{Advisor, Department of Industrial Engineering, Universidad de los Andes, Bogotá D.C, Colombia (email: jf.perez33@uniandes.edu.co)}
 
 \markboth
 {Sierra Sanchez \headeretal: A study of experimental privacy budget quantification in quantum differential privacy simulations}
@@ -124,7 +127,7 @@ another useful form to define the trace distance in terms of vectors by Nielsen 
 
 
 \begin{definition}
-    Quantum measurement \cite{zhou2017differential}: It is the way to extract information from a quantum system. Mathematically, a measurement is modelled as a set of matrices $M = \{K_m\}$ with the condition of 
+    Quantum measurement \cite{zhou2017differential}: It is the way to extract information from a quantum system. Mathematically, a measurement is modelled as a set of matrices $M = \{K_m\}$ with the condition of
 
     $$\sum_m K^{\dagger}_{m}K_{m} = I$$
 
@@ -233,6 +236,49 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
     are the probabilities of obtaining outcome $m$ when the measurement is performed on $\rho$, $\sigma$, respectively, and we make the conventions $\frac{0}{0} = 1$, $\frac{1}{0} = +\infty$, $\ln 0 = -\infty$, $\ln{+\infty} = +\infty$.
 \end{definition}
 
+% Zhou and Ying's Eq. (6) writes only the rho/sigma direction; the max over both directions is what matches the definition above (their proof covers each direction)
+\begin{proposition}[Zhou and Ying~\cite{zhou2017differential}]
+    \[
+      \mathrm{PD}(\rho, \sigma) = \sup_{\ket{\psi}} \max\left(\ln\frac{\bra{\psi}\rho\ket{\psi}}{\bra{\psi}\sigma\ket{\psi}}, \ln\frac{\bra{\psi}\sigma\ket{\psi}}{\bra{\psi}\rho\ket{\psi}}\right)
+    \]
+    where the supremum is over all pure states.
+    \label{prop:pd_pure_states}
+\end{proposition}
+
+\begin{definition}
+    ($\mathrm{dPD}$ \cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$,
+    \[
+      \mathrm{dPD}(\rho, \sigma) = \sup_{0 < M \leq I} \ln\frac{\Tr(M\rho)}{\Tr(M\sigma)}
+    \]
+    so that
+    \begin{equation}
+      \mathrm{PD}(\rho, \sigma) = \max\left(\mathrm{dPD}(\rho, \sigma), \mathrm{dPD}(\sigma, \rho)\right).
+      \label{eq:pd_dpd}
+    \end{equation}
+    \label{def:dpd}
+\end{definition}
+
+% Zhou and Ying's Algorithm 2. Symbols renamed to avoid clashes with this paper:
+% theta -> acc (theta is the encoding angle), eta -> A (GAD parameter), lambda -> r_prev (PD parameter),
+% max -> r, diagonal matrix D -> Lambda (D is the dimension), dimension n -> D
+\begin{algorithm}[!t]
+  \caption{Computing $\mathrm{dPD}$ \cite{zhou2017differential}}
+  \label{alg:dpd}
+  \begin{algorithmic}[1]
+    \REQUIRE density operators $\rho$, $\sigma$ in a Hilbert space $\mathcal{H}$ of dimension $D$; desired accuracy $\mathit{acc}$
+    \STATE $r \gets 0$, $r_{prev} \gets \infty$
+    \WHILE{$|r - r_{prev}| > \mathit{acc}$}
+      \STATE $r_{prev} \gets r$
+      \STATE $r \gets \max_i (\rho_{ii}/\sigma_{ii})$
+      \STATE $A \gets \rho - r\,\sigma$
+      \STATE Diagonalize $A = P \Lambda P^{\dagger}$ ($P$ unitary, $\Lambda$ diagonal)
+      \STATE $\rho \gets P^{\dagger} \rho P$
+      \STATE $\sigma \gets P^{\dagger} \sigma P$
+    \ENDWHILE
+    \RETURN $\ln r$
+  \end{algorithmic}
+\end{algorithm}
+
 \begin{theorem}[Zhou and Ying~\cite{zhou2017differential}]
     Let $\eta = 0.5$ in $\mathcal{E}_{GAD}$. For all inputs $\rho$ and $\sigma$ with $\tau(\rho, \sigma) \leq d$, the generalized amplitude damping mechanism $\mathcal{M}_{GAD}$ provides $\epsilon$-differential privacy where
     \[
@@ -256,6 +302,19 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
     \]
     \label{thm:epsilon_dep}
 \end{theorem}
+
+\begin{corollary}[Zhou and Ying~\cite{zhou2017differential}]
+    For each $i \in [k]$, let $\mathcal{M}_i : \mathcal{H}_i \to \mathcal{H}'_i$ be an $\epsilon_i$-differentially private quantum algorithm, and assume that they are independent. Their combination
+    \[
+      \mathcal{M}_{[k]} : \bigotimes_{i=1}^{k} \mathcal{H}_i \to \bigotimes_{i=1}^{k} \mathcal{H}'_i
+    \]
+    is defined by
+    \[
+      \mathcal{M}_{[k]}(\rho_1, \rho_2, \dots, \rho_k) = \bigotimes_{i=1}^{k} \mathcal{M}_i(\rho_i)
+    \]
+    for all density operators $\rho_i$ in $\mathcal{H}_i$. Then $\mathcal{M}_{[k]}$ is $\left(\sum_{i=1}^{k} \epsilon_i\right)$-differentially private.
+    \label{cor:composition}
+\end{corollary}
 
 \section{Related Work}
 \label{sec:related_work}
@@ -426,6 +485,51 @@ Before starting with the in-depth explanation of each experiment it is important
 \end{table}
 
 \subsection{Central Setting}
+
+\begin{figure*}[!t]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+      font=\small,
+      box/.style={draw, rounded corners, align=center, text width=3.3cm, minimum height=1.2cm},
+      arr/.style={-latex, thick}
+    ]
+    % loop frames
+    \draw[rounded corners] (0.3,1.5) rectangle (18.9,-7.4);
+    \node[anchor=north west] at (0.45,1.45) {For each column $k = 0, \dots, 7$};
+    \draw[rounded corners] (0.5,-1.0) rectangle (18.7,-5.1);
+    \node[anchor=south west] at (0.65,-5.05) {For each row $j = 0, \dots, n-1$};
+    % full dataset
+    \node[box] (enc) at (2.6,0) {\textbf{Encode}\\ $\{\rho_i^k\}_{i=0}^{n-1}$};
+    \node[box] (agg) at (6.5,0) {\textbf{Aggregate}\\ $\rho^k = \frac{1}{n}\sum_{i}\rho_i^k$};
+    \node[box] (noise) at (10.8,0) {\textbf{Noise}\\ $\rho^{\prime k} = \mathcal{M}(\rho^k)$};
+    % neighboring dataset
+    \node[box] (rem) at (2.6,-3.0) {\textbf{Remove row $j$}\\ $\{\rho_i^k\}_{i \neq j}$};
+    \node[box] (aggs) at (6.5,-3.0) {\textbf{Aggregate}\\ $\sigma_j^k = \frac{1}{n-1}\sum_{i \neq j}\rho_i^k$};
+    \node[box] (noises) at (10.8,-2.3) {\textbf{Noise}\\ $\sigma_j^{\prime k} = \mathcal{M}(\sigma_j^k)$};
+    \node[box] (dist) at (10.8,-4.1) {\textbf{Trace distance}\\ $d_j = \tau(\rho^k, \sigma_j^k)$};
+    \node[box, text width=4.9cm] (epsj) at (15.9,-2.3) {\textbf{Experimental $\epsilon$ for row $j$} (Alg.~\ref{alg:dpd})\\ $\epsilon_{exp}^{j} = \max\big(\mathrm{dPD}(\rho^{\prime k}, \sigma_j^{\prime k}),$\\ $\mathrm{dPD}(\sigma_j^{\prime k}, \rho^{\prime k})\big)$};
+    % per-column results
+    \node[box, text width=4.1cm] (theo) at (10.8,-6.5) {\textbf{Theoretical $\epsilon$ for column $k$}\\ $\epsilon_{theo}^{k} = \epsilon_{theo}(\max_j d_j)$};
+    \node[box, text width=4.1cm] (expk) at (15.9,-6.5) {\textbf{Experimental $\epsilon$ for column $k$}\\ $\epsilon_{exp}^{k} = \max_j \epsilon_{exp}^{j}$};
+    % arrows
+    \draw[arr] (enc) -- (agg);
+    \draw[arr] (agg) -- (noise);
+    \draw[arr] (enc) -- (rem);
+    \draw[arr] (rem) -- (aggs);
+    \draw[arr] (noise.east) -| (epsj.north);
+    \draw[arr] (noises) -- (epsj);
+    \draw[arr] (aggs.east) -- (8.45,-3.0) |- (noises.west);
+    \draw[arr] (8.45,-3.0) |- ([yshift=-0.25cm]dist.west);
+    \fill (8.65,0) circle (1.5pt);
+    \draw[arr] (8.65,0) |- ([yshift=0.25cm]dist.west);
+    \draw[arr] (dist) -- (theo);
+    \draw[arr] (epsj) -- (expk);
+  \end{tikzpicture}%
+  }
+  \caption{}
+  \label{fig:central_setting}
+\end{figure*}
 
 La explicacion del experimento central, es basicamente puesto en texto la presentacion de semana 8
 
