@@ -77,9 +77,11 @@ Differential privacy, Quantum computing, Quantum noise
 \section{Background}
 \label{sec:background}
 
-En esta seccion se va a introducir todos los conceptos, ecuaciones y conocimiento necesario para entender el paper. Siguiendo el documento de propuesta propuesta vamos a tener:
+On this section we will introduce all the background information that the reader might find usefull for understanding the investigation. This secction wwill introduce concepts, equations and any other piece of information to this end.
 
 \subsection{Quantum Information and Computation}
+
+
 
 \begin{definition}
     (Quantum states~\cite{watrous_quantum_channels}). A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been placed in correspondence with the classical state set $\Sigma$.
@@ -267,6 +269,8 @@ For the purpose of our investigation we were interested in the two settings that
 
 
 \subsection{Quantum Differential Privacy}
+
+When it comes to quantum differential privacy, the promise that this mechasims are trying to offer to the data holder will not change. However the means that will be taken to reach that promise will. In \cite{zhou2017differential} They define the concept of quantum differential privacy as follows
 
 \begin{definition}
     (Quantum differential privacy~\cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:

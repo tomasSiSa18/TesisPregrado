@@ -21,6 +21,20 @@ def ApplyNoise(density_matrix, noise: NoiseType, noiseParams):
         
     return result
 
+def getStretchNoise(noise: NoiseType, noiseParams: dict):
+    
+    result = None
+    
+    if(noise == NoiseType.DEP):
+        result = 1 - noiseParams["p"]
+    elif(noise == NoiseType.GAD):
+        result = math.sqrt(1-noiseParams["g"])
+    elif(noise == NoiseType.PAD):
+        result = math.sqrt(1-noiseParams["g"])* math.sqrt(1-noiseParams["l"])
+        
+    return result
+    
+
 def DepolarizingNoise(density_matrix: np.ndarray, p: float):
         
     D = density_matrix.shape[0]

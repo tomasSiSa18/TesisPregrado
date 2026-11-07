@@ -4,12 +4,13 @@ import pandas as pd
 import pennylane as qp
 import matplotlib.pyplot as plt
 import numpy as np
-from tabulate import tabulate
 
-from Experiment.classes import NoiseMechanisms, ProportionalDistance, QuantProcesses, Encoder
-from tqdm import tqdm
+from Experiment.classes import NoiseMechanisms, Encoder
 
-probability = 0.5
+from Experiment.classes.NoiseMechanisms import NoiseType, getStretchNoise
+
+noises = {NoiseType.DEP: {"p": 0.5}, NoiseType.PAD: {"p": 0.5, "g": 0.5, "l": 0.25}, NoiseType.GAD: {"p": 0.5, "g": 0.5}}
+
 device = qp.device('default.mixed', wires=1)
 
 dataset = pd.read_csv("/Users/tomassierra/Documents/Universidad/Tesis/TesisPregrado/ProcesamientoDataset/german_credit_data_for_quant.csv")
@@ -22,62 +23,90 @@ data_encoded = Encoder.encodeAllSingle(dataset, circuit, 0)
 plusState = np.array([1/math.sqrt(2), 1/math.sqrt(2)])
 plusStateTranspose = plusState.conj().T
 
-probs_normal = []
-probs_dep = []
+probsNormal = []
 
-for rho in data_encoded:
-    
-    probs_normal.append((plusStateTranspose @ rho @ plusState).real)
-    
-    rho_dep = NoiseMechanisms.DepolarizingNoise(rho, probability)
-    
-    probs_dep.append((plusStateTranspose @ rho_dep @ plusState).real)
-
-probs_normal = np.array(probs_normal)
-probs_dep = np.array(probs_dep)
-
-print(np.unique(np.round(probs_normal, decimals=5)))
-print(np.unique(np.round(probs_dep, 5)))
 
 randomGen = np.random.default_rng(8)
 
 uniforms = randomGen.random(size=(2000, 1000))
 
-comparison_normal = uniforms < probs_normal
-comparison_dep = uniforms < probs_dep
+for rho in data_encoded:
+        
+    probsNormal.append((plusStateTranspose @ rho @ plusState).real)
+probsNormal = np.array(probsNormal)
+comparison_normal = uniforms < probsNormal
 
-avg_normal_values = np.mean(comparison_normal, axis=1)
-avg_dep_values = np.mean(comparison_dep, axis=1)
-avg_dep_corrected_values = (avg_dep_values - (probability/2))/(1-probability)
-
-avg_normal = np.mean(avg_normal_values)
-avg_dep = np.mean(avg_dep_values)
-avd_dep_corrected = np.mean(avg_dep_corrected_values)
-
-std_normal = np.std(avg_normal_values)
-std_dep = np.std(avg_dep_values)
-std_corrected = std_dep/(1-probability)
-
-print(f"F_B: Media: {avg_normal} Std: {std_normal}")
-print(f"F_C: Media: {avg_dep} Std: {std_dep}")
-print(f"F^: Media: {avd_dep_corrected} Std: {std_corrected}")
+correctedByNoise = {}
+for noiseMechanisms in noises.keys():
+    probsNoise = []
     
-FB = avg_normal_values
-FH = avg_dep_corrected_values
+    noiseParams = noises[noiseMechanisms]
+    for rho in data_encoded:
+         
+        rhoNoise = NoiseMechanisms.ApplyNoise(rho, noiseMechanisms, noiseParams)
+        
+        probsNoise.append((plusStateTranspose @ rhoNoise @ plusState).real)
+        
+    probsNoise = np.array(probsNoise)
 
-ancho = 0.004
-bordes = np.arange(min(FB.min(), FH.min()) - 0.0005, max(FB.max(), FH.max()) + ancho, ancho)
+    #print(np.unique(np.round(probsNormal, decimals=5)))
+    #print(np.unique(np.round(probsNoise, 5)))
 
-plt.hist(FB, bins=bordes, alpha=0.6, label=f"{r"${F}_{B}$"} (sin ruido), std = {FB.std():.3f}")
-plt.hist(FH, bins=bordes, alpha=0.6, label=f"{r"$\hat{F} $"} (con ruido, corregido), std = {FH.std():.3f}")
-plt.axvline(0.45, color="black", linestyle="--", label="valor esperado sin ruido (0.45)")
+    
+    comparison = uniforms < probsNoise
 
-plt.xlabel("Fracción de + en cada mundo")
-plt.ylabel("Cantidad de mundos")
-plt.ylim(0, 400)
-plt.title(f"Comparativo entre {r"${F}_{B}$"} y {r"$\hat{F}$"} para {r"$\varepsilon$"} = 1.10 y p = 0.5 en varios mundos")
-plt.legend(loc="upper left")
-plt.savefig("Experiment/imgs/histograma_collateral")
+    avgNormalValues = np.mean(comparison_normal, axis=1)
+    
+    avgNoiseValues = np.mean(comparison, axis=1)
+    
+    avgNoiseCorrectedValues = 1/2 + ((avgNoiseValues - (1/2))/getStretchNoise(noiseMechanisms, noiseParams))
+
+    avgNormal = np.mean(avgNormalValues)
+    
+    avgNoise = np.mean(avgNoiseValues)
+    
+    avgNoiseCorrected = np.mean(avgNoiseCorrectedValues)
+
+    stdNormal = np.std(avgNormalValues)
+    stdNoise = np.std(avgNoiseValues)
+    stdCorrected = np.std(avgNoiseCorrectedValues)
+
+    print(f"F_B: Media: {avgNormal} Std: {stdNormal}")
+    print(f"F_C: Media: {avgNoise} Std: {stdNoise}")
+    print(f"F^: Media: {avgNoiseCorrected} Std: {stdCorrected}")
+        
+    correctedByNoise[noiseMechanisms] = avgNoiseCorrectedValues
+
+names = {NoiseType.DEP: "Depolarizing", NoiseType.PAD: "Phase-amplitude damping", NoiseType.GAD: "Generalized amplitude damping"}
+
+FB = avgNormalValues
+allValues = np.concatenate([FB, *correctedByNoise.values()])
+
+# F can only take the values k/n, so F_hat lives on a grid of spacing (1/n)/s.
+# Bin edges are placed on that grid (binSteps grid points per bin) for every histogram;
+# otherwise bins catch 2 or 3 grid points alternately and the histogram looks like a comb.
+n = uniforms.shape[1]
+binSteps = 4
+edgesF = (np.arange(-1, n // binSteps + 2) * binSteps - 0.5) / n
+
+fig, axes = plt.subplots(len(correctedByNoise), 1, sharex=True, sharey=True, figsize=(6.4, 7.5))
+
+for ax, (noiseMechanism, FH) in zip(axes, correctedByNoise.items()):
+    s = getStretchNoise(noiseMechanism, noises[noiseMechanism])
+    epsilon = math.log((1 + s) / (1 - s))
+    edgesHat = 1/2 + (edgesF - 1/2) / s
+
+    ax.hist(FB, bins=edgesF, density=True, color="grey", alpha=0.5, label=rf"$F_B$ (no noise), std = {FB.std():.4f}")
+    ax.hist(FH, bins=edgesHat, density=True, color="C0", alpha=0.6, label=rf"$\hat{{F}}$ (noisy, corrected), std = {FH.std():.4f}")
+    ax.axvline(probsNormal.mean(), color="black", linestyle="--", linewidth=1, label=rf"$E[F_B]$ = {probsNormal.mean():.3f}")
+    ax.set_title(rf"{names[noiseMechanism]}: $s$ = {s:.3f}, $\varepsilon$ = {epsilon:.2f}", fontsize=10)
+    ax.legend(loc="upper left", fontsize=8)
+
+axes[0].set_xlim(allValues.min(), allValues.max())
+fig.supxlabel("Fraction of + outcomes per repetition")
+fig.supylabel("Density of repetitions")
+fig.tight_layout()
+fig.savefig("Experiment/imgs/histograma_collateral_mecanismos.png", dpi=300)
 plt.show()
 
     
