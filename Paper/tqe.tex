@@ -263,7 +263,8 @@ In order to bound this $\epsilon$, Dwork \& Roth define the privacy loss of an o
 
 This privacy loss will be used throughout this investigation to experimentally measure $\epsilon_{exp}$ in the experiments explained in Section~\ref{sec:finding_epsilon}.
 
-For the purpose of our investigation we were interested in the two settings that can be thought of when working on differential privacy: \textbf{Central} and \textbf{Local}. The central setting (or curator model, as explained in~\cite{dwork2014algorithmic}) explains how a trusted third party receives the unprotected data, applies differentially private methods to the data and releases the outputs computed from them. On the other hand, the local setting explains how each individual is responsible for applying a differentially private method to their own data and then releases the result.
+For the purpose of our investigation we were interested in the two settings that can be thought of when working on differential privacy: \textbf{Central} and \textbf{Local}. The central setting (or curator model, as explained in~\cite{dwork2014algorithmic} and by Definition~\ref{def:dp}) explains how a trusted third party receives the unprotected data, applies differentially private methods to the data and releases the outputs computed from them. On the other hand, the local setting explains how each individual is responsible for applying a differentially private method to their own data and then releases the result. In other words, it is a special case of Definition~\ref{def:dp} where the database is of size 1~\cite[Def.~12.1]{dwork2014algorithmic}.
+
 
 \subsection{Quantum Differential Privacy}
 
@@ -402,6 +403,7 @@ In the original dataset created by Professor Hofmann, all non-numerical variable
 A simple data analysis concluded that the dataset did not have any problem in terms of completeness (as all rows include all 21 variables) or uniqueness (as there is no instance of an exact duplicate). For these reasons, no special cleaning procedure was done prior to variable selection.
 
 \subsection{Variable selection with PhiK}
+\label{subsec:var_selection}
 
 In order to hold quantum data for a dataset that contains 1000 instances of 20 variables each, the simulation would, at a maximum, store 1000 $2^n \times 2^n$ density matrices, with $n$ being the number of qubits used. This means that using the full 20 variables, one per qubit, would imply $2^{20} \times 2^{20} \approx 1.1 \times 10^{12}$ complex entries, and at 16 bytes each, that is about 16 TiB per matrix. It was decided that a correlation study over the target variable would be an adequate way to reduce this load. The reasons for this decision are: First, the investigation did not aim to produce a classifier and thus could use a smaller number of variables in the experiments. Second, the variables selected from a correlation study would be the most likely candidates to be chosen as significant by a classifier.
 
@@ -626,6 +628,9 @@ In the case of the depolarizing mechanism, we can actually modify the pipeline b
 
 \subsection{Local Setting}
 
+We have now considered an experiment where a trusted curator applies the noise to the data and releases the data. This experiment, however, tries to answer the question of what would happen if it were each individual person applying the noise, the local setting.
+
+In the central setting we defined neighbors as two aggregated density matrices, the one for the full 1000 $\rho$ rows and the leave-one-out $\sigma$. In this setting (inspired by~\cite[Def.~12.1]{dwork2014algorithmic} as mentioned in Section~\ref{sec:background}), however, since it is just one person at a time who is privatizing their data, it would not make sense to compare two different people as neighbors, as in reality what the attacker would want to know is ``what was person A's original category?''. With this idea, this experiment defines the neighbors as the possible states that each label is encoded into, and because of Definition~\ref{def:qdp} we can compare two states as neighbors by their trace distance $\tau$. This experiment, however, limits the variables we can encode. As mentioned in Subsection~\ref{subsec:encoding_variables} the numerical variables need to be normalized within the Bloch sphere with the minimum and maximum values of the variables. In the local setting a single person has no way to access that data and thus cannot encode it in that manner. With that limitation in mind, this setting calculates the $\epsilon$ for all the categorical variables and the sole variable \texttt{status\_account} since the other two ordinal variables are accompanied in the same qubit by a numerical variable and thus cannot be encoded independently. Figure~\ref{fig:local_setting} shows the pipeline for the local setting experiment.
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
@@ -634,20 +639,18 @@ In the case of the depolarizing mechanism, we can actually modify the pipeline b
       box/.style={draw, rounded corners, align=center, text width=5.6cm, minimum height=1.2cm},
       arr/.style={-latex, thick}
     ]
-    % loop frames (same width as Fig.~\ref{fig:central_setting}, so both figures share one scale)
-    \draw[rounded corners] (0.3,1.5) rectangle (18.9,-6.3);
-    \node[anchor=north west] at (0.45,1.45) {For each categorical variable with $K \in \{3, 4, 5, 10\}$ categories};
-    \draw[rounded corners] (0.5,-1.0) rectangle (18.7,-4.2);
-    \node[anchor=south west] at (0.65,-4.15) {For each pair $\{c, c'\}$, $c < c'$};
-    % all categories of the variable
-    \node[box] (enc) at (6.0,0) {\textbf{Encode all $K$ categories} (Def.~\ref{def:encoding_categorical})\\[3pt] $\{\rho_c\}_{c=0}^{K-1}$};
+    % pair-loop frame (same width as Fig.~\ref{fig:central_setting}, so both figures share one scale)
+    \draw[rounded corners] (0.3,-1.0) rectangle (18.9,-4.2);
+    \node[anchor=south west] at (0.45,-4.15) {For each pair $\{c, c'\}$, $c < c'$};
+    % all values of the variable
+    \node[box] (enc) at (6.0,0) {\textbf{Encode all $K$ values} (Sec.~\ref{subsec:encoding_variables})\\[3pt] $\{\rho_c\}_{c=0}^{K-1}$};
     \node[box] (noise) at (13.2,0) {\textbf{Noise}\\ $\rho^{\prime}_c = \mathcal{M}(\rho_c)$};
-    % pair of categories
+    % pair of values
     \node[box] (dist) at (6.0,-2.6) {\textbf{Trace distance}\\ $d_{cc'} = \tau(\rho_c, \rho_{c'})$};
     \node[box] (epsp) at (13.2,-2.6) {\textbf{Experimental $\epsilon$ for pair $\{c, c'\}$} (Alg.~\ref{alg:dpd})\\[2pt] $\epsilon_{exp}^{cc'} = \max\big(\mathrm{dPD}(\rho^{\prime}_c, \rho^{\prime}_{c'}),$\\ $\mathrm{dPD}(\rho^{\prime}_{c'}, \rho^{\prime}_c)\big)$};
-    % per-variable results
-    \node[box] (theo) at (6.0,-5.4) {\textbf{Theoretical $\epsilon$ for $K$}\\ $\epsilon_{theo}^{K} = \epsilon_{theo}(\max_{c,c'} d_{cc'})$};
-    \node[box] (expk) at (13.2,-5.4) {\textbf{Experimental $\epsilon$ for $K$}\\ $\epsilon_{exp}^{K} = \max_{c,c'} \epsilon_{exp}^{cc'}$};
+    % results for the variable
+    \node[box] (theo) at (6.0,-5.4) {\textbf{Theoretical $\epsilon$ of the variable}\\ $\epsilon_{theo}(\max_{c,c'} d_{cc'})$};
+    \node[box] (expk) at (13.2,-5.4) {\textbf{Experimental $\epsilon$ of the variable}\\ $\max_{c,c'} \epsilon_{exp}^{cc'}$};
     % arrows
     \draw[arr] (enc) -- (noise);
     \draw[arr] (enc) -- (dist);
@@ -656,11 +659,12 @@ In the case of the depolarizing mechanism, we can actually modify the pipeline b
     \draw[arr] (epsp) -- (expk);
   \end{tikzpicture}%
   }
-  \caption{} % TODO: your caption
+  \caption{Pipeline for the local setting experiment for finding $\epsilon$ for a categorical or ordinal variable} 
   \label{fig:local_setting}
 \end{figure*}
 
-La explicacion del experimento loca, es basicamente puesto en texto la presentacion de semana 10
+The experiment begins by defining two sets $\{\rho_c\}$ which are all the density matrices that result from encoding the $c$-th label and $\{\rho_c^{\prime}\}$ which is the set of all the density matrices $\rho_c$ that have been passed over the noise mechanism $\mathcal{M}$. Then, for each pair of labels $\{c, c^{\prime}\}, c < c^{\prime}$, we calculate both the trace distance between the original noiseless density matrices $\rho_c$ and $\rho_{c^{\prime}}$ and the $\epsilon_{exp}$ which is the same procedure as the central setting just with inputs $\rho_c^{\prime}$ and $\rho_{c^{\prime}}^{\prime}$. Then, at the end, we make the same search for the maximum $\epsilon_{theo}$ and $\epsilon_{exp}$ of all the analyzed pairs and that is the final result of the variable. 
+
 
 \section{Measurement and Classical release of categorical variables}
 
