@@ -39,6 +39,7 @@
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}{Proposition}[section]
 \newtheorem{corollary}{Corollary}[section]
+\newtheorem{lemma}{Lemma}[section]
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -81,74 +82,91 @@ En esta seccion se va a introducir todos los conceptos, ecuaciones y conocimient
 \subsection{Quantum Information and Computation}
 
 \begin{definition}
-    Quantum states \cite{watrous_quantum_channels}: A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been place in correspondence with the classical state set $\Sigma$
+    (Quantum states~\cite{watrous_quantum_channels}). A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been placed in correspondence with the classical state set $\Sigma$.
+    \label{def:quantum_state}
 \end{definition}
 
 \begin{definition}
-    Mixed state \cite{zhou2017differential}: A mixed state of a quantum system is an ensemble
+    (Mixed state~\cite{zhou2017differential}). A mixed state of a quantum system is an ensemble
 
-    $$\mathbb{E} = \{(p_1,\ket{\psi_1}),...,(p_k,\ket{\psi_k})\}$$
+    \[
+      \mathbb{E} = \{(p_1,\ket{\psi_1}),...,(p_k,\ket{\psi_k})\}
+    \]
 
     which in turn can be represented by the density operator
 
-    $$\rho_{\mathbb{E}} = \sum_{i}p_i\ket{\psi_i}\bra{\psi_i}$$
+    \[
+      \rho_{\mathbb{E}} = \sum_{i}p_i\ket{\psi_i}\bra{\psi_i}
+    \]
 
     thus the resulting $\rho_{\mathbb{E}}$ will be the density matrix representation of the ensemble.
+    \label{def:mixed_state}
 \end{definition}
 
 \begin{definition}
-    Quantum Channel \cite{watrous_quantum_channels}: A quantum channel describes a linear mapping over density matrices. 
+    (Quantum channel~\cite{watrous_quantum_channels}). A quantum channel describes a linear mapping over density matrices.
+    \label{def:quantum_channel}
 \end{definition}
 
-Quantum channels are important as they are the generalization of an operation over a quantum state and in the case of this project we need to use operations such as the depolarizing channel which is defined thanks to this general definition.
+Quantum channels are important as they are the generalization of an operation over a quantum state, and in the case of this project we need to use operations such as the depolarizing channel, which is defined thanks to this general definition.
 
 \begin{definition}
-    Bloch spehere \cite{watrous_quantum_channels}: The Bloch sphere is a useful geometrical representation for a single qubit. 
+    (Bloch sphere~\cite{watrous_quantum_channels}). The Bloch sphere is a useful geometrical representation for a single qubit.
+    \label{def:bloch_sphere}
 \end{definition}
 
 \begin{definition}
-  \label{def:trace_distance}
-    Trace distance \cite{zhou2017differential}: It is the distance between two density operators and it is defined by:
+    (Trace distance~\cite{zhou2017differential}). It is the distance between two density operators and it is defined by:
 
-    $$\tau(\rho, \sigma) = \frac{1}{2}Tr\abs{\rho - \sigma}$$
+    \[
+      \tau(\rho, \sigma) = \frac{1}{2}Tr\abs{\rho - \sigma}
+    \]
 
-    where $Tr(x)$ is the trace of the density matrix $x$
+    where $Tr(x)$ is the trace of the density matrix $x$.
+    \label{def:trace_distance}
 \end{definition}
 
-another useful form to define the trace distance in terms of vectors by Nielsen $\&$ Chuang \cite{Nielsen_Chuang_2010} is 
+Another useful form to define the trace distance in terms of vectors, by Nielsen \& Chuang~\cite{Nielsen_Chuang_2010}, is 
 
 \begin{definition}
-  \label{def:trace_distance_vector}
-    Trace distance \cite{Nielsen_Chuang_2010}: It is the distance between two qubit vectors $u$ and $v$ defined by:
+    (Trace distance~\cite{Nielsen_Chuang_2010}). It is the distance between two qubit vectors $u$ and $v$ defined by:
 
-    $$\tau(u, v) = \frac{1}{2}\norm{u - v}$$
+    \[
+      \tau(u, v) = \frac{1}{2}\norm{u - v}
+    \]
+    \label{def:trace_distance_vector}
 \end{definition}
 
 
 
 \begin{definition}
-    Quantum measurement \cite{zhou2017differential}: It is the way to extract information from a quantum system. Mathematically, a measurement is modelled as a set of matrices $M = \{K_m\}$ with the condition of
+    (Quantum measurement~\cite{zhou2017differential}). It is the way to extract information from a quantum system. Mathematically, a measurement is modeled as a set of matrices $M = \{K_m\}$ with the condition of
 
-    $$\sum_m K^{\dagger}_{m}K_{m} = I$$
+    \[
+      \sum_m K^{\dagger}_{m}K_{m} = I
+    \]
 
-    with $I$ being the identity of the density operator (i.e for a qubit $I = 2\times2$ identity matrix)
-
+    with $I$ being the identity of the density operator (i.e., for a qubit, $I$ is the $2\times2$ identity matrix).
+    \label{def:quantum_measurement}
 \end{definition}
 
-When talking about quantum differential privacy below it won't really matter what the quantum state collapses into. Given this liberty we can define a POVM (Positive Operator-Valued Measure) which is a simplification over the measurement where we get a set of matrices $M = \{M_m\}$ with $M_m = K^{\dagger}_{m}K_{m}$ $\forall m$ this is possible since we only care about the probabilities and so $p_m = Tr(K_{m} \rho K^{\dagger}_{m}) = Tr(M_m\rho)$
+When talking about quantum differential privacy below, it will not really matter what the quantum state collapses into. Given this liberty, we can define a POVM (Positive Operator-Valued Measure) which is a simplification over the measurement where we get a set of matrices $M = \{M_m\}$ with $M_m = K^{\dagger}_{m}K_{m}$ $\forall m$. This is possible since we only care about the probabilities, and so $p_m = Tr(K_{m} \rho K^{\dagger}_{m}) = Tr(M_m\rho)$.
 
 \begin{definition}
-    Quantum noise \cite{zhou2017differential}: It is an inherent physical process that occurs on the quantum state that causes it to change in some way.
+    (Quantum noise~\cite{zhou2017differential}). It is an inherent physical process that occurs on the quantum state that causes it to change in some way.
+    \label{def:quantum_noise}
 \end{definition}
 
-For the purposes of this investigation we are interested in three types of noise: Generalized amplitude damping, Phase-amplitude damping and Depolarizing noise. Each one of these types represent a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. The definition of each noise channel are
+For the purposes of this investigation we are interested in three types of noise: generalized amplitude damping, phase-amplitude damping and depolarizing noise. Each one of these types represents a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. The definitions of the noise channels are:
 
 \begin{definition}
-    (Generalized amplitude damping mechanism\cite{zhou2017differential}). The generalized amplitude channel operation ($\mathcal{E}_{GAD}$) over a density matrix $\rho$ is defined as 
+    (Generalized amplitude damping mechanism~\cite{zhou2017differential}). The generalized amplitude damping channel operation ($\mathcal{E}_{GAD}$) over a density matrix $\rho$ is defined as 
 
-    $$\mathcal{E}_{GAD}(\rho) = \sum_{k = 0}^{3}E_{k}\rho E_{k}^{\dagger}$$
+    \[
+      \mathcal{E}_{GAD}(\rho) = \sum_{k = 0}^{3}E_{k}\rho E_{k}^{\dagger}
+    \]
 
-    in the 2-dimensional hilbert space
+    in the 2-dimensional Hilbert space
 
     where
 
@@ -161,18 +179,22 @@ For the purposes of this investigation we are interested in three types of noise
 
     and $\eta$ and $\gamma$ are two parameters
 
-    and the Generalized amplitude damping mechanism ($\mathcal{M}_{GAD}$) is the mapping
+    and the generalized amplitude damping mechanism ($\mathcal{M}_{GAD}$) is the mapping
 
-    $$ \rho \mapsto \mathcal{M}_{GAD} = \mathcal{E}_{GAD}(\rho)$$ 
-
+    \[
+      \rho \mapsto \mathcal{M}_{GAD} = \mathcal{E}_{GAD}(\rho)
+    \]
+    \label{def:gad}
 \end{definition}
 
 \begin{definition}
-    (Phase damping channel\cite{zhou2017differential}). The phase damping channel operation ($\mathcal{E}_{PD}$) over a density matrix $\rho$ is defined as
+    (Phase damping channel~\cite{zhou2017differential}). The phase damping channel operation ($\mathcal{E}_{PD}$) over a density matrix $\rho$ is defined as
 
-    $$\mathcal{E}_{PD}(\rho) = \sum_{k = 0}^{1}E_{k}\rho E_{k}^{\dagger}$$
+    \[
+      \mathcal{E}_{PD}(\rho) = \sum_{k = 0}^{1}E_{k}\rho E_{k}^{\dagger}
+    \]
 
-    in the 2-dimensional hilbert space 
+    in the 2-dimensional Hilbert space 
 
     where
 
@@ -182,61 +204,99 @@ For the purposes of this investigation we are interested in three types of noise
     \]
 
     with $\lambda$ being a parameter
-
+    \label{def:phase_damping}
 \end{definition}
 
 \begin{definition}
-    (Phase-amplitude channel mechanism \cite{zhou2017differential}). The phase-amplitude channel operation ($\mathcal{E}_{PAD}$) over a density matrix $\rho$ in the hilbert space $\mathcal{H}_2$ is defined as the mapping
+    (Phase-amplitude damping mechanism~\cite{zhou2017differential}). The phase-amplitude damping channel operation ($\mathcal{E}_{PAD}$) over a density matrix $\rho$ in the Hilbert space $\mathcal{H}_2$ is defined as the mapping
 
-    $$\rho \mapsto \mathcal{M}_{PAD} = \mathcal{E}_{GAD}(\mathcal{E}_{PD}(\rho))$$
-    
+    \[
+      \rho \mapsto \mathcal{M}_{PAD} = \mathcal{E}_{GAD}(\mathcal{E}_{PD}(\rho))
+    \]
+    \label{def:pad}
 \end{definition}
 
 \begin{definition}
-  (Depolarizing channel mechanism\cite{zhou2017differential}). The depolarizing channel operation ($\mathcal{E}_{DEP}$) over a density matrix $\rho$ with a hilbert space dimension $D$ and $I$ the identity matrix of $D \times D$ can be represented by the quantum operation
+  (Depolarizing channel mechanism~\cite{zhou2017differential}). The depolarizing channel operation ($\mathcal{E}_{DEP}$) over a density matrix $\rho$ with a Hilbert space dimension $D$ and $I$ the $D \times D$ identity matrix can be represented by the quantum operation
   
-  $$\mathcal{E}_{DEP}(\rho) = \frac{pI}{D} + (1-p)\rho$$
+  \[
+    \mathcal{E}_{DEP}(\rho) = \frac{pI}{D} + (1-p)\rho
+  \]
 
-  where p is the probability parameter
+  where $p$ is the probability parameter
 
-  and the Depolarizing mechanism ($\mathcal{M}_{DEP}$) is the mapping
+  and the depolarizing mechanism ($\mathcal{M}_{DEP}$) is the mapping
 
-  $$ \rho \mapsto \mathcal{M}_{DEP} = \mathcal{E}_{DEP}(\rho)$$
-
+  \[
+    \rho \mapsto \mathcal{M}_{DEP} = \mathcal{E}_{DEP}(\rho)
+  \]
+  \label{def:dep}
 \end{definition}
 
 
 \subsection{Differential Privacy}
 
-\begin{definition}
-    ($\epsilon$, $\delta$)-Differential privacy \cite{dwork2014algorithmic}. A randomized algorithm $\mathcal{M}$ will provide ($\epsilon$, $\delta$)-Differential privacy (henceforth ($\epsilon$, $\delta$)-DP) if for any two outputs on two different databases D and D' differing by at most one record, and for all possible outputs $A$:
+Differential privacy describes a promise that is made by a data holder or curator to a data subject: ``You will not be affected, adversely or otherwise, by allowing your data to be used in any study or analysis, no matter what other studies, data sets, or information sources, are available''~\cite{dwork2014algorithmic}. In other words, differential privacy is the process that either a data curator or a data holder must do in order to ensure that a single individual's data cannot be extracted from the study as a whole. In \textit{The Algorithmic Foundations of Differential Privacy}, Dwork \& Roth formalize differential privacy as
 
-    $$Pr[\mathcal{M}(D) \in A] \leq e^{\epsilon}Pr[\mathcal{M}(D') \in A] + \delta$$
+\begin{definition}
+    (Differential privacy~\cite[Def.~2.4]{dwork2014algorithmic}). A randomized algorithm $\mathcal{M}$ with domain $\mathbb{N}^{|\mathcal{X}|}$ is $(\epsilon, \delta)$-differentially private if for all $S \subseteq \mathrm{Range}(\mathcal{M})$ and for all $x, y \in \mathbb{N}^{|\mathcal{X}|}$ such that $\|x - y\|_1 \leq 1$:
+    \[
+      \Pr[\mathcal{M}(x) \in S] \leq \exp(\epsilon) \Pr[\mathcal{M}(y) \in S] + \delta,
+    \]
+    where the probability space is over the coin flips of the mechanism $\mathcal{M}$. If $\delta = 0$, we say that $\mathcal{M}$ is $\epsilon$-differentially private.
+
+    Here a database $x \in \mathbb{N}^{|\mathcal{X}|}$ is represented by its histogram over the universe $\mathcal{X}$ of possible rows ($x_i$ is the number of rows of type $i$), and $\|x - y\|_1 = \sum_{i} |x_i - y_i|$ is the number of records in which $x$ and $y$ differ \cite[Def.~2.3]{dwork2014algorithmic}.
+    \label{def:dp}
 \end{definition}
+
+In our investigation we are interested in the privacy guarantee $\epsilon$ when $\delta = 0$. The value of $\epsilon$ can be interpreted as a privacy guarantee from the differentially private algorithm as it implies that adding or removing one record (i.e., adding or removing a participant) in the dataset $x$ will change the probability of any output by a factor of at most $e^{\epsilon}$. In other words, an adversary who wants to analyze the dataset will not be able to reliably tell if a person was included in the dataset or not.
+
+In order to bound this $\epsilon$, Dwork \& Roth define the privacy loss of an output as:
+
+\begin{definition}
+    (Privacy loss~\cite[Sec.~2.3]{dwork2014algorithmic}). Let $x, y \in \mathbb{N}^{|\mathcal{X}|}$ be adjacent databases ($\|x - y\|_1 \leq 1$) and let $\xi$ be an output of $\mathcal{M}$. The privacy loss incurred by observing $\xi$ is
+    \[
+      \mathcal{L}^{(\xi)}_{\mathcal{M}(x) \| \mathcal{M}(y)} = \ln\left(\frac{\Pr[\mathcal{M}(x) = \xi]}{\Pr[\mathcal{M}(y) = \xi]}\right)
+    \]
+    \label{def:privacy_loss}
+\end{definition}
+
+This privacy loss will be used throughout this investigation to experimentally measure $\epsilon_{exp}$ in the experiments explained in Section~\ref{sec:finding_epsilon}.
+
+For the purpose of our investigation we were interested in the two settings that can be thought of when working on differential privacy: \textbf{Central} and \textbf{Local}. The central setting (or curator model, as explained in~\cite{dwork2014algorithmic}) explains how a trusted third party receives the unprotected data, applies differentially private methods to the data and releases the outputs computed from them. On the other hand, the local setting explains how each individual is responsible for applying a differentially private method to their own data and then releases the result.
 
 \subsection{Quantum Differential Privacy}
 
 \begin{definition}
-    (Quantum differential privacy \cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
+    (Quantum differential privacy~\cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
 
-    $$Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta$$
+    \[
+      Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta
+    \]
+    \label{def:qdp}
 \end{definition}
 
-There are many ways to obtain that epsilon in theory however Zhou and Ying proposed the following algorithm to obtain a quantity called proportional distance which can help obtain $\epsilon$.
+There are many ways to obtain $\epsilon$ in theory; however, Zhou and Ying proposed the following algorithm to obtain a quantity called proportional distance which can help obtain $\epsilon$.
 
 \begin{definition}
-    (Proportional Distance \cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$, their proportional distance is defined as:
+    (Proportional Distance~\cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$, their proportional distance is defined as:
 
-    $$PD(\rho, \sigma) = \sup_{\{M_m\}, m} \max\left(\ln\frac{q_m}{p_m}, \ln\frac{p_m}{q_m}\right)$$
+    \[
+      PD(\rho, \sigma) = \sup_{\{M_m\}, m} \max\left(\ln\frac{q_m}{p_m}, \ln\frac{p_m}{q_m}\right)
+    \]
 
     where the supremum is over all POVMs $\{M_m\}$ and all possible outcomes $m$,
 
-    $$p_m \equiv Tr[\rho M_m], \quad q_m \equiv Tr[\sigma M_m]$$
+    \[
+      p_m \equiv Tr[\rho M_m], \quad q_m \equiv Tr[\sigma M_m]
+    \]
 
     are the probabilities of obtaining outcome $m$ when the measurement is performed on $\rho$, $\sigma$, respectively, and we make the conventions $\frac{0}{0} = 1$, $\frac{1}{0} = +\infty$, $\ln 0 = -\infty$, $\ln{+\infty} = +\infty$.
+    \label{def:proportional_distance}
 \end{definition}
 
-% Zhou and Ying's Eq. (6) writes only the rho/sigma direction; the max over both directions is what matches the definition above (their proof covers each direction)
+
+
 \begin{proposition}[Zhou and Ying~\cite{zhou2017differential}]
     \[
       \mathrm{PD}(\rho, \sigma) = \sup_{\ket{\psi}} \max\left(\ln\frac{\bra{\psi}\rho\ket{\psi}}{\bra{\psi}\sigma\ket{\psi}}, \ln\frac{\bra{\psi}\sigma\ket{\psi}}{\bra{\psi}\rho\ket{\psi}}\right)
@@ -246,7 +306,7 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
 \end{proposition}
 
 \begin{definition}
-    ($\mathrm{dPD}$ \cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$,
+    ($\mathrm{dPD}$~\cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$,
     \[
       \mathrm{dPD}(\rho, \sigma) = \sup_{0 < M \leq I} \ln\frac{\Tr(M\rho)}{\Tr(M\sigma)}
     \]
@@ -258,9 +318,8 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
     \label{def:dpd}
 \end{definition}
 
-% Zhou and Ying's Algorithm 2. Symbols renamed to avoid clashes with this paper:
-% theta -> acc (theta is the encoding angle), eta -> A (GAD parameter), lambda -> r_prev (PD parameter),
-% max -> r, diagonal matrix D -> Lambda (D is the dimension), dimension n -> D
+As the reader can observe, dPD is nothing more than the privacy loss that~\cite{dwork2014algorithmic} defined, and thus if we find dPD then we can find $\epsilon$. Algorithm~\ref{alg:dpd}~\cite{zhou2017differential} provides a linear programming algorithm in order to compute dPD between two density operators $\sigma$ and $\rho$ with an accuracy of $\mathit{acc}$. 
+
 \begin{algorithm}[!t]
   \caption{Computing $\mathrm{dPD}$ \cite{zhou2017differential}}
   \label{alg:dpd}
@@ -318,44 +377,44 @@ There are many ways to obtain that epsilon in theory however Zhou and Ying propo
 
 \section{Related Work}
 \label{sec:related_work}
-It was important to figure out what the current investigative and academic situation was with regards to the fields of quantum information and computation and differential privacy. For this an investigation was made in which different databases were searched and analized to find out the amount of papers that covered the topics mentioned before. The investigation found 61 relevant papers that focused on the topics and the specific distributions of each one are compiled in Figure~\ref{fig:state_of_qdp}.  
+It was important to figure out what the current investigative and academic situation was with regard to the fields of quantum information and computation and differential privacy. For this an investigation was made in which different databases were searched and analyzed to find out the number of papers that covered the topics mentioned before. The investigation found 61 relevant papers that focused on the topics and the specific distributions of each one are compiled in Figure~\ref{fig:state_of_qdp}.  
 
 \begin{figure*}[!t]
     \centering
     \includegraphics[width=\textwidth]{state_of_qdp.png}
-    \caption{State of the art of quantum differential privacy. (own elaboration, based on the literature review described above)}
+    \caption{State of the art of quantum differential privacy (own elaboration, based on the literature review described above).}
     \label{fig:state_of_qdp}
 \end{figure*}
 
-As shown in Figure~\ref{fig:state_of_qdp} the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the project could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. \cite{yang2023improved} in which an extended analysis was made to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. And finally in the study of Zhou and Ying \cite{zhou2017differential} they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
+As shown in Figure~\ref{fig:state_of_qdp}, the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the project could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. \cite{yang2023improved} in which an extended analysis was made to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. Finally, in the study of Zhou and Ying~\cite{zhou2017differential}, they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
 
 \section{Data Processing and Analysis}
 \label{sec:data_processing_and_analysis}
 
-This section details the data processing and analysis methodology that was used in order to prepare the classical Statlog (German Credit Data) dataset \cite{hofmann1994german} \cite{germancredit2026} for use in the quantum setting. Firstly we outline the dataset characteristics, variable selection procedures and lastly quantum encoding procedures for the selected data. 
+This section details the data processing and analysis methodology that was used in order to prepare the classical Statlog (German Credit Data) dataset~\cite{hofmann1994german, germancredit2026} for use in the quantum setting. Firstly, we outline the dataset characteristics, then the variable selection procedures and, lastly, the quantum encoding procedures for the selected data. 
 
 \subsection{Dataset description}
 
-The selected dataset for this investigation is the Statlog (German Credit Data) dataset created by Professor Hans Hofmann \cite{hofmann1994german}. This multivariate dataset aims to classify people as a good or bad credit risk. The orginal dataset is composed of 1000 instances that span 21 variables (7 numerical, 13 categorical, and the target). 
+The selected dataset for this investigation is the Statlog (German Credit Data) dataset created by Professor Hans Hofmann \cite{hofmann1994german}. This multivariate dataset aims to classify people as a good or bad credit risk. The original dataset is composed of 1000 instances that span 21 variables (7 numerical, 13 categorical, and the target). 
 
-In the original dataset created by Professor Hofmann, all non numerical variables use a attribute code to define their characteristics (e.g The status of a person whose checking account is less than 0 Deutsche Marks (DM) is A11) for that reason it was decided that the investigation was going to use a curated version of the dataset \cite{germancredit2026} which transforms all the labels to their definition as a means of simplifying the readers' understanding of the dataset by eliminating that intermediate layer of label and category. Every mention to the dataset henceforth will refer to this curated version and not the original compiled by Professor Hofmann
+In the original dataset created by Professor Hofmann, all non-numerical variables use an attribute code to define their characteristics (e.g., the status of a person whose checking account is less than 0 Deutsche Marks (DM) is A11). For that reason, it was decided that the investigation was going to use a curated version of the dataset \cite{germancredit2026} which transforms all the labels to their definition as a means of simplifying the readers' understanding of the dataset by eliminating that intermediate layer of label and category. Every mention of the dataset henceforth will refer to this curated version and not the original compiled by Professor Hofmann.
 
-A simple data analysis concluded that the dataset didn't have any problem in terms of completeness (as all rows include all 21 variables) nor uniqueness (as there is no instance of an exact duplicate). For these reasons no special cleaning procedure was done prior to variable selection.
+A simple data analysis concluded that the dataset did not have any problem in terms of completeness (as all rows include all 21 variables) or uniqueness (as there is no instance of an exact duplicate). For these reasons, no special cleaning procedure was done prior to variable selection.
 
 \subsection{Variable selection with PhiK}
 
 In order to hold quantum data for a dataset that contains 1000 instances of 20 variables each, the simulation would, at a maximum, store 1000 $2^n \times 2^n$ density matrices, with $n$ being the number of qubits used. This means that using the full 20 variables, one per qubit, would imply $2^{20} \times 2^{20} \approx 1.1 \times 10^{12}$ complex entries, and at 16 bytes each, that is about 16 TiB per matrix. It was decided that a correlation study over the target variable would be an adequate way to reduce this load. The reasons for this decision are: First, the investigation did not aim to produce a classifier and thus could use a smaller number of variables in the experiments. Second, the variables selected from a correlation study would be the most likely candidates to be chosen as significant by a classifier.
 
-As mentioned previously however, most of the variables in this dataset are not numeric and thus a popular correlation analysis such as the Pearson correlation is not an adequate choice to evaluate variable correlation. For starters, for a nominal variable the Pearson's coefficient relies on an arbitrary choice for the label and since the proportions of the target variable in the dataset for each category are not the same across the board, a change in category label implies a change in the coefficient. Moreover the Pearson coefficient identifies well the linear relationships of variables but lacks for nonlinear cases.
+As mentioned previously, however, most of the variables in this dataset are not numeric and thus a popular correlation analysis such as the Pearson correlation is not an adequate choice to evaluate variable correlation. For starters, for a nominal variable the Pearson coefficient relies on an arbitrary choice for the label and since the proportions of the target variable in the dataset for each category are not the same across the board, a change in category label implies a change in the coefficient. Moreover, the Pearson coefficient identifies linear relationships between variables well but fails for nonlinear cases.
 
-For these reasons it was decided to use the PhiK method \cite{BAAK2020107043PHIK} to select the variables which show a consistent stronger correlation with the target variable. PhiK is a stronger candidate as it works well for both numerical and categorical variables correlations and it is able to identify nonlinear relationships between them.
+For these reasons it was decided to use the PhiK method \cite{BAAK2020107043PHIK} to select the variables which show a consistently stronger correlation with the target variable. PhiK is a stronger candidate as it works well for both numerical and categorical variables and it is able to identify nonlinear relationships between them.
 
-We used Baak et al. PhiK library to measure the correlation and significance between each variable and the target and recorded the results in Table~\ref{tab:phik}. It is important to note that the library returns, for a pair of variables, two results: the first is $\phi_{K}$ which is the measurement of how strong the relationship between the two variables is. This result is calculated by calibrating a $\chi^2$ test statistic to a contingency table (populated with the categorical variables or a bin distributed numerical variables) with respect to a bivariate normal distribution. This calibration returns a $\phi_{K}$ with range of 0 (no association) to 1 (complete association). Since $\phi_{K}$ depends on the counting of the contingency table renumbering the categories no longer affects the end result. The second result is $Z$ which is a conversion of the p-value from the independence test into a number of standard deviations. A higher $Z$ provides more evidence that the variable is not independent from the target.
+We used Baak et al.'s PhiK library to measure the correlation and significance between each variable and the target and recorded the results in Table~\ref{tab:phik}. It is important to note that the library returns, for a pair of variables, two results: the first is $\phi_{K}$ which is the measurement of how strong the relationship between the two variables is. This result is calculated by calibrating a $\chi^2$ test statistic to a contingency table (populated with the categorical variables or binned numerical variables) with respect to a bivariate normal distribution. This calibration returns a $\phi_{K}$ with range of 0 (no association) to 1 (complete association). Since $\phi_{K}$ depends on the counts of the contingency table, renumbering the categories no longer affects the end result. The second result is $Z$ which is a conversion of the p-value from the independence test into a number of standard deviations. A higher $Z$ provides more evidence that the variable is not independent from the target.
 
 \begin{table}[htbp]
-  \centering
   \caption{$\phi_K$ correlation of each feature with the target and its statistical significance with a cutoff of $Z > 2.81$.}
   \label{tab:phik}
+  \centering
   \begin{tabular}{lrrc}
     \toprule
     Feature & $\phi_K$ & $Z$ & Significant \\
@@ -384,68 +443,70 @@ We used Baak et al. PhiK library to measure the correlation and significance bet
   \end{tabular}
 \end{table}
 
-For the variable selection we chose to use $Z$ as although the $\phi_{K}$ measures the correlation between variables, the significance $Z$ of that correlation explains if that correlation is significant enough to be told apart from chance. The Bonferroni method states that, to ensure that the probability of at least one false positive across $k$ tests (in our case $k = 20$ for $20$ variables against the target) is at most $\alpha = 0.05$, each individual test must use a significance level of $\alpha' = \alpha/k = 0.05/20 = 0.0025$ \cite{bland1995multiple}. Here a false positive is a variable that is independent of the target but is selected anyway. Since $\alpha' = 0.0025$ corresponds to $Z \approx 2.81$, we used $Z > 2.81$ as the cutoff for the selection of the variables.
+For the variable selection we chose to use $Z$ because, although $\phi_{K}$ measures the correlation between variables, the significance $Z$ of that correlation indicates whether that correlation is significant enough to be told apart from chance. The Bonferroni method states that, to ensure that the probability of at least one false positive across $k$ tests (in our case $k = 20$ for $20$ variables against the target) is at most $\alpha = 0.05$, each individual test must use a significance level of $\alpha' = \alpha/k = 0.05/20 = 0.0025$ \cite{bland1995multiple}. Here a false positive is a variable that is independent of the target but is selected anyway. Since $\alpha' = 0.0025$ corresponds to $Z \approx 2.81$, we used $Z > 2.81$ as the cutoff for the selection of the variables.
 
 %Table~\ref{tab:phik} has the values that the PhiK method returned for all 20 variables with regards to the target sorted by $Z$. As an example the reader can observe that the variable \textbf{housing} has a small correlation with target yet a strong significance. On the contrary \textbf{age} has a higher correlation than \textbf{housing} with target yet a small enough significance to not merit its selection
 
-As the reader can observe in Table~\ref{tab:phik} the selection took 10 out of the 20 variables which as mentioned before now leaves a maximum of 1000 $2^{10} \times 2^{10}$ matrices as opposed to 1000 $2^{20} \times 2^{20}$ should we use one qubit per variable, we will show how we lowered that number in Section~\ref{subsec:encoding_variables}. The definition and type of each variable is recorded in Appendix~\ref{ap:selected_features}
+As the reader can observe in Table~\ref{tab:phik}, the selection took 10 out of the 20 variables, which, as mentioned before, now leaves a maximum of 1000 $2^{10} \times 2^{10}$ matrices as opposed to 1000 $2^{20} \times 2^{20}$ should we use one qubit per variable. We will show how we lowered that number in Section~\ref{subsec:encoding_variables}. The definition and type of each variable is recorded in Appendix~\ref{ap:selected_features}.
 
 \subsection{Encoding of classical variables into quantum}
 \label{subsec:encoding_variables}
 
-Having chosen a reduced set of variables from the dataset (10 from the original 20), the next step was to encode the classical information from each variable into qubits which could be used in the quantum simulation. For this it is important to note that the variables were divided into two groups each with their own encoding:
+Having chosen a reduced set of variables from the dataset (10 from the original 20), the next step was to encode the classical information from each variable into qubits which could be used in the quantum simulation. For this it is important to note that the variables were divided into two groups, each with its own encoding:
 
 \subsubsection{Categorical Variables}
 
-These are categorical variables whose categories do not follow a natural ranking. An example for this is the variable $\texttt{purpose}$ which has ten categories (car(new), vacation, education, among others). As the reader can observe these categories don't follow a natural order as there is no way to tell if say car goes after or before education. Due to this it was decided to separate them from the categorical (ordinal) variablese that will be mentioned later on
+These are categorical variables whose categories do not follow a natural ranking. An example of this is the variable \texttt{purpose}, which has ten categories (car (new), vacation, education, among others). As the reader can observe, these categories do not follow a natural order, as there is no way to tell if, say, car goes before or after education. Due to this, it was decided to separate them from the categorical (ordinal) variables that will be mentioned later on.
 
-The proposed encoding for these types of variables is given by Definition~\ref{def:encoding_categorical}
+The proposed encoding for these types of variables is given by Definition~\ref{def:encoding_categorical}.
 
 \begin{definition}
- \label{def:encoding_categorical} 
-  (Method for encoding categorical variables)
-  For a categorical variable with $K$ categories. When ecoding the label $c \in \{0, \dots, K - 1\}$ the resulting encoded qubit state $\ket{\psi}$ is given by the equation
+  (Method for encoding categorical variables). For a categorical variable with $K$ categories, when encoding the label $c \in \{0, \dots, K - 1\}$, the resulting encoded qubit state $\ket{\psi}$ is given by the equation
 
-  $$\ket{\psi} = RZ(\phi)H\ket{0} \text{with, } \phi = \frac{2\pi c}{K}$$
-
+  \[
+    \ket{\psi} = RZ(\phi)H\ket{0} \quad \text{with} \quad \phi = \frac{2\pi c}{K}
+  \]
+  \label{def:encoding_categorical}
 \end{definition}
 
 
-This encoding ends up with a qubit state in one of $K$ equally distributed points across the equator of the Bloch sphere. We choose to place the qubit on the equator as because from Definition~\ref{def:trace_distance_vector} we can express $\tau$ in terms of the angle between to points of a circle $\Delta$ and the radius of that circle as $r\sin{\frac{\Delta}{2}}$. With this expression the reader can note that the minimum distance $\tau$ is maximized for all other angles on the sphere when the radius is maximum which happens in the equator of the sphere. More over one could argue that having a smaller $\theta$ (i.e the angle of rotation with regards to the y-axis of the Bloch sphere) would reduce $\epsilon$, and one would be right if not for the fact that it comes with the tradeoff of making the categories less distinguishable. In the case where $\theta = 0$ any rotation over the z-axis would invalidate since no rotation over the y-axis would make it a global phase.
+This encoding ends up with a qubit state in one of $K$ equally distributed points across the equator of the Bloch sphere. We choose to place the qubit on the equator because, from Definition~\ref{def:trace_distance_vector}, we can express $\tau$ in terms of the angle between two points of a circle $\Delta$ and the radius of that circle as $r\sin{\frac{\Delta}{2}}$. With this expression the reader can note that the minimum distance $\tau$ is maximized for all other angles on the sphere when the radius is maximum, which happens at the equator of the sphere. Moreover, one could argue that having a smaller $\theta$ (i.e., the angle of rotation about the y-axis of the Bloch sphere) would reduce $\epsilon$, and one would be right if not for the fact that it comes with the tradeoff of making the categories less distinguishable. In the case where $\theta = 0$, any rotation over the z-axis would be invalidated, since without a rotation over the y-axis it would only add a global phase.
 
-This method assures then that $\tau$ between two categories is at least $\sin(\frac{\pi}{K})$. What this means in theory is that the privacy in the local setting won't change the final $\epsilon$ as regardless of the labels given to any category, the angle between the labels themselves might change but the possible angles between different categories will remain the same. However, what this encoding doesn't prevent is the fact that different categories can have different proportions. The labels given to each category can impact the distance $\tau$ between the dataset and that same dataset without a person included, which, as will be explained in Section~\ref{sec:finding_epsilon} is crucial when computing $\epsilon_{exp}$ and $\epsilon_{theo}$ and then in theory can lead to different results. In Appendix~\ref{ap:label_categorical} we compiled the $c$ value given to the variable's categories.
+This method assures then that $\tau$ between two categories is at least $\sin(\frac{\pi}{K})$. What this means in theory is that the privacy in the local setting will not change the final $\epsilon$, as regardless of the labels given to any category, the angle between the labels themselves might change, but the possible angles between different categories will remain the same. However, what this encoding does not prevent is the fact that different categories can have different proportions. The labels given to each category can impact the distance $\tau$ between the dataset and that same dataset without a person included, which, as will be explained in Section~\ref{sec:finding_epsilon}, is crucial when computing $\epsilon_{exp}$ and $\epsilon_{theo}$ and therefore, in theory, can lead to different results. In Appendix~\ref{ap:label_categorical} we compiled the $c$ values given to each variable's categories.
 
 \subsubsection{Numerical and ordinal variables}
 
-These are variables which are either ranges of an amount (ordinal) or numerical. An example of these variables is $\texttt{month\_duration}$ which explains the loan's duration in months. A loan that goes for 4 months is clearly smaller than that of a loan that goes for 72, thus it is important to preserve that order. The encoding method which we believed would be able to preserve this order was Dense angle encoding \cite{ibm_encoding}.
+These are variables which are either ranges of an amount (ordinal) or numerical. An example of these variables is \texttt{month\_duration}, which gives the loan's duration in months. A loan that goes for 4 months is clearly shorter than a loan that goes for 72, thus it is important to preserve that order. The encoding method which we believed would be able to preserve this order was dense angle encoding~\cite{ibm_encoding}.
 
-The question that remained however was, which variables were going to be encoded together? To answer this question we first created all 15 possible arrangements of the 5 numerical and ordinal variables into two pairs and a single variable. Then, we once again used the PhiK method to analyze the correlation between each pair of variables which is documented in Annex~\ref{tab:phik_numerical_ordinal}. From this small investigation it was concluded that the combination of variables that yielded the smallest correlation in the worst case was \texttt{status\_account} as the lone variable \texttt{status\_savings} and \texttt{month\_duration} as the first pair and \texttt{years\_employment} and \texttt{credit\_amount} as the second pair. We chose this combination as the smallest correlation between the worst pair would imply that the qubits carried as little redundant information within each qubit as possible.
+The question that remained, however, was: which variables were going to be encoded together? To answer this question we first created all 15 possible arrangements of the 5 numerical and ordinal variables into two pairs and a single variable. Then, we once again used the PhiK method to analyze the correlation between each pair of variables which is documented in Table~\ref{tab:phik_numerical_ordinal} (Appendix~\ref{ap:phik_numerical_ordinal}). From this small investigation it was concluded that the combination of variables that yielded the smallest correlation in the worst case was \texttt{status\_account} as the lone variable, \texttt{status\_savings} and \texttt{month\_duration} as the first pair, and \texttt{years\_employment} and \texttt{credit\_amount} as the second pair. We chose this combination as the smallest correlation between the worst pair would imply that the qubits carried as little redundant information within each qubit as possible.
 
-Before the encoding definition we defined a function \textbf{minmax}(a, min, max) which normalizes a value $a \in [min , max]$ to $a \in [0 , \pi ]$ 
+Before the encoding definition, we defined a function \textbf{minmax}(min, max, a), which normalizes a value $a \in [min , max]$ to $a \in [0 , \pi ]$. 
 
 \begin{definition}
-  Given a value $a \in [min , max]$ with $min, max \in \mathbb{R}$ we define the function \textbf{minmax} as
+  (Min-max normalization). Given a value $a \in [min , max]$ with $min, max \in \mathbb{R}$ we define the function \textbf{minmax} as
 
-  $$\textbf{minmax(min, max, a)} = \pi \times \frac{a-min}{max-min}$$
-
+  \[
+    \textbf{minmax(min, max, a)} = \pi \times \frac{a-min}{max-min}
+  \]
+  \label{def:minmax}
 \end{definition}
 
-With this definition the method to encode numerical and ordinal variables is Dense Angle Encoding \cite{ibm_encoding} which we define as:
+With this definition the method to encode numerical and ordinal variables is dense angle encoding~\cite{ibm_encoding}, which we define as:
 
 \begin{definition}
-  (Method for encoding numerical and ordinal variables with dense angle encoding). For an ordinal variable with $K$ categories and a numerical variable with range $[n_{Min}, n_{Max}]$. When encoding the ordinal variable with label $c \in \{0, \dots, K-1\}$ and a numerical variable with value $n \in [n_{Min}, n_{Max}]$. The resulting dense angle encoding is given by
+  (Method for encoding numerical and ordinal variables with dense angle encoding). For an ordinal variable with $K$ categories and a numerical variable with range $[n_{Min}, n_{Max}]$, when encoding the ordinal variable with label $c \in \{0, \dots, K-1\}$ and the numerical variable with value $n \in [n_{Min}, n_{Max}]$, the resulting dense angle encoding is given by
   
   \begin{align*}
     \ket{\psi} &= RZ(\phi)RY(\theta)\ket{0},\\
     \text{with } \phi &= minmax(n_{Min}, n_{Max}, n),\\
     \text{and } \theta &= minmax(-0.5, K - 0.5, c)
   \end{align*}
-
+  \label{def:encoding_dense_angle}
 \end{definition}
 
-Because of pairing selection the definition only needs to cover the case for when an ordinal variable is paired with a numerical one. Thus it is important to note that the reason \textbf{minmax} is calibrated from $-0.5$ to $K-0.5$ for the ordinal variables is so that the resulting categories cannot reach the poles which would result in the gate RZ being invalidated. This calibration then sets each category into the middle of a bin of length $\frac{\pi}{K}$. An exception to this definition is the lone variable \texttt{status\_account} since it doesn't need this calibration as there is no RZ gate to invalidate so the range for \textbf{minmax} is $[0, K-1]$ 
+Because of the pairing selection, the definition only needs to cover the case where an ordinal variable is paired with a numerical one. Thus it is important to note that the reason \textbf{minmax} is calibrated from $-0.5$ to $K-0.5$ for the ordinal variables is so that the resulting categories cannot reach the poles, which would result in the gate RZ being invalidated. This calibration then sets each category into the middle of a bin of length $\frac{\pi}{K}$. An exception to this definition is the lone variable \texttt{status\_account}, since it does not need this calibration as there is no RZ gate to invalidate, so the range for \textbf{minmax} is $[0, K-1]$. 
 
-As the reader can observe thanks to dense angle encoding we can actually reduce the number of qubits necessary for encoding the full 10 variables to 8 which helps reduce the computational toll from the original $2^{10}\times 2^{10}$ matrices with 1:1 qubit to  variables encoding to $2^{8}\times 2^{8}$ matrices. The final quantum circuit can be seen on Figure~\ref{fig:quantum_encoding_circuit}
+As the reader can observe, thanks to dense angle encoding we can actually reduce the number of qubits necessary for encoding the full 10 variables to 8 which helps reduce the computational toll from the original $2^{10}\times 2^{10}$ matrices with a 1:1 qubit-to-variable encoding to $2^{8}\times 2^{8}$ matrices. The final quantum circuit can be seen in Figure~\ref{fig:quantum_encoding_circuit}.
 
 \begin{figure}[!t]
   \centering
@@ -460,19 +521,19 @@ As the reader can observe thanks to dense angle encoding we can actually reduce 
     \lstick{\shortstack[r]{\texttt{years\_employment}\\\texttt{credit\_amount}}~~$\ket{0}$}    & \gate{R_Y(\theta)} & \gate{R_Z(\phi)} & \qw \\
     \lstick{\texttt{status\_account}~~$\ket{0}$}         & \gate{R_Y(\theta)} & \qw                 & \qw
   \end{quantikz}
-  \caption{8 qubit encoding circuit for the 10 selected variables}
+  \caption{8-qubit encoding circuit for the 10 selected variables}
   \label{fig:quantum_encoding_circuit}
 \end{figure}
 
 \section{Finding the experimental privacy budget}
 \label{sec:finding_epsilon}
 
-Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters chosen for all the different mechanisms mentioned in Section~\ref{sec:background} these are compiled in Table~\ref{tab:noise_params}. All of these parameters are just that, parameters, so the selection was made mainly as a way to: firstly excecute all the tests with the same parameters and thus allow for a comparison between experiments. And second, in abide by the restrictions imposed on $\lambda$ and $ \gamma$ by Theorem~\ref{thm:epsilon_pad} and for $\eta$ in Theorem~\ref{thm:epsilon_gad}. Further more due to the nature of the PAD mechanism it was important to chose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP.
+Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters chosen for all the different mechanisms mentioned in Section~\ref{sec:background}; these are compiled in Table~\ref{tab:noise_params}. All of these parameters are just that, parameters, so the selection was made mainly as a way to, firstly, execute all the tests with the same parameters and thus allow for a comparison between experiments and, secondly, abide by the restrictions imposed on $\lambda$ and $\gamma$ by Theorem~\ref{thm:epsilon_pad} and on $\eta$ by Theorem~\ref{thm:epsilon_gad}. Furthermore, due to the nature of the PAD mechanism, it was important to choose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP.
 
 \begin{table}[H]
-  \centering
   \caption{Selection of parameters for noise mechanisms}
   \label{tab:noise_params}
+  \centering
   \begin{tabular}{ll}
     \toprule
     Mechanism & Parameters\\
@@ -485,6 +546,8 @@ Before starting with the in-depth explanation of each experiment it is important
 \end{table}
 
 \subsection{Central Setting}
+
+The first experiment that was carried out was finding the $\epsilon_{theo}$ and $\epsilon_{exp}$ in a central setting for each qubit $k$ of the dataset (recall the encoding from Section~\ref{subsec:encoding_variables}). In other words, we wanted to see what privacy guarantee each of the mechanisms $\mathcal{M}_{GAD}$, $\mathcal{M}_{PAD}$ and $\mathcal{M}_{DEP}$ provided. In order to accomplish this, we designed the pipeline documented in Figure~\ref{fig:central_setting}.
 
 \begin{figure*}[!t]
   \centering
@@ -527,13 +590,75 @@ Before starting with the in-depth explanation of each experiment it is important
     \draw[arr] (epsj) -- (expk);
   \end{tikzpicture}%
   }
-  \caption{}
+  \caption{Experimental pipeline for finding $\epsilon_{exp}$ and $\epsilon_{theo}$}
   \label{fig:central_setting}
 \end{figure*}
 
-La explicacion del experimento central, es basicamente puesto en texto la presentacion de semana 8
+The pipeline begins by calculating some values that will be used during the leave-one-out loop: encoding the full column using the methodology provided in Section~\ref{sec:data_processing_and_analysis}, which will become our set $\{\rho_i^{k}\}$, containing the states of each person in the dataset for that column. That complete set will be aggregated into a single matrix $\rho^{k}$, which will hold an average of all the participants of the dataset for the column $k$. Then noise from the selected noise mechanism will be applied to that density matrix, resulting in the matrix $\rho'^{k}$. With those two matrices calculated, the pipeline will begin a loop that iterates over each participant of the dataset in order to compare the original against a leave-one-out version of the dataset where the row $j$ is removed.
+
+For each row $j$, the process is as follows: aggregate the set $\{\rho_i^{k}\}$ with the row $j$ removed, which results in the density matrix $\sigma_j^{k}$, the aggregation of all participants except $j$. From $\sigma_j^{k}$ both $\sigma_j^{\prime k}$ and $d_j$ will be calculated. $\sigma_j^{\prime k}$ is the density matrix that results from applying the selected noise mechanism to $\sigma_j^{k}$, and $d_j$ is the trace distance between $\rho^{k}$ and $\sigma_{j}^{k}$, which has to be calculated with the pre-noise matrices as per Theorems~\ref{thm:epsilon_gad} through~\ref{thm:epsilon_dep}. Lastly, it will calculate $\epsilon_{exp}^{j}$, which is the $\epsilon_{exp}$ for the $j$-th row and corresponds to the maximum of the values that Algorithm~\ref{alg:dpd} returns in both directions. 
+
+With all those values, the only remaining step of the pipeline is to input them into each method for finding $\epsilon$. On the theoretical side, the pipeline will input the maximum trace distance and the noise mechanism's parameters into one of the theorems defined in Section~\ref{sec:background} (for the depolarizing mechanism $D=2$, as we are calculating on a per-qubit basis) for the resulting $\epsilon_{theo}$ of the column. In the case of $\epsilon_{exp}$, it is the maximum $\epsilon_{exp}^{j}$ over all rows $j$, as that is the maximum privacy loss that the dataset can offer for that noise mechanism.
+
+With the $\epsilon_{exp}^{k}$ and $\epsilon_{theo}^{k}$ calculated for each column $k$ of the dataset, the only thing that remains is to add them to find the upper bound of $\epsilon_{exp}$ and $\epsilon_{theo}$ of the dataset. In the pipeline, the curator would release the noisy density matrices for the 8 qubits
+\[
+  \bigotimes_{k=0}^{7} \rho^{\prime k} = \bigotimes_{k=0}^{7} \mathcal{M}(\rho^{k}).
+\]
+Because of Lemma~\ref{lem:product_channel}, this is equal to
+\[
+  \Big(\bigotimes_{k=0}^{7} \mathcal{M}\Big)\Big(\bigotimes_{k=0}^{7} \rho^{k}\Big) = \mathcal{M}_{[8]}(\rho^{0}, \dots, \rho^{7})
+\]
+which is the combination defined in Corollary~\ref{cor:composition}, and thus the addition is valid.
+ 
+
+\begin{lemma}
+  For $i = 1, \dots, k$, let $\mathcal{E}_i(\rho) = \sum_{a} E_{i,a}\, \rho\, E_{i,a}^{\dagger}$ be a quantum operation on $\mathcal{H}_i$ and $\rho_i$ a density operator on $\mathcal{H}_i$. Then
+  \[
+    \Big(\bigotimes_{i=1}^{k} \mathcal{E}_i\Big)\Big(\bigotimes_{i=1}^{k} \rho_i\Big) = \bigotimes_{i=1}^{k} \mathcal{E}_i(\rho_i).
+  \]
+  \label{lem:product_channel}
+\end{lemma}
+
+For readability, the proof of Lemma~\ref{lem:product_channel} is deferred to Appendix~\ref{ap:composition_proof}.
+
+In the case of the depolarizing mechanism, we can actually modify the pipeline by removing the need to encode each column individually and applying the noise to the full 8 columns, since Theorem~\ref{thm:epsilon_dep} allows it. This, however, is classified as a separate experiment, since both the aggregation and the release that the curator would perform are over the full 8-qubit matrix (not per qubit, as was explained), thus not allowing for a comparison against the original pipeline. Later on, in Section~\ref{sec:discussion_and_conclusion}, we will discuss how these methods yield very different privacy results.
+
 
 \subsection{Local Setting}
+
+\begin{figure*}[!t]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+      font=\small,
+      box/.style={draw, rounded corners, align=center, text width=5.6cm, minimum height=1.2cm},
+      arr/.style={-latex, thick}
+    ]
+    % loop frames (same width as Fig.~\ref{fig:central_setting}, so both figures share one scale)
+    \draw[rounded corners] (0.3,1.5) rectangle (18.9,-6.3);
+    \node[anchor=north west] at (0.45,1.45) {For each categorical variable with $K \in \{3, 4, 5, 10\}$ categories};
+    \draw[rounded corners] (0.5,-1.0) rectangle (18.7,-4.2);
+    \node[anchor=south west] at (0.65,-4.15) {For each pair $\{c, c'\}$, $c < c'$};
+    % all categories of the variable
+    \node[box] (enc) at (6.0,0) {\textbf{Encode all $K$ categories} (Def.~\ref{def:encoding_categorical})\\[3pt] $\{\rho_c\}_{c=0}^{K-1}$};
+    \node[box] (noise) at (13.2,0) {\textbf{Noise}\\ $\rho^{\prime}_c = \mathcal{M}(\rho_c)$};
+    % pair of categories
+    \node[box] (dist) at (6.0,-2.6) {\textbf{Trace distance}\\ $d_{cc'} = \tau(\rho_c, \rho_{c'})$};
+    \node[box] (epsp) at (13.2,-2.6) {\textbf{Experimental $\epsilon$ for pair $\{c, c'\}$} (Alg.~\ref{alg:dpd})\\[2pt] $\epsilon_{exp}^{cc'} = \max\big(\mathrm{dPD}(\rho^{\prime}_c, \rho^{\prime}_{c'}),$\\ $\mathrm{dPD}(\rho^{\prime}_{c'}, \rho^{\prime}_c)\big)$};
+    % per-variable results
+    \node[box] (theo) at (6.0,-5.4) {\textbf{Theoretical $\epsilon$ for $K$}\\ $\epsilon_{theo}^{K} = \epsilon_{theo}(\max_{c,c'} d_{cc'})$};
+    \node[box] (expk) at (13.2,-5.4) {\textbf{Experimental $\epsilon$ for $K$}\\ $\epsilon_{exp}^{K} = \max_{c,c'} \epsilon_{exp}^{cc'}$};
+    % arrows
+    \draw[arr] (enc) -- (noise);
+    \draw[arr] (enc) -- (dist);
+    \draw[arr] (noise) -- (epsp);
+    \draw[arr] (dist) -- (theo);
+    \draw[arr] (epsp) -- (expk);
+  \end{tikzpicture}%
+  }
+  \caption{} % TODO: your caption
+  \label{fig:local_setting}
+\end{figure*}
 
 La explicacion del experimento loca, es basicamente puesto en texto la presentacion de semana 10
 
@@ -574,16 +699,19 @@ Tambien el analisis de los resultados de los mismos y que implicaciones tienen e
 
 \clearpage
 \appendices
+% appendix results numbered D.1, D.2, ... instead of 4.1 (IEEEtran keeps \thesection arabic in appendices)
+\renewcommand{\thelemma}{\Alph{section}.\arabic{lemma}}
+\renewcommand{\theproposition}{\Alph{section}.\arabic{proposition}}
 
 \section{Description of selected features}
 \label{ap:selected_features}
 
-Table~\ref{tab:variables_descriptions} compiles the name, type and description that were selected to use in the quantum experiments.
+Table~\ref{tab:variables_descriptions} compiles the name, type and description of the variables that were selected for use in the quantum experiments.
 
 \begin{table*}[!t]
-  \centering
   \caption{Description of the selected variables.}
   \label{tab:variables_descriptions}
+  \centering
   \begin{tabular}{llp{0.5\textwidth}}
     \toprule
     Name & Type & Description \\
@@ -605,12 +733,12 @@ Table~\ref{tab:variables_descriptions} compiles the name, type and description t
 \section{Description of label assigned to each categorical variable}
 \label{ap:label_categorical}
 
-Table~\ref{tab:label_categorical} compiles labels given to each variable using the scikit-learn python library.
+Table~\ref{tab:label_categorical} compiles the labels given to each variable's categories using the scikit-learn Python library.
 
 \begin{table*}[!t]
-  \centering
   \caption{Assignment of the label given to each categorical variable's category}
   \label{tab:label_categorical}
+  \centering
   \begin{tabular}{llc}
     \toprule
     Variable & Category & Label \\
@@ -654,38 +782,94 @@ Table~\ref{tab:label_categorical} compiles labels given to each variable using t
 \end{table*}
 
 \section{$\phi_{K}$ correlation for all combinations of numerical and ordinal variables}
+\label{ap:phik_numerical_ordinal}
 
-Table~\ref{tab:phik_numerical_ordinal} shows the results for all the $\phi_{K}$ correlation between all combinations of numerical and ordinal variables, as well as their worst correlation between the two pairs.
+Table~\ref{tab:phik_numerical_ordinal} shows the $\phi_{K}$ correlation results for all combinations of numerical and ordinal variables, as well as their worst correlation between the two pairs.
 
 \begin{table*}[htbp]
-\centering
-\caption{Comparison of Variable Pairs and PhiK Metrics}
-\label{tab:phik_numerical_ordinal}
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{@{}lllrrr@{}}
-\toprule
- & & & \multicolumn{3}{c}{$\phi_K$} \\
-\cmidrule(l){4-6}
-Alone & First pair & Second pair & First pair & Second pair & Worst \\
-\midrule
-\texttt{status\_account} & \texttt{status\_savings}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.000 & 0.043 & 0.043 \\
-\texttt{credit\_amount} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{month\_duration} & 0.088 & 0.000 & 0.088 \\
-\texttt{status\_savings} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.091 & 0.043 & 0.091 \\
-\texttt{status\_account} & \texttt{status\_savings}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.092 & 0.065 & 0.092 \\
-\texttt{years\_employment} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.091 & 0.092 & 0.092 \\
-\texttt{month\_duration} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.088 & 0.092 & 0.092 \\
-\texttt{status\_savings} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.114 & 0.065 & 0.114 \\
-\texttt{years\_employment} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{month\_duration} & 0.114 & 0.000 & 0.114 \\
-\texttt{credit\_amount} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{years\_employment} & 0.091 & 0.150 & 0.150 \\
-\texttt{month\_duration} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{years\_employment} & 0.114 & 0.150 & 0.150 \\
-\texttt{credit\_amount} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{month\_duration} & 0.200 & 0.065 & 0.200 \\
-\texttt{month\_duration} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.200 & 0.043 & 0.200 \\
-\texttt{status\_account} & \texttt{status\_savings}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.150 & 0.689 & 0.689 \\
-\texttt{status\_savings} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.088 & 0.689 & 0.689 \\
-\texttt{years\_employment} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.200 & 0.689 & 0.689 \\
-\bottomrule
-\end{tabular}
+  \caption{Comparison of variable pairs and PhiK metrics}
+  \label{tab:phik_numerical_ordinal}
+  \centering
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lllrrr@{}}
+  \toprule
+   & & & \multicolumn{3}{c}{$\phi_K$} \\
+  \cmidrule(l){4-6}
+  Alone & First pair & Second pair & First pair & Second pair & Worst \\
+  \midrule
+  \texttt{status\_account} & \texttt{status\_savings}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.000 & 0.043 & 0.043 \\
+  \texttt{credit\_amount} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{month\_duration} & 0.088 & 0.000 & 0.088 \\
+  \texttt{status\_savings} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.091 & 0.043 & 0.091 \\
+  \texttt{status\_account} & \texttt{status\_savings}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.092 & 0.065 & 0.092 \\
+  \texttt{years\_employment} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.091 & 0.092 & 0.092 \\
+  \texttt{month\_duration} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.088 & 0.092 & 0.092 \\
+  \texttt{status\_savings} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.114 & 0.065 & 0.114 \\
+  \texttt{years\_employment} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{month\_duration} & 0.114 & 0.000 & 0.114 \\
+  \texttt{credit\_amount} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{years\_employment} & 0.091 & 0.150 & 0.150 \\
+  \texttt{month\_duration} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{years\_employment} & 0.114 & 0.150 & 0.150 \\
+  \texttt{credit\_amount} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{month\_duration} & 0.200 & 0.065 & 0.200 \\
+  \texttt{month\_duration} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.200 & 0.043 & 0.200 \\
+  \texttt{status\_account} & \texttt{status\_savings}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.150 & 0.689 & 0.689 \\
+  \texttt{status\_savings} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.088 & 0.689 & 0.689 \\
+  \texttt{years\_employment} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.200 & 0.689 & 0.689 \\
+  \bottomrule
+  \end{tabular}
 \end{table*}
+
+\section{Per-qubit noise as a combined mechanism}
+\label{ap:composition_proof}
+
+In this appendix we prove Lemma~\ref{lem:product_channel} which is used in Section~\ref{sec:finding_epsilon} in order to allow for the addition of the $\epsilon_{theo}^{k}$ and $\epsilon_{exp}^{k}$ for the $k$ qubits by demonstrating that the tensor product of the outputs, $\bigotimes_i\mathcal{E}_i(\rho_i)$, is the same as the tensor product of the operations applied to the tensor product of the states, $(\bigotimes_{i}\mathcal{E}_i)(\bigotimes_{i}\rho_i)$.
+
+\begin{lemma}
+  Let $X_i$ and $U_i$ be linear operators on a vector space $\mathcal{H}_i$, for $i = 1, \dots, k$. Then
+  \[
+    \Big(\bigotimes_{i=1}^{k} X_i\Big)\Big(\bigotimes_{i=1}^{k} U_i\Big) = \bigotimes_{i=1}^{k} X_i U_i.
+  \]
+  \label{lem:mixed_product}
+\end{lemma}
+
+\begin{IEEEproof}
+  Two linear operators are equal if and only if they act in the same way on every vector of the space. The product vectors $e_1 \otimes \dots \otimes e_k$, with each $e_i$ taken from a basis of $\mathcal{H}_i$, span $\bigotimes_{i} \mathcal{H}_i$, and both sides are linear, so it is enough to compare them on these vectors. By the definition of the tensor product of operators, $(\bigotimes_i T_i)(\bigotimes_i v_i) = \bigotimes_i T_i v_i$~\cite[Eq.~(1.8)]{zwiebach2013tensor}.
+  Therefore
+  \begin{align*}
+    \Big(\bigotimes_{i} X_i\Big)\Big(\bigotimes_{i} U_i\Big)\Big(\bigotimes_{i} e_i\Big)
+      &= \Big(\bigotimes_{i} X_i\Big)\Big(\bigotimes_{i} U_i e_i\Big) \\
+      &= \bigotimes_{i} X_i U_i e_i \\
+      &= \Big(\bigotimes_{i} X_i U_i\Big)\Big(\bigotimes_{i} e_i\Big),
+  \end{align*}
+  so both operators agree on every product vector, and hence on all of $\bigotimes_i \mathcal{H}_i$.
+\end{IEEEproof}
+
+\begin{proposition}
+  Let $A_i$ be a linear operator and $\rho_i$ a density operator on $\mathcal{H}_i$, for $i = 1, \dots, k$. Then
+  \begin{align*}
+    \Big(\bigotimes_{i=1}^{k} A_i\Big)\Big(\bigotimes_{i=1}^{k} \rho_i\Big)&\Big(\bigotimes_{i=1}^{k} A_i\Big)^{\dagger} \\
+      &= \bigotimes_{i=1}^{k} A_i \rho_i A_i^{\dagger}.
+  \end{align*}
+  \label{prop:product_operation}
+\end{proposition}
+
+\begin{IEEEproof}
+  The adjoint of a tensor product is the tensor product of the adjoints, $(\bigotimes_i A_i)^{\dagger} = \bigotimes_i A_i^{\dagger}$~\cite{Nielsen_Chuang_2010}. % TODO: add the section number once read
+  Applying Lemma~\ref{lem:mixed_product} twice,
+  \begin{align*}
+    \Big(\bigotimes_{i} A_i\Big)\Big(\bigotimes_{i} \rho_i\Big)\Big(\bigotimes_{i} A_i^{\dagger}\Big)
+      &= \Big(\bigotimes_{i} A_i\Big)\Big(\bigotimes_{i} \rho_i A_i^{\dagger}\Big) \\
+      &= \bigotimes_{i} A_i \rho_i A_i^{\dagger}.
+  \end{align*}
+\end{IEEEproof}
+
+\begin{IEEEproof}[Proof of Lemma~\ref{lem:product_channel}]
+  The operation $\bigotimes_i \mathcal{E}_i$ has Kraus operators $E_{1,a_1} \otimes \dots \otimes E_{k,a_k}$, one for each choice of indices $a_1, \dots, a_k$. Applying Proposition~\ref{prop:product_operation} to each term, and then the distributivity (bilinearity) of the tensor product over sums,
+  \begin{align*}
+    &\Big(\bigotimes_{i} \mathcal{E}_i\Big)\Big(\bigotimes_{i} \rho_i\Big) \\
+    &\quad= \sum_{a_1, \dots, a_k} \Big(\bigotimes_{i} E_{i,a_i}\Big)\Big(\bigotimes_{i} \rho_i\Big)\Big(\bigotimes_{i} E_{i,a_i}\Big)^{\dagger} \\
+    &\quad= \sum_{a_1, \dots, a_k} \bigotimes_{i} E_{i,a_i}\, \rho_i\, E_{i,a_i}^{\dagger} \\
+    &\quad= \bigotimes_{i} \sum_{a_i} E_{i,a_i}\, \rho_i\, E_{i,a_i}^{\dagger}
+       = \bigotimes_{i} \mathcal{E}_i(\rho_i).
+  \end{align*}
+\end{IEEEproof}
 
 \clearpage
 \raggedbottom
