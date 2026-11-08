@@ -113,9 +113,28 @@ On this section we will introduce all the background information that the reader
 Quantum channels are important as they are the generalization of an operation over a quantum state, and in the case of this project we need to use operations such as the depolarizing channel, which is defined thanks to this general definition.
 
 \begin{definition}
-    (Bloch sphere~\cite{watrous_quantum_channels}). The Bloch sphere is a useful geometrical representation for a single qubit.
+    (Bloch sphere~\cite{watrous_quantum_channels}). The Bloch sphere is a useful geometrical representation for a single qubit. 
     \label{def:bloch_sphere}
 \end{definition}
+
+\begin{definition}
+  (Bloch sphere representation of a quantum state~\cite{watrous_bloch_sphere}). A pure qubit state can be written in terms of two angles $\theta \in [0, \pi]$ and $\phi \in [0, 2\pi)$ as
+  \[
+    \ket{\psi} = \cos\left(\frac{\theta}{2}\right)\ket{0} + e^{i\phi}\sin\left(\frac{\theta}{2}\right)\ket{1},
+  \]
+  and its density matrix is
+  \[
+    \ket{\psi}\bra{\psi} = \frac{\mathbb{I} + \sin\theta\cos\phi\, X + \sin\theta\sin\phi\, Y + \cos\theta\, Z}{2},
+  \]
+  which corresponds to the point $(\sin\theta\cos\phi, \sin\theta\sin\phi, \cos\theta)$ on the surface of the Bloch sphere. Mixed states are convex combinations of pure states, so they correspond to points inside the sphere: every state can be written as
+  \[
+    \rho = \frac{\mathbb{I} + xX + yY + zZ}{2}, \qquad x^2 + y^2 + z^2 \leq 1,
+  \]
+  where $(x, y, z)$ is its Bloch vector. The completely mixed state $\mathbb{I}/2$ sits at the center, $(0, 0, 0)$.
+  \label{def:bloch_representation}
+\end{definition}
+
+
 
 \begin{definition}
     (Trace distance~\cite{zhou2017differential}). It is the distance between two density operators and it is defined by:
@@ -380,6 +399,15 @@ As the reader can observe, dPD is nothing more than the privacy loss that~\cite{
     \label{cor:composition}
 \end{corollary}
 
+\begin{proposition}[Post-processing, Zhou and Ying~\cite{zhou2017differential}]
+    Let $\mathcal{E}$ be a quantum operation that is $(\epsilon, \delta)$-differentially private. Let $\mathcal{F}$ be a quantum operation. Then the composition of $\mathcal{E}$ and $\mathcal{F}$:
+    \[
+      \mathcal{F} \circ \mathcal{E} : \rho \mapsto \mathcal{F}(\mathcal{E}(\rho))
+    \]
+    is $(\epsilon, \delta)$-differentially private too.
+    \label{prop:post_processing}
+\end{proposition}
+
 \section{Related Work}
 \label{sec:related_work}
 It was important to figure out what the current investigative and academic situation was with regard to the fields of quantum information and computation and differential privacy. For this an investigation was made in which different databases were searched and analyzed to find out the number of papers that covered the topics mentioned before. The investigation found 61 relevant papers that focused on the topics and the specific distributions of each one are compiled in Figure~\ref{fig:state_of_qdp}.  
@@ -552,6 +580,7 @@ Before starting with the in-depth explanation of each experiment it is important
 \end{table}
 
 \subsection{Central Setting}
+\label{subsec:experiment_central_setting}
 
 The first experiment that was carried out was finding the $\epsilon_{theo}$ and $\epsilon_{exp}$ in a central setting for each qubit $k$ of the dataset (recall the encoding from Section~\ref{subsec:encoding_variables}). In other words, we wanted to see what privacy guarantee each of the mechanisms $\mathcal{M}_{GAD}$, $\mathcal{M}_{PAD}$ and $\mathcal{M}_{DEP}$ provided. In order to accomplish this, we designed the pipeline documented in Figure~\ref{fig:central_setting}.
 
@@ -631,10 +660,11 @@ In the case of the depolarizing mechanism, we can actually modify the pipeline b
 
 
 \subsection{Local Setting}
+\label{subsec:experiment_local_setting}
 
 We have now considered an experiment where a trusted curator applies the noise to the data and releases the data. This experiment, however, tries to answer the question of what would happen if it were each individual person applying the noise, the local setting.
 
-In the central setting we defined neighbors as two aggregated density matrices, the one for the full 1000 $\rho$ rows and the leave-one-out $\sigma$. In this setting (inspired by~\cite[Def.~12.1]{dwork2014algorithmic} as mentioned in Section~\ref{sec:background}), however, since it is just one person at a time who is privatizing their data, it would not make sense to compare two different people as neighbors, as in reality what the attacker would want to know is ``what was person A's original category?''. With this idea, this experiment defines the neighbors as the possible states that each label is encoded into, and because of Definition~\ref{def:qdp} we can compare two states as neighbors by their trace distance $\tau$. This experiment, however, limits the variables we can encode. As mentioned in Subsection~\ref{subsec:encoding_variables} the numerical variables need to be normalized within the Bloch sphere with the minimum and maximum values of the variables. In the local setting a single person has no way to access that data and thus cannot encode it in that manner. With that limitation in mind, this setting calculates the $\epsilon$ for all the categorical variables and the sole variable \texttt{status\_account} since the other two ordinal variables are accompanied in the same qubit by a numerical variable and thus cannot be encoded independently. Figure~\ref{fig:local_setting} shows the pipeline for the local setting experiment.
+In the central setting we defined neighbors as two aggregated density matrices, the one for the full 1000 $\rho$ rows and the leave-one-out $\sigma$. In this setting (inspired by~\cite[Def.~12.1]{dwork2014algorithmic} as mentioned in Section~\ref{sec:background}), however, since it is just one person at a time who is privatizing their data, it would not make sense to compare two different people as neighbors, as in reality what the attacker would want to know is ``what was person A's original category?''. With this idea, this experiment defines the neighbors as the possible states that each label is encoded into, and because of Definition~\ref{def:qdp} we can compare two states as neighbors by their trace distance $\tau$. This experiment, however, limits the variables we can encode. As mentioned in Section~\ref{subsec:encoding_variables} the numerical variables need to be normalized within the Bloch sphere with the minimum and maximum values of the variables. In the local setting a single person has no way to access that data and thus cannot encode it in that manner. With that limitation in mind, this setting calculates the $\epsilon$ for all the categorical variables and the sole variable \texttt{status\_account} since the other two ordinal variables are accompanied in the same qubit by a numerical variable and thus cannot be encoded independently. Figure~\ref{fig:local_setting} shows the pipeline for the local setting experiment.
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
@@ -670,10 +700,213 @@ In the central setting we defined neighbors as two aggregated density matrices, 
 The experiment begins by defining two sets $\{\rho_c\}$ which are all the density matrices that result from encoding the $c$-th label and $\{\rho_c^{\prime}\}$ which is the set of all the density matrices $\rho_c$ that have been passed over the noise mechanism $\mathcal{M}$. Then, for each pair of labels $\{c, c^{\prime}\}, c < c^{\prime}$, we calculate both the trace distance between the original noiseless density matrices $\rho_c$ and $\rho_{c^{\prime}}$ and the $\epsilon_{exp}$ which is the same procedure as the central setting just with inputs $\rho_c^{\prime}$ and $\rho_{c^{\prime}}^{\prime}$. Then, at the end, we make the same search for the maximum $\epsilon_{theo}$ and $\epsilon_{exp}$ of all the analyzed pairs and that is the final result of the variable. 
 
 
-\section{Measurement and Classical release of categorical variables}
+\section{Measurement and Classical release of a categorical variable}
 
-La explicación de la medicion de las variables categoricas como forma de mostrar el ruido en acción. Es el resto de la presentación de semana 10 puesto en texto
+With the previous two experiments we have been able to find $\epsilon_{theo}$ and $\epsilon_{exp}$ for both settings of differential privacy. This, however, leaves one important question to answer: what does this privacy budget actually look like after the classical release of the data? The previous experiments did not need to answer this question to compute $\epsilon$, as we had the full distribution (density matrix) of the qubits.
 
+To answer this question, we first need to clarify the concept of a \textbf{copy}. For the purposes of this investigation, a copy is one qubit in a specific quantum state, either a pure state $\ket{\psi}$ or a mixed state with density matrix $\rho$. When that copy is measured, it collapses into one of the two states of the measurement basis (i.e., $\ket{+}$ or $\ket{-}$ for the $X$ basis). Because of the no-cloning theorem~\cite{watrous_limitations}, the curator (or anybody, for that matter) cannot save the state prior to the measurement to measure it again, and thus every new measurement requires the state to be fully prepared again.
+
+Figure~\ref{fig:release_designs} shows what happens to the data after the pipelines of Subsections~\ref{subsec:experiment_central_setting} and~\ref{subsec:experiment_local_setting}. In the central setting, the final state is the aggregation of the full dataset, $\rho = \frac{1}{n}\sum_{i=1}^{n}\rho_i$, so by the law of total probability, measuring a copy of $\rho^{\prime}$ is no different from drawing a random person $i$ and then measuring their state. In other words, every person is hidden within the full aggregation, and the privacy of each copy is the $\epsilon$ calculated in Subsection~\ref{subsec:experiment_central_setting}. However, each new copy needed to estimate the distribution is another draw and thus costs another $\epsilon$, resulting in a total of $N\epsilon$ because of Corollary~\ref{cor:composition}, with $N$ being the number of copies measured. In the local setting, on the other hand, each individual only needs a single measurement. Since a measurement (Definition~\ref{def:quantum_measurement}) can be thought of as a quantum operation in itself, Proposition~\ref{prop:post_processing} implies that the final $\epsilon$ is at most the one found in the local setting experiment. 
+
+\begin{figure*}[!t]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+      font=\small,
+      box/.style={draw, rounded corners, align=center, text width=2.8cm, minimum height=1.1cm, fill=white},
+      noisebox/.style={box, fill=gray!20},
+      group/.style={draw, rounded corners, thick},
+      mech/.style={draw, rounded corners, dashed},
+      lbl/.style={font=\footnotesize\itshape, anchor=north east},
+      arr/.style={-latex, thick}
+    ]
+    % ---------- C: central setting (Sec. V-A) ----------
+    \node[anchor=west] at (0.3,2.0) {\textbf{C: central setting}};
+    \draw[group] (0.3,-1.1) rectangle (2.7,1.5);
+    \node[anchor=north west] at (0.4,1.45) {Individual};
+    \node[box, text width=1.2cm] (ci) at (1.5,-0.2) {$\rho_i$};
+    \draw[group] (3.4,-1.1) rectangle (18.9,1.5);
+    \node[anchor=north west] at (3.5,1.45) {Curator};
+    \draw[mech] (3.7,-0.95) rectangle (14.1,0.95);
+    \node[lbl] at (14.05,0.93) {central QDP mechanism (Sec.~\ref{subsec:experiment_central_setting})};
+    \node[box] (call) at (5.4,-0.25) {$\rho_0, \dots, \rho_{n-1}$};
+    \node[box] (cagg) at (8.9,-0.25) {\textbf{Aggregate}\\ $\rho = \frac{1}{n}\sum_i \rho_i$};
+    \node[noisebox] (cnoise) at (12.4,-0.25) {\textbf{Noise}\\ $\rho^{\prime} = \mathcal{M}(\rho)$};
+    \node[box] (cmeas) at (16.4,-0.25) {\textbf{Measure}\\ $N$ copies of $\rho^{\prime}$};
+    \draw[arr] (2.7,-0.2) -- (3.4,-0.2);
+    \draw[arr] (call) -- (cagg);
+    \draw[arr] (cagg) -- (cnoise);
+    \draw[arr] (cnoise) -- (cmeas);
+    \node at (16.4,-1.5) {$\epsilon_{total} = N \cdot \epsilon$ per copy};
+    % ---------- L: local setting (Sec. V-B) ----------
+    \node[anchor=west] at (0.3,-2.6) {\textbf{L: local setting}};
+    \draw[group] (0.3,-5.7) rectangle (13.9,-3.1);
+    \node[anchor=north west] at (0.4,-3.15) {Individual $i$};
+    \draw[mech] (0.6,-5.55) rectangle (8.9,-3.65);
+    \node[lbl] at (8.85,-3.67) {local QDP mechanism (Sec.~\ref{subsec:experiment_local_setting})};
+    \node[box] (li) at (2.4,-4.85) {\textbf{Encode}\\ $\rho_i$};
+    \node[noisebox] (lnoise) at (6.9,-4.85) {\textbf{Own noise}\\ $\rho_i^{\prime} = \mathcal{M}(\rho_i)$};
+    \node[box] (lmeas) at (11.6,-4.85) {\textbf{Measure}\\ one copy of $\rho_i^{\prime}$};
+    \node[box] (lcur) at (16.4,-4.85) {\textbf{Curator}\\ collects the outcomes};
+    \draw[arr] (li) -- (lnoise);
+    \draw[arr] (lnoise) -- (lmeas);
+    \draw[arr] (13.9,-4.85) -- (lcur);
+    \node at (16.4,-6.1) {$\epsilon_{total} = \epsilon$ of one person};
+  \end{tikzpicture}%
+  }
+  \caption{The two methodologies for measuring each setting of quantum differential privacy}
+  \label{fig:release_designs}
+\end{figure*}
+
+With this in mind, we propose an experiment that measures the encoded qubit of the variable \texttt{collateral} in the local setting; the central setting is discussed analytically in Section~\ref{sec:discussion_and_conclusion}. We chose only \texttt{collateral} because, as will be shown shortly, this variable is the worst-case scenario for privacy: it has an opposite pair of categories ($\phi = 0$ and $\phi = \pi$), so a single measurement reaches the full local $\epsilon$. Moreover, every other variable would require a very similar analysis to the one done for \texttt{collateral}, so we believe a single variable is sufficient to get the point across.
+
+Measuring a qubit first requires choosing a measurement basis, and for the categorical encoding of Section~\ref{subsec:encoding_variables} this choice is not arbitrary. Since the encoding leaves the qubits of the categorical variables on the equator ($\theta = \frac{\pi}{2}$), measuring in the $Z$ basis would return $\ket{0}$ with probability $P(0) = \frac{1 + \cos\theta}{2} = \frac{1}{2}$ (and the same for $\ket{1}$) for every category, so the analyst would not get any useful information back about the category of the qubit they are reading. For the experiment we therefore chose $X$ as the measurement basis. For the experiment we therefore chose $X$ as the measurement basis. We chose $X$ instead of another basis that also distinguishes states on the equator, such as $Y$, because $X$ aligns the label car (0) with the basis state $\ket{+}$.
+
+Now that the basis is clear, the next step is to find the probability of each outcome for each category. In the $X$ basis, a state with Bloch angles $\theta$ and $\phi$ (Definition~\ref{def:bloch_representation}) gives $P(+) = \frac{1 + \sin\theta\cos\phi}{2}$, which on the equator becomes $P(+) = \frac{1 + \cos\phi}{2}$. The four categories of \texttt{collateral} (see Table~\ref{tab:label_categorical}) sit at $\phi = 0, \frac{\pi}{2}, \pi$ and $\frac{3\pi}{2}$, respectively, so their probabilities of measuring $\ket{+}$ are $1, \frac{1}{2}, 0$ and $\frac{1}{2}$, with $P(-) = 1 - P(+)$.
+
+For the experiment we therefore chose $X$ as the measurement basis. We chose $X$ instead of another basis that also distinguishes states on the equator, such as $Y$, because $X$ aligns the label car (0) with the basis state $\ket{+}$.
+
+This immediately shows one limitation of the measurement, noted in~\cite{watrous_limitations}: a measurement can only tell two states apart perfectly if they are orthogonal to one another, and since a qubit has at most two mutually orthogonal states, we cannot distinguish all four categories perfectly with a single measurement.
+
+This limitation, however, ties nicely to the value that the experiment will actually measure, which is also what the analyst who uses QDP will actually receive. Since a single outcome cannot reveal a person's category, the analyst can only use the population statistic $F$: the fraction of the population whose measurement gave a particular state ($\ket{+}$ for the experiment). Since each person gives $\ket{+}$ with probability $P(+|c)$, with $c$ being their category, the expected value of $F$ is
+\begin{equation}
+  E[F] = \sum_{c} \Omega_c \, P(+|c),
+  \label{eq:expected_F}
+\end{equation}
+with $\Omega_c$ being the proportion of category $c$ (i.e., the fraction of people in the original dataset with category $c$). For the selected variable \texttt{collateral},
+\begin{align}
+  E[F] &= (0.232 \times 1) + \left(0.282 \times \tfrac{1}{2}\right) \nonumber \\
+       &\quad + (0.332 \times 0) + \left(0.154 \times \tfrac{1}{2}\right) = 0.45,
+  \label{eq:expected_F_collateral}
+\end{align}
+which means that, on average, $45\%$ of the measurements give the state $\ket{+}$.
+
+This result also shows another important point: even without any noise, the measurement itself does not offer a deterministic output, since the categories none and savings give $\ket{+}$ with probability $\frac{1}{2}$. Since the experiment, and the investigation as a whole, aims to observe the privacy that the noise mechanisms offer and not the randomness of the measurement, we set a baseline $F_B$, the statistic of measuring the population without any noise, and $F_C$, the same statistic measured with noise.
+
+As it was mentioned before, the probability of measuring the state $\ket{+}$ without noise is
+\begin{equation}
+  P_B(+) = \frac{1+\cos\phi}{2}.
+  \label{eq:p_b}
+\end{equation}
+However, after the noise the state vector is shortened by a factor $s$, which we call the ``shrinking coefficient''. The shrinking coefficient of each mechanism is the factor by which the mechanism multiplies the off-diagonal entries of the density matrix $\rho$. This is because, if we write the representation in Definition~\ref{def:bloch_representation} as a matrix, the $x$ and $y$ values of the vector lie on the off-diagonal entries, and thus anything that alters those entries alters $x$ and $y$. Since our basis only cares about $x$, any changes to $z$ have no effect on $P(+)$. Table~\ref{tab:shrinking_coefficient} compiles that coefficient for each noise mechanism.
+
+\begin{table}[H]
+  \caption{Shrinking coefficient for each noise mechanism}
+  \label{tab:shrinking_coefficient}
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    Mechanism & $s$ & $s$ with Table~\ref{tab:noise_params} \\
+    \midrule
+    $\mathcal{M}_{DEP}$ (Def.~\ref{def:dep}) & $1 - p$ & $0.5$ \\
+    $\mathcal{M}_{GAD}$ (Def.~\ref{def:gad}) & $\sqrt{1 - \gamma}$ & $\approx 0.707$ \\
+    $\mathcal{M}_{PAD}$ (Def.~\ref{def:pad}) & $\sqrt{1 - \lambda}\,\sqrt{1 - \gamma}$ & $\approx 0.612$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+With this fact, the probability of measuring $\ket{+}$ after noise becomes
+\begin{equation}
+  P_C(+) = \frac{1+s\cos\phi}{2}.
+  \label{eq:p_c}
+\end{equation}
+We can write $P_C(+)$ in terms of $P_B(+)$ by solving \eqref{eq:p_b} for $\cos\phi$,
+\begin{equation}
+  \cos\phi = 2P_B(+) - 1,
+  \label{eq:cos_phi}
+\end{equation}
+and substituting it into \eqref{eq:p_c}, which gives
+\begin{equation}
+  P_C(+) = \frac{1+s\left(2P_B(+) - 1\right)}{2},
+  \label{eq:p_c_of_p_b}
+\end{equation}
+or, equivalently,
+\begin{equation}
+  P_C(+) - \frac{1}{2} = s\left(P_B(+) - \frac{1}{2}\right).
+  \label{eq:shrink_relation}
+\end{equation}
+Averaging both sides of \eqref{eq:shrink_relation} over all the participants gives
+\begin{equation}
+  E[F_C] - \frac{1}{2} = s\left(E[F_B] - \frac{1}{2}\right).
+  \label{eq:expected_shrink}
+\end{equation}
+As the reader can observe, the distance between $E[F_C]$ and $\frac{1}{2}$ after noise is the shrinking coefficient times the distance between $E[F_B]$ and $\frac{1}{2}$ prior to noise. The reason $s$ can come out of the average is that it is the same for each participant who uses the same noise mechanism on their data.
+
+Relationship~\eqref{eq:expected_shrink}, however, is between expected values, which the analyst has no access to. What the analyst does have is the observed fraction $F_C$ obtained by measuring each participant once, together with the shrinking coefficient $s$, which is public since the parameters of the noise mechanism are public. Replacing $E[F_C]$ with the observed $F_C$ and solving for the noiseless value gives the estimator $\hat{F}$:
+\begin{align}
+  F_C - \tfrac{1}{2} &= s\left(\hat{F} - \tfrac{1}{2}\right), \nonumber \\
+  \hat{F} &= \frac{1}{2} + \frac{F_C - \frac{1}{2}}{s}.
+  \label{eq:estimator}
+\end{align}
+This estimator is unbiased since, by the linearity of the expected value and \eqref{eq:expected_shrink},
+\begin{align}
+  E[\hat{F}] &= \frac{1}{2} + \frac{E[F_C] - \frac{1}{2}}{s} \nonumber \\
+             &= \frac{1}{2} + \frac{s\left(E[F_B] - \frac{1}{2}\right)}{s} = E[F_B].
+  \label{eq:unbiased}
+\end{align}
+Moreover, since $\hat{F}$ is computed only from the released measurements and the public $s$, it is a classical post-processing of the released data and does not increase $\epsilon$~\cite[Prop.~2.1]{dwork2014algorithmic}.
+
+The estimator $\hat{F}$ solves the problem for the expected value, but not for the standard deviation: the correction returns the center to $E[F_B]$, but it cannot undo the randomness that the noise added to each measurement. Each person $i$ can be thought of as a random variable $X_i$ with a Bernoulli distribution of parameter $P_i(+)$, whose variance is
+\begin{equation}
+  \mathrm{Var}(X_i) = P_i(+)\left(1 - P_i(+)\right),
+  \label{eq:var_person}
+\end{equation}
+with $P_i(+) = P_B(+)$ without noise and $P_i(+) = P_C(+)$ with noise. Writing \eqref{eq:shrink_relation} as $P_C(+) = \frac{1}{2} + a$ and $1 - P_C(+) = \frac{1}{2} - a$, with $a = s\left(P_B(+) - \frac{1}{2}\right)$, and replacing it into \eqref{eq:var_person}, we get the variance of each person after the noise in terms of $P_B(+)$:
+\begin{equation}
+  P_C(+)\left(1 - P_C(+)\right) = \frac{1}{4} - s^2\left(P_B(+) - \frac{1}{2}\right)^2.
+  \label{eq:var_person_c}
+\end{equation}
+Replacing the values of $P_B(+)$ from Table~\ref{tab:collateral_probabilities}, the variance of each person is $\frac{1-s^2}{4}$ for the categories car and real estate, and $\frac{1}{4}$ for none and savings.
+
+\begin{table}[H]
+  \caption{} % TODO: caption (user)
+  \label{tab:collateral_probabilities}
+  \centering
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{lccccc}
+    \toprule
+    Category & $\phi$ & $P_B(+)$ & $P_C(+)$ & \multicolumn{2}{c}{$\mathrm{Var}(X_i)$} \\
+    \cmidrule(l){5-6}
+     & & & & B & C \\
+    \midrule
+    car (0)         & $0$                & $1$            & $\tfrac{1+s}{2}$ & $0$            & $\tfrac{1-s^2}{4}$ \\
+    none (1)        & $\tfrac{\pi}{2}$   & $\tfrac{1}{2}$ & $\tfrac{1}{2}$   & $\tfrac{1}{4}$ & $\tfrac{1}{4}$ \\
+    real estate (2) & $\pi$              & $0$            & $\tfrac{1-s}{2}$ & $0$            & $\tfrac{1-s^2}{4}$ \\
+    savings (3)     & $\tfrac{3\pi}{2}$  & $\tfrac{1}{2}$ & $\tfrac{1}{2}$   & $\tfrac{1}{4}$ & $\tfrac{1}{4}$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Finally, since $F = \frac{1}{n}\sum_{i} X_i$ and the participants are independent, the variance of $F$ is the sum of the variances of all the participants divided by $n^2$:
+
+\begin{equation}
+  \mathrm{Var}(F) = \frac{1}{n^2}\sum_{i=1}^{n}\mathrm{Var}(X_i).
+  \label{eq:var_F}
+\end{equation}
+Grouping the participants by category, with $\Omega_c$ the proportion of category $c$ as in \eqref{eq:expected_F} and the labels of Table~\ref{tab:collateral_probabilities},
+\begin{equation}
+  \mathrm{Var}(F_C) = \frac{(\Omega_0 + \Omega_2)(1 - s^2) + \Omega_1 + \Omega_3}{4n},
+  \label{eq:var_fc}
+\end{equation}
+and $\mathrm{Var}(F_B)$ is the case $s = 1$. Since \eqref{eq:estimator} divides $F_C$ by $s$, $\mathrm{Var}(\hat{F}) = \mathrm{Var}(F_C)/s^2$, that is, $\mathrm{std}(\hat{F}) = \mathrm{std}(F_C)/s$.
+
+So far we have shown the ideal distributions for the population measurements. The question that remains is: How much does one single measurement reveal about its owner?
+
+To answer this question, let us recall Definition~\ref{def:qdp}, restricted to the $X$-basis measurement and a single participant. In this case we want that, for any two categories $c$ and $c^{\prime}$ and any outcome $o \in \{+, -\}$, the following condition is met:
+
+\begin{equation}
+  P_C(o|c) \leq e^{\epsilon}\, P_C(o|c^{\prime}).
+  \label{eq:measure_condition}
+\end{equation}
+
+Solving for $\epsilon$, the smallest value that satisfies \eqref{eq:measure_condition} for every pair of categories and every outcome is
+
+\begin{equation}
+  \epsilon_{meas} = \max_{c,\, c^{\prime},\, o} \ln\frac{P_C(o|c)}{P_C(o|c^{\prime})}.
+  \label{eq:epsilon_bit}
+\end{equation}
+
+That is to say, the privacy of the participant is set by the pair of categories, and the outcome, with the largest ratio. 
 
 \section{Experimental Results}
 \label{sec:experimental_results}
