@@ -701,6 +701,7 @@ The experiment begins by defining two sets $\{\rho_c\}$ which are all the densit
 
 
 \section{Measurement and Classical release of a categorical variable}
+\label{sec:measurement_release}
 
 With the previous two experiments we have been able to find $\epsilon_{theo}$ and $\epsilon_{exp}$ for both settings of differential privacy. This, however, leaves one important question to answer: what does this privacy budget actually look like after the classical release of the data? The previous experiments did not need to answer this question to compute $\epsilon$, as we had the full distribution (density matrix) of the qubits.
 
@@ -958,19 +959,149 @@ Each run of the experiment represents one possible release of the data, in which
 \section{Experimental Results}
 \label{sec:experimental_results}
 
+In this section we detail the results of the three experiments detailed in Sections~\ref{sec:finding_epsilon} through \ref{sec:measurement_release} in the same order that they were detailed above.
+
 \subsection{Finding the experimental privacy budget}
 
 \subsubsection{Central Setting}
 
-Resultados del experimento central
+Table~\ref{tab:central_results} compiles the results of the central setting experiment done with all three noise mechanisms. This table also includes the run with the depolarizing noise over the full $256 \times 256$ joint density matrix. On it we compiled three things: the maximum trace distance between the original matrix $\rho$ and the $j$-th leave-one-out matrix $\sigma_j$, the theoretical epsilon $\epsilon_{theo}$ and the found experimental epsilon $\epsilon_{exp}$. To help with the reader's understanding of the table all numbers were multiplied by $10^{3}$.
+
+\begin{table*}[!t]
+  \caption{Results of the $\epsilon_{theo}$ and $\epsilon_{exp}$ for the central setting experiments with all three noise mechanisms.} 
+  \label{tab:central_results}
+  \centering
+  \begin{tabular}{clccccccc}
+    \toprule
+     & & \multicolumn{7}{c}{All values $\times 10^{-3}$} \\
+    \cmidrule(l){3-9}
+     & & & \multicolumn{2}{c}{DEP} & \multicolumn{2}{c}{PAD} & \multicolumn{2}{c}{GAD} \\
+    \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(l){8-9}
+    $k$ & Variable(s) & $\max_j d_j$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ \\
+    \midrule
+    0 & \texttt{collateral}                                 & 0.567 & 1.133 & 0.608 & 1.789 & 0.758 & 2.733 & 0.887 \\
+    1 & \texttt{purpose}                                    & 0.513 & 1.026 & 0.520 & 1.620 & 0.639 & 2.475 & 0.739 \\
+    2 & \texttt{credit\_history}                            & 0.675 & 1.349 & 0.817 & 2.130 & 1.051 & 3.253 & 1.267 \\
+    3 & \texttt{housing}                                    & 0.709 & 1.416 & 0.927 & 2.236 & 1.255 & 3.415 & 1.566 \\
+    4 & \texttt{other\_installment\_plans}                  & 0.773 & 1.545 & 1.150 & 2.439 & 1.595 & 3.725 & 2.080 \\
+    5 & \texttt{status\_savings}, \texttt{month\_duration}  & 0.788 & 1.574 & 1.187 & 2.486 & 1.594 & 3.796 & 2.000 \\
+    6 & \texttt{years\_employment}, \texttt{credit\_amount} & 0.806 & 1.611 & 1.192 & 2.544 & 1.625 & 3.885 & 2.080 \\
+    7 & \texttt{status\_account}                            & 0.708 & 1.414 & 0.943 & 2.234 & 1.020 & 3.411 & 1.100 \\
+    \midrule
+    \multicolumn{3}{l}{Sum over $k$ (Corollary~\ref{cor:composition})} & 11.068 & 7.345 & 17.478 & 9.537 & 26.694 & 11.721 \\
+    \midrule
+    \multicolumn{2}{l}{All 8 qubits, joint ($D = 256$)} & 0.999 & 227.670 & 199.849 & -- & -- & -- & -- \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+In all 24 cases, $\epsilon_{exp} < \epsilon_{theo}$. This is good as in Theorems~\ref{thm:epsilon_gad} through~\ref{thm:epsilon_dep} the $\epsilon_{theo}$ is the upper bound for epsilon. On the other hand at every iteration of Algorithm~\ref{alg:dpd} the matrices are $\rho^{\prime}$ and $\sigma^{\prime}$ rotated by a unitary $P$ (lines 6 through 8). When we calculate $\rho_{ii}$ and $\sigma_{ii}$, we are measuring over $\ket{\psi_i} = P\ket{i}$ and because $P$ is unitary, $\ket{\psi_i}$ is a unit vector. From that result, the maximum ratio $r$ of line 4 is the ratio for a particular pure state, which means that the result produced by the algorithm is at most $PD(\rho^{\prime}, \sigma_{j}^{\prime})$, since PD is no more than the supremum over all pure states (Proposition~\ref{prop:pd_pure_states}). On the other side, Theorems~\ref{thm:epsilon_gad} through~\ref{thm:epsilon_dep} guarantee that the mechanism is $\epsilon_{theo}$-differentially private (Definition~\ref{def:qdp} with $\delta = 0$) for every pair of inputs at trace distance at most $d = \max_j d_j$, which includes every leave-one-out pair $(\rho, \sigma_j)$. Taking a single outcome $S = \{m\}$ in Definition~\ref{def:qdp}, the privacy loss (Definition~\ref{def:privacy_loss}) of every outcome of every measurement is at most $\epsilon_{theo}$, and since PD is the largest of these privacy losses (Definition~\ref{def:proportional_distance}), $PD(\rho^{\prime}, \sigma_{j}^{\prime}) \leq \epsilon_{theo}$. Associating both results, we find the final bound
+\begin{equation}
+  \epsilon_{exp}^{j} \leq PD(\rho^{\prime}, \sigma_{j}^{\prime}) \leq \epsilon_{theo}
+  \label{eq:final_bound}
+\end{equation}
+for every row $j$, and therefore also for $\epsilon_{exp} = \max_j \epsilon_{exp}^{j}$.
+
+Analyzing the table some more we can see a couple more interesting results. The privacy budget computed for each mechanism holds for every column that $\epsilon_{DEP} < \epsilon_{PAD} < \epsilon_{GAD}$, this is a callback to our ``shrinking coefficient'' mentioned in Table~\ref{tab:shrinking_coefficient} and Theorems~\ref{thm:epsilon_gad} through~\ref{thm:epsilon_dep} because the $\epsilon$ increases with $s, d$ so if we hold $d$ constant then the results should align with the smallest to the biggest $s$ of Table~\ref{tab:shrinking_coefficient}. And in the case of the theo/exp ratio is $1.33 - 1.97$ for DEP, $1.53 - 2.54$ for PAD and $1.79 - 3.35$ for GAD so one could say the GAD is the loosest out of the three mechanisms.
+
+In terms of the distance we can observe that most of them are close to $10^{-3}$ for values ranging from $0.513$ to $0.806 \times 10^{-3}$. This can be explained if we write the states we are finding the distance from $\rho$ and $\sigma_j$ as
+\begin{equation}
+  \rho = \frac{1}{n}\sum_{i} \rho_i, \qquad \sigma_j = \frac{1}{n-1}\sum_{i \neq j} \rho_i
+  \label{eq:aggregates}
+\end{equation}
+but since everyone except person $j$ is just everyone minus the state of person $j$ we have
+\begin{equation}
+  \sum_{i \neq j} \rho_i = \sum_{i} \rho_i - \rho_j = n\rho - \rho_j
+  \label{eq:sum_except_j}
+\end{equation}
+from \eqref{eq:aggregates} we get
+\begin{equation}
+  \sigma_j = \frac{n\rho - \rho_j}{n-1}
+  \label{eq:sigma_j}
+\end{equation}
+we can rewrite \eqref{eq:sigma_j} in terms of the difference between $\rho$ and $\sigma_j$ to get
+\begin{equation}
+  \begin{aligned}
+    n\rho &= (n-1)\sigma_j + \rho_j, \\
+    \rho - \sigma_j &= \frac{\rho_j - \sigma_j}{n}
+  \end{aligned}
+  \label{eq:difference_neighbours}
+\end{equation}
+from here we can see that the difference between the two states is just the difference between the state of person $j$ and everyone else's over the number of people.
+
+Then, calculating the distance $d_j$ with Definition~\ref{def:trace_distance}, we get
+\begin{equation}
+  d_j = \tau(\rho, \sigma_j) = \frac{1}{2}\Tr\abs{\rho - \sigma_j}
+  \label{eq:d_j}
+\end{equation}
+and simplifying with \eqref{eq:difference_neighbours} we get
+\begin{equation}
+  \begin{aligned}
+    d_j &= \frac{1}{2}\Tr\abs{\frac{\rho_j - \sigma_j}{n}} \\
+        &= \frac{1}{n}\cdot\frac{1}{2}\Tr\abs{\rho_j - \sigma_j} = \frac{\tau(\rho_j, \sigma_j)}{n}
+  \end{aligned}
+  \label{eq:d_j_person}
+\end{equation}
+
+and considering that the largest distance between two states in the Bloch sphere is 2 (so trace distance $\tau =1$), then at most the distance can become $\frac{1}{n} = 10^{-3}$. This can also give insights as to why even though \texttt{housing} and \texttt{other\_installment\_plans} have the same $K=3$ the proportions of the categories are different and thus the relationship between a single person against the rest changes and so does the worst $d$.
 
 \subsubsection{Local Setting}
 
-Resultados del experimento local
+Table~\ref{tab:local_results} shows the results of the local experiment for the variables selected. On the tables we can find the number of categories $K$ each variable has. their maximum trace distance between two states, and the $\epsilon_{theo}$ and $\epsilon_{exp}$ for each variable.
+
+\begin{table*}[!t]
+  \caption{Results for the local setting experiment of finding the theorical and experimental privacy budget $\epsilon_{theo}$ and $\epsilon_{exp}$}
+  \label{tab:local_results}
+  \centering
+  \begin{tabular}{lcccccccc}
+    \toprule
+     & & & \multicolumn{2}{c}{DEP} & \multicolumn{2}{c}{PAD} & \multicolumn{2}{c}{GAD} \\
+    \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(l){8-9}
+    Variable & $K$ & $\max_{c,c'} d_{cc'}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ \\
+    \midrule
+    \texttt{collateral}                        & 4  & 1     & 1.099 & 1.099 & 1.425 & 1.425 & 1.763 & 1.763 \\
+    \texttt{purpose}                           & 10 & 1     & 1.099 & 1.099 & 1.425 & 1.425 & 1.763 & 1.763 \\
+    \texttt{credit\_history}                   & 5  & 0.951 & 1.065 & 1.049 & 1.388 & 1.365 & 1.721 & 1.693 \\
+    \texttt{housing}                           & 3  & 0.866 & 1.005 & 0.962 & 1.318 & 1.257 & 1.645 & 1.567 \\
+    \texttt{other\_installment\_plans}         & 3  & 0.866 & 1.005 & 0.962 & 1.318 & 1.257 & 1.645 & 1.567 \\
+    \texttt{status\_account} (ordinal)         & 4  & 1     & 1.099 & 1.099 & 1.425 & 1.117 & 1.763 & 1.290 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+These results actually agree with the bound of Equation~\ref{eq:final_bound}. In this setting we are actually looking directly at the states that each encoding will return. For variables which have an even number of categories (e.g $K=4$ or $K=10$) then we are assured that there is going to be a pair of states $c, c^{\prime}$ whose distance is going to be maximal and thus $PD(\rho^{\prime}_{c}, \rho^{\prime}_{c^{\prime}}) = \epsilon_{theo}$. For odd categories (e.g $K=3$) that bound is closer but never equal to the theoretical $\epsilon$.
+
+Along that line these results also agree with the fact that as was mentioned in Section~\ref{subsec:experiment_local_setting} this experiment does not depend on the data. We can observe this by comparing the variables $\texttt{housing}$ and $\texttt{other\_installment\_plans}$ in the central and local setting. For the central setting as it was already mentioned the privacy budgets change from one varriable to the other even thought the number of categories remain the same because the experiment cares about each persons category relative to the others. While in the local setting the experiment only cares about the worst distance between two encoded categories, and because for $\texttt{housing}$ and $\texttt{other\_installment\_plans}$ there is an equal amount of categories then the encoding returns the same three possible states and the worst pair is the same in both.
+
+
 
 \subsection{Measurement and Classical release of categorical variables}
 
 Resultados de las mediciones con las distribuciones de probabilidad
+\begin{table*}[!t]
+  \caption{} % TODO: caption (user)
+  \label{tab:measurement_results}
+  \centering
+  \begin{tabular}{lcccccccccc}
+    \toprule
+     & & & \multicolumn{2}{c}{$E[F_C]$} & \multicolumn{2}{c}{Std.\ dev.\ of $F_C$} & \multicolumn{2}{c}{$E[\hat{F}]$} & \multicolumn{2}{c}{Std.\ dev.\ of $\hat{F}$} \\
+    \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9} \cmidrule(l){10-11}
+    Mechanism & $s$ & $\epsilon_{meas}$ & Theo. & Sim. & Theo. & Sim. & Theo. & Sim. & Theo. & Sim. \\
+    \midrule
+    No noise (B: $F_B$) & --    & --    & --     & --     & --      & --      & 0.4500 & 0.4500 & 0.01044 & 0.01027 \\
+    DEP                 & 0.500 & 1.099 & 0.4750 & 0.4751 & 0.01465 & 0.01426 & 0.4500 & 0.4502 & 0.02931 & 0.02852 \\
+    PAD                 & 0.612 & 1.425 & 0.4694 & 0.4694 & 0.01404 & 0.01364 & 0.4500 & 0.4500 & 0.02293 & 0.02227 \\
+    GAD                 & 0.707 & 1.763 & 0.4646 & 0.4646 & 0.01340 & 0.01304 & 0.4500 & 0.4500 & 0.01895 & 0.01844 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=\columnwidth]{histograma_collateral_mecanismos.png}
+  \caption{} % TODO: caption (user)
+  \label{fig:measurement_histograms}
+\end{figure}
 
 
 \section{Discussion and Conclusion}
