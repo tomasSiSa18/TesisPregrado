@@ -760,11 +760,9 @@ Figure~\ref{fig:release_designs} shows what happens to the data after the pipeli
 
 With this in mind, we propose an experiment that measures the encoded qubit of the variable \texttt{collateral} in the local setting; the central setting is discussed analytically in Section~\ref{sec:discussion_and_conclusion}. We chose only \texttt{collateral} because, as will be shown shortly, this variable is the worst-case scenario for privacy: it has an opposite pair of categories ($\phi = 0$ and $\phi = \pi$), so a single measurement reaches the full local $\epsilon$. Moreover, every other variable would require a very similar analysis to the one done for \texttt{collateral}, so we believe a single variable is sufficient to get the point across.
 
-Measuring a qubit first requires choosing a measurement basis, and for the categorical encoding of Section~\ref{subsec:encoding_variables} this choice is not arbitrary. Since the encoding leaves the qubits of the categorical variables on the equator ($\theta = \frac{\pi}{2}$), measuring in the $Z$ basis would return $\ket{0}$ with probability $P(0) = \frac{1 + \cos\theta}{2} = \frac{1}{2}$ (and the same for $\ket{1}$) for every category, so the analyst would not get any useful information back about the category of the qubit they are reading. For the experiment we therefore chose $X$ as the measurement basis. For the experiment we therefore chose $X$ as the measurement basis. We chose $X$ instead of another basis that also distinguishes states on the equator, such as $Y$, because $X$ aligns the label car (0) with the basis state $\ket{+}$.
+Measuring a qubit first requires choosing a measurement basis, and for the categorical encoding of Section~\ref{subsec:encoding_variables} this choice is not arbitrary. Since the encoding leaves the qubits of the categorical variables on the equator ($\theta = \frac{\pi}{2}$), measuring in the $Z$ basis would return $\ket{0}$ with probability $P(0) = \frac{1 + \cos\theta}{2} = \frac{1}{2}$ (and the same for $\ket{1}$) for every category, so the analyst would not get any useful information back about the category of the qubit they are reading. For the experiment we therefore chose $X$ as the measurement basis. We chose $X$ instead of another basis that also distinguishes states on the equator, such as $Y$, because $X$ aligns the label car (0) with the basis state $\ket{+}$.
 
 Now that the basis is clear, the next step is to find the probability of each outcome for each category. In the $X$ basis, a state with Bloch angles $\theta$ and $\phi$ (Definition~\ref{def:bloch_representation}) gives $P(+) = \frac{1 + \sin\theta\cos\phi}{2}$, which on the equator becomes $P(+) = \frac{1 + \cos\phi}{2}$. The four categories of \texttt{collateral} (see Table~\ref{tab:label_categorical}) sit at $\phi = 0, \frac{\pi}{2}, \pi$ and $\frac{3\pi}{2}$, respectively, so their probabilities of measuring $\ket{+}$ are $1, \frac{1}{2}, 0$ and $\frac{1}{2}$, with $P(-) = 1 - P(+)$.
-
-For the experiment we therefore chose $X$ as the measurement basis. We chose $X$ instead of another basis that also distinguishes states on the equator, such as $Y$, because $X$ aligns the label car (0) with the basis state $\ket{+}$.
 
 This immediately shows one limitation of the measurement, noted in~\cite{watrous_limitations}: a measurement can only tell two states apart perfectly if they are orthogonal to one another, and since a qubit has at most two mutually orthogonal states, we cannot distinguish all four categories perfectly with a single measurement.
 
@@ -783,7 +781,7 @@ which means that, on average, $45\%$ of the measurements give the state $\ket{+}
 
 This result also shows another important point: even without any noise, the measurement itself does not offer a deterministic output, since the categories none and savings give $\ket{+}$ with probability $\frac{1}{2}$. Since the experiment, and the investigation as a whole, aims to observe the privacy that the noise mechanisms offer and not the randomness of the measurement, we set a baseline $F_B$, the statistic of measuring the population without any noise, and $F_C$, the same statistic measured with noise.
 
-As it was mentioned before, the probability of measuring the state $\ket{+}$ without noise is
+As mentioned before, the probability of measuring the state $\ket{+}$ without noise is
 \begin{equation}
   P_B(+) = \frac{1+\cos\phi}{2}.
   \label{eq:p_b}
@@ -851,12 +849,12 @@ The estimator $\hat{F}$ solves the problem for the expected value, but not for t
   \mathrm{Var}(X_i) = P_i(+)\left(1 - P_i(+)\right),
   \label{eq:var_person}
 \end{equation}
-with $P_i(+) = P_B(+)$ without noise and $P_i(+) = P_C(+)$ with noise. Writing \eqref{eq:shrink_relation} as $P_C(+) = \frac{1}{2} + a$ and $1 - P_C(+) = \frac{1}{2} - a$, with $a = s\left(P_B(+) - \frac{1}{2}\right)$, and replacing it into \eqref{eq:var_person}, we get the variance of each person after the noise in terms of $P_B(+)$:
+with $P_i(+) = P_B(+)$ without noise and $P_i(+) = P_C(+)$ with noise. Writing \eqref{eq:shrink_relation} as $P_C(+) = \frac{1}{2} + a$ and $1 - P_C(+) = \frac{1}{2} - a$, with $a = s\left(P_B(+) - \frac{1}{2}\right)$, and substituting it into \eqref{eq:var_person}, we get the variance of each person after the noise in terms of $P_B(+)$:
 \begin{equation}
   P_C(+)\left(1 - P_C(+)\right) = \frac{1}{4} - s^2\left(P_B(+) - \frac{1}{2}\right)^2.
   \label{eq:var_person_c}
 \end{equation}
-Replacing the values of $P_B(+)$ from Table~\ref{tab:collateral_probabilities}, the variance of each person is $\frac{1-s^2}{4}$ for the categories car and real estate, and $\frac{1}{4}$ for none and savings.
+Substituting the values of $P_B(+)$ from Table~\ref{tab:collateral_probabilities}, the variance of each person is $\frac{1-s^2}{4}$ for the categories car and real estate, and $\frac{1}{4}$ for none and savings.
 
 \begin{table}[H]
   \caption{} % TODO: caption (user)
@@ -878,7 +876,6 @@ Replacing the values of $P_B(+)$ from Table~\ref{tab:collateral_probabilities}, 
 \end{table}
 
 Finally, since $F = \frac{1}{n}\sum_{i} X_i$ and the participants are independent, the variance of $F$ is the sum of the variances of all the participants divided by $n^2$:
-
 \begin{equation}
   \mathrm{Var}(F) = \frac{1}{n^2}\sum_{i=1}^{n}\mathrm{Var}(X_i).
   \label{eq:var_F}
@@ -890,23 +887,73 @@ Grouping the participants by category, with $\Omega_c$ the proportion of categor
 \end{equation}
 and $\mathrm{Var}(F_B)$ is the case $s = 1$. Since \eqref{eq:estimator} divides $F_C$ by $s$, $\mathrm{Var}(\hat{F}) = \mathrm{Var}(F_C)/s^2$, that is, $\mathrm{std}(\hat{F}) = \mathrm{std}(F_C)/s$.
 
-So far we have shown the ideal distributions for the population measurements. The question that remains is: How much does one single measurement reveal about its owner?
+So far we have shown the ideal distributions for the population measurements. The question that remains is: how much does one single measurement reveal about its owner?
 
 To answer this question, let us recall Definition~\ref{def:qdp}, restricted to the $X$-basis measurement and a single participant. In this case we want that, for any two categories $c$ and $c^{\prime}$ and any outcome $o \in \{+, -\}$, the following condition is met:
-
 \begin{equation}
-  P_C(o|c) \leq e^{\epsilon}\, P_C(o|c^{\prime}).
+  P_C(o|c) \leq e^{\epsilon_{meas}}\, P_C(o|c^{\prime}).
   \label{eq:measure_condition}
 \end{equation}
-
-Solving for $\epsilon$, the smallest value that satisfies \eqref{eq:measure_condition} for every pair of categories and every outcome is
-
+Solving for $\epsilon_{meas}$ (the privacy budget of the measurement), the smallest value that satisfies \eqref{eq:measure_condition} for every pair of categories and every outcome is
 \begin{equation}
   \epsilon_{meas} = \max_{c,\, c^{\prime},\, o} \ln\frac{P_C(o|c)}{P_C(o|c^{\prime})}.
-  \label{eq:epsilon_bit}
+  \label{eq:epsilon_measurement}
 \end{equation}
+That is to say, the privacy of the participant is set by the pair of categories, and the outcome, with the largest ratio.
 
-That is to say, the privacy of the participant is set by the pair of categories, and the outcome, with the largest ratio. 
+Using Table~\ref{tab:collateral_probabilities}, we find that the worst pair is car and real estate, since they give the largest ratio of $P_C(+)$. Inputting the values of $P_C(+)$ into \eqref{eq:epsilon_measurement}, we get
+\begin{align}
+  \epsilon_{meas} &= \ln\frac{(1+s)/2}{(1-s)/2} \nonumber \\
+                  &= \ln\frac{1+s}{1-s}.
+  \label{eq:epsilon_measurement_replaced}
+\end{align}
+
+Equation~\eqref{eq:epsilon_measurement_replaced} is precisely the $\epsilon$ found for \texttt{collateral} in the local setting experiment of Subsection~\ref{subsec:experiment_local_setting}. Therefore, for this measurement the bound of Proposition~\ref{prop:post_processing} holds with equality: the measurement goes from releasing at most the local $\epsilon$ to releasing exactly that $\epsilon$.
+
+With the preliminaries explained, we can use Figure~\ref{fig:measurement_experiment} to explain the experiment that will help us investigate what the privacy actually looks like for the data.
+
+\begin{figure*}[!t]
+  \centering
+  \resizebox{\textwidth}{!}{%
+  \begin{tikzpicture}[
+      font=\small,
+      box/.style={draw, rounded corners, align=center, text width=2.8cm, minimum height=1.2cm, fill=white},
+      noisebox/.style={box, fill=gray!20},
+      arr/.style={-latex, thick}
+    ]
+    % repetition frame (same width as Figs. 3--5)
+    \draw[rounded corners] (7.4,1.0) rectangle (18.9,-3.95);
+    \node[anchor=south west] at (7.55,-3.9) {Repeat $R = 2000$ times, with the same random numbers for both branches};
+    % shared steps
+    \node[box] (data) at (1.9,-1.3) {\textbf{Data}\\ \texttt{collateral}\\ $n = 1000$, $K = 4$};
+    \node[box] (enc) at (5.4,-1.3) {\textbf{Encode}\\ one qubit per person\\ (Def.~\ref{def:encoding_categorical})};
+    % branch B
+    \node[box] (nb) at (9.4,0) {\textbf{Baseline B}\\ no noise};
+    \node[box] (mb) at (13.0,0) {\textbf{Measure in $X$}\\ once per person};
+    \node[box] (fb) at (16.6,0) {\textbf{Statistic}\\ $F_B$ = fraction of $+$};
+    % branch C
+    \node[noisebox] (nc) at (9.4,-2.6) {\textbf{Noise}\\ $\rho_i^{\prime} = \mathcal{M}(\rho_i)$\\ (Table~\ref{tab:shrinking_coefficient})};
+    \node[box] (mc) at (13.0,-2.6) {\textbf{Measure in $X$}\\ once per person};
+    \node[box] (fc) at (16.6,-2.6) {\textbf{Correct}\\ $F_C \mapsto \hat{F}$, Eq.~\eqref{eq:estimator}};
+    % arrows
+    \draw[arr] (data) -- (enc);
+    \draw[arr] (enc.east) -- ++(0.45,0) |- (nb.west);
+    \draw[arr] (enc.east) -- ++(0.45,0) |- (nc.west);
+    \draw[arr] (nb) -- (mb);
+    \draw[arr] (mb) -- (fb);
+    \draw[arr] (nc) -- (mc);
+    \draw[arr] (mc) -- (fc);
+    % output
+    \node[anchor=north] at (13.15,-4.15) {$\Rightarrow$ distributions of $F_B$ and $\hat{F}$ over the $R$ repetitions (Section~\ref{sec:experimental_results})};
+  \end{tikzpicture}%
+  }
+  \caption{Experiment to measure the distributions of $F_B$ and $\hat{F}$ for $\texttt{collateral}$} 
+  \label{fig:measurement_experiment}
+\end{figure*}
+
+The experiment begins by encoding the 1000 participants of the dataset into their individual qubits. Then two branches run in parallel. In branch B, each qubit is measured in the $X$ basis and we record the statistic $F_B$. In branch C, noise is applied to each qubit, resulting in the density matrix $\rho_i^{\prime} = \mathcal{M}(\rho_i)$ for the $i$-th participant, which we then measure to get $F_C$ and correct with \eqref{eq:estimator} to get $\hat{F}$; this branch is run once for each mechanism of Table~\ref{tab:shrinking_coefficient}. In both branches, each outcome is sampled with the probability given by the Born rule, $\bra{+}\rho\ket{+}$, which matches \eqref{eq:p_b} and \eqref{eq:p_c}.
+
+Each run of the experiment represents one possible release of the data, in which every participant is measured exactly once. We call these runs repetitions rather than shots, since shots would suggest measuring the same participant many times, which is precisely what breaks the privacy guarantee. The experiment is repeated $R = 2000$ times, which gives a relative error of about $1/\sqrt{2R} \approx 1.6\%$ in the estimated standard deviations, and both branches share the same random numbers so that the noise is the only thing that changes from one branch to the other. Finally, we report the mean and standard deviation of $F_B$, $F_C$ and $\hat{F}$ over the repetitions, and compare them with \eqref{eq:expected_F_collateral}, \eqref{eq:expected_shrink} and \eqref{eq:var_fc}.
 
 \section{Experimental Results}
 \label{sec:experimental_results}
