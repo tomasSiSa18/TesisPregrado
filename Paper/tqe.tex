@@ -858,7 +858,7 @@ with $P_i(+) = P_B(+)$ without noise and $P_i(+) = P_C(+)$ with noise. Writing \
 Substituting the values of $P_B(+)$ from Table~\ref{tab:collateral_probabilities}, the variance of each person is $\frac{1-s^2}{4}$ for the categories car and real estate, and $\frac{1}{4}$ for none and savings.
 
 \begin{table}[H]
-  \caption{} % TODO: caption (user)
+  \caption{Probabilities of measuring the state $\ket{+}$ wihile using $\ket{+}$ and the variance of each respective measurement before $B$ and after noise $C$}
   \label{tab:collateral_probabilities}
   \centering
   \renewcommand{\arraystretch}{1.3}
@@ -886,7 +886,12 @@ Grouping the participants by category, with $\Omega_c$ the proportion of categor
   \mathrm{Var}(F_C) = \frac{(\Omega_0 + \Omega_2)(1 - s^2) + \Omega_1 + \Omega_3}{4n},
   \label{eq:var_fc}
 \end{equation}
-and $\mathrm{Var}(F_B)$ is the case $s = 1$. Since \eqref{eq:estimator} divides $F_C$ by $s$, $\mathrm{Var}(\hat{F}) = \mathrm{Var}(F_C)/s^2$, that is, $\mathrm{std}(\hat{F}) = \mathrm{std}(F_C)/s$.
+and $\mathrm{Var}(F_B)$ is the case $s = 1$. Since \eqref{eq:estimator} divides $F_C$ by $s$, $\mathrm{Var}(\hat{F}) = \mathrm{Var}(F_C)/s^2$, doing the square root to get the standard deviation we get,
+\begin{equation}
+  \mathrm{std}(\hat{F}) = \mathrm{std}(F_C)/s
+  \label{eq:corrected_std}
+\end{equation}
+
 
 So far we have shown the ideal distributions for the population measurements. The question that remains is: how much does one single measurement reveal about its owner?
 
@@ -1079,13 +1084,12 @@ In the case of the ordinal variable \texttt{status\_account}, it is here that th
 
 One last observation that has to be mentioned is that the local $\epsilon$ is about 1000 times that of the central $\epsilon$. This might, at first glance, look like the local setting is worse overall. However, the reader might remember the explanation in Section~\ref{sec:measurement_release} about copies and what the analyst has to do to read the information of both methods, and recall that on one the $\epsilon$ is consumed $N$ times per reading while in the local setting it is consumed once. In Section~\ref{sec:discussion_and_conclusion} we will discuss this topic further.  
 
-
-
 \subsection{Measurement and Classical release of categorical variables}
 
-Resultados de las mediciones con las distribuciones de probabilidad
+The last results we are going to explore are the ones for the experiment of the local measurement and release of the data. In Table~\ref{tab:measurement_results} we can observe the expected values and standard deviations of $\hat{F}$ and $F_C$ for all mechanisms, including the control, which has no noise, as well as the $\epsilon_{meas}$ and the shrinking coefficient $s$ for each one. In Figure~\ref{fig:measurement_histograms} there are three histograms which compile the distributions that $F_B$ and the corrected $\hat{F}$ had.
+
 \begin{table*}[!t]
-  \caption{} % TODO: caption (user)
+  \caption{Results of the measurement experiments for the statistics $F_C$ and $\hat{F}$ for the 2000 repetitions}
   \label{tab:measurement_results}
   \centering
   \begin{tabular}{lcccccccccc}
@@ -1105,9 +1109,15 @@ Resultados de las mediciones con las distribuciones de probabilidad
 \begin{figure}[!t]
   \centering
   \includegraphics[width=\columnwidth]{histograma_collateral_mecanismos.png}
-  \caption{} % TODO: caption (user)
+  \caption{Density histogram of the fraction of people whose measured state was $\ket{+}$ without noise, $F_B$, and post noise and corrected, $\hat{F}$, for DEP, PAD and GAD (top to bottom)}
   \label{fig:measurement_histograms}
 \end{figure}
+
+We can observe that the mean value of $F_C$ matches the theory and, after the correction $\hat{F}$, the mean value returns to that of $F_B$ yet the standard deviation increases in all cases. The simulated standard deviations are all slightly below the theoretical ones, by $1.6\%$ (for $F_B$) up to $2.9\%$ (for $\hat{F}$ with PAD). Since $1/\sqrt{2R} \approx 1.6\%$ is the typical size of this error (one standard error), and about $95\%$ of runs fall within two standard errors ($3.2\%$), these differences are expected. Moreover, all of them deviate in the same direction because both branches share the same random numbers, so this is a single fluctuation rather than four independent ones.
+
+The change in the standard deviation is the real cost of privacy, which we will discuss further in Section~\ref{sec:discussion_and_conclusion}, but straight from the data of Table~\ref{tab:measurement_results} the reader can observe that each mechanism gives a standard deviation $2.78$, $2.17$ and $1.80$ times larger than $\mathrm{std}(F_B)$ in each respective case. This is thanks to Equation~\ref{eq:corrected_std}'s denominator, which results in the corrected standard deviation being inversely proportional to the shrinking coefficient and thus a smaller $s$ (more shrinking) implies a larger std. This gives a reason to the ultimate trade-off of differential privacy: with a larger $s$ (less noise), the $\epsilon$ will be bigger as people will be able to be distinguished more easily and, at the same time, the corrected $\hat{F}$ will have a more precise density.
+
+Lastly, the reader might have noticed that the values for $\epsilon_{meas}$ are the same values that resulted from $\epsilon_{exp}$ from the local setting experiment for \texttt{collateral}. This is thanks in part to Proposition~\ref{prop:post_processing} since the measurement itself will be a quantum operation and thus be bounded by the $\epsilon$ of the noise mechanism. Moreover, the variable \texttt{collateral} measured with $X$ will give complete distinction between the worst pair without noise (car and real estate). After noise, as shown in Equation~\ref{eq:epsilon_measurement_replaced}, the value will be reached for the states which result in the longest trace distance $d=1$ apart.
 
 
 \section{Discussion and Conclusion}
