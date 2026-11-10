@@ -72,16 +72,22 @@ Differential privacy, Quantum computing, Quantum noise
 
 \section{Introduction}
 \label{sec:introduction}
-\PARstart{E}{sta} va a ser la introduccion a la tesis. En esta sección pienso hablar de la motivación, la importancia de la privacidad diferencial, basicamente muy similar al documento de propuesta
+\PARstart{W}{hen} doing research or working in a field that involves other people's data, it is crucial to set clear boundaries as to how that data is going to be collected, managed and distributed. Nowadays our most important asset is data; thus, it becomes a necessity to create tools that allow us to set such boundaries, and one of those tools is differential privacy. Differential privacy describes a promise that is made by a data holder or curator to a data subject: ``You will not be affected, adversely or otherwise, by allowing your data to be used in any study or analysis, no matter what other studies, data sets, or information sources, are available''~\cite{dwork2014algorithmic}. In other words, differential privacy is the process that either a data curator or a data holder must do in order to ensure that a single individual's data cannot be extracted from the study as a whole.
+
+On the other hand, quantum information and computation is rapidly becoming mainstream as a response to the growing necessity of larger and faster computation. Quantum computing significantly advances computational capabilities, outperforming its classical counterpart in certain areas. Given the inherent noise of current quantum hardware, one could argue that it is a perfect scenario for differential privacy. In fact, the promise that the classical DP curator makes to the data holder will not change in the quantum setting; however, the means that the curator will take to reach that promise do.
+
+The motivation for this project is to understand the literature that involves techniques of quantum differential privacy, in particular the theoretical privacy budgets derived by Zhou and Ying~\cite{zhou2017differential}, and to contrast those techniques with experimental data collected in a quantum simulation experiment. With these results, the project hopes to open the door to further studies in quantum differential privacy applications, whose results might keep getting better as quantum computing keeps growing.
+
+Our main contributions involve the proposal and subsequent study of a series of experiments that measure the privacy budget $\epsilon$ with which the data is protected, in both the central and local settings of differential privacy, and compare it with the theoretical budget. These experiments were run as quantum simulations in the PennyLane Python framework~\cite{bergholm2018pennylane} using classical data. Since the classical data needs a way to be translated into qubits for the simulator to use, we also propose encoding methods for the various types of variables used throughout the experiments. Finally, we study what happens when the noisy quantum data is measured and released as a classical statistic, and what that release costs in privacy and precision.
+
+The rest of this paper is organized as follows. Section~\ref{sec:background} introduces formal definitions of the topics used throughout this investigation, so that the reader is familiar with each term and methodology used further. Section~\ref{sec:related_work} briefly discusses previous investigations in topics that align with this one. Section~\ref{sec:data_processing_and_analysis} details the processing and analysis made to select, clean and encode the classical variables into usable quantum data. Sections~\ref{sec:finding_epsilon} and~\ref{sec:measurement_release} detail the design of the experiments, and Section~\ref{sec:experimental_results} analyzes their results. Finally, Section~\ref{sec:discussion_and_conclusion} gathers the insights of the investigation as a whole and discusses possible future work.
 
 \section{Background}
 \label{sec:background}
 
-On this section we will introduce all the background information that the reader might find usefull for understanding the investigation. This secction wwill introduce concepts, equations and any other piece of information to this end.
+In this section we introduce the background that the reader might find useful for understanding the investigation. We first present the quantum information concepts used throughout the paper: quantum states, channels, the Bloch sphere, trace distance, measurement, and the noise channels later used as privacy mechanisms. We then present the classical definition of differential privacy and, finally, its quantum counterpart, together with the tools of Zhou and Ying~\cite{zhou2017differential} to obtain $\epsilon$ both theoretically and experimentally.
 
 \subsection{Quantum Information and Computation}
-
-
 
 \begin{definition}
     (Quantum states~\cite{watrous_quantum_channels}). A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been placed in correspondence with the classical state set $\Sigma$.
@@ -157,8 +163,6 @@ Another useful form to define the trace distance in terms of vectors, by Nielsen
     \]
     \label{def:trace_distance_vector}
 \end{definition}
-
-
 
 \begin{definition}
     (Quantum measurement~\cite{zhou2017differential}). It is the way to extract information from a quantum system. Mathematically, a measurement is modeled as a set of matrices $M = \{K_m\}$ with the condition of
@@ -257,7 +261,7 @@ For the purposes of this investigation we are interested in three types of noise
 
 \subsection{Differential Privacy}
 
-Differential privacy describes a promise that is made by a data holder or curator to a data subject: ``You will not be affected, adversely or otherwise, by allowing your data to be used in any study or analysis, no matter what other studies, data sets, or information sources, are available''~\cite{dwork2014algorithmic}. In other words, differential privacy is the process that either a data curator or a data holder must do in order to ensure that a single individual's data cannot be extracted from the study as a whole. In \textit{The Algorithmic Foundations of Differential Privacy}, Dwork \& Roth formalize differential privacy as
+Dwork and Roth~\cite{dwork2014algorithmic} formalize the promise described in Section~\ref{sec:introduction} as
 
 \begin{definition}
     (Differential privacy~\cite[Def.~2.4]{dwork2014algorithmic}). A randomized algorithm $\mathcal{M}$ with domain $\mathbb{N}^{|\mathcal{X}|}$ is $(\epsilon, \delta)$-differentially private if for all $S \subseteq \mathrm{Range}(\mathcal{M})$ and for all $x, y \in \mathbb{N}^{|\mathcal{X}|}$ such that $\|x - y\|_1 \leq 1$:
@@ -289,7 +293,7 @@ For the purpose of our investigation we were interested in the two settings that
 
 \subsection{Quantum Differential Privacy}
 
-When it comes to quantum differential privacy, the promise that this mechasims are trying to offer to the data holder will not change. However the means that will be taken to reach that promise will. In \cite{zhou2017differential} They define the concept of quantum differential privacy as follows
+As mentioned in Section~\ref{sec:introduction}, the promise of differential privacy does not change in the quantum setting, but the means to reach it do. Zhou and Ying~\cite{zhou2017differential} define quantum differential privacy as follows
 
 \begin{definition}
     (Quantum differential privacy~\cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
@@ -1050,6 +1054,8 @@ and simplifying with \eqref{eq:difference_neighbours} we get
 
 and considering that the largest distance between two states in the Bloch sphere is 2 (so trace distance $\tau =1$), then at most the distance can become $\frac{1}{n} = 10^{-3}$. This can also give insights as to why even though \texttt{housing} and \texttt{other\_installment\_plans} have the same $K=3$ the proportions of the categories are different and thus the relationship between a single person against the rest changes and so does the worst $d$.
 
+Finally in Table~\ref{tab:central_results} we can observe that there is a row for the full 8 qubit side experiment. This experiment yielded a privacy budget almost 20x larger that the per qubit sum and in Section~\ref{sec:discussion_and_conclusion} we will discuss the implications this with regards to the release of the information.
+
 \subsubsection{Local Setting}
 
 Table~\ref{tab:local_results} shows the results of the local experiment for the variables selected. On the table we can find the number of categories $K$ each variable has, their maximum trace distance between two states, and the $\epsilon_{theo}$ and $\epsilon_{exp}$ for each variable.
@@ -1085,6 +1091,7 @@ In the case of the ordinal variable \texttt{status\_account}, it is here that th
 One last observation that has to be mentioned is that the local $\epsilon$ is about 1000 times that of the central $\epsilon$. This might, at first glance, look like the local setting is worse overall. However, the reader might remember the explanation in Section~\ref{sec:measurement_release} about copies and what the analyst has to do to read the information of both methods, and recall that on one the $\epsilon$ is consumed $N$ times per reading while in the local setting it is consumed once. In Section~\ref{sec:discussion_and_conclusion} we will discuss this topic further.  
 
 \subsection{Measurement and Classical release of categorical variables}
+\label{subsec:measurement_results}
 
 The last results we are going to explore are the ones for the experiment of the local measurement and release of the data. In Table~\ref{tab:measurement_results} we can observe the expected values and standard deviations of $\hat{F}$ and $F_C$ for all mechanisms, including the control, which has no noise, as well as the $\epsilon_{meas}$ and the shrinking coefficient $s$ for each one. In Figure~\ref{fig:measurement_histograms} there are three histograms which compile the distributions that $F_B$ and the corrected $\hat{F}$ had.
 
@@ -1123,18 +1130,24 @@ Lastly, the reader might have noticed that the values for $\epsilon_{meas}$ are 
 \section{Discussion and Conclusion}
 \label{sec:discussion_and_conclusion}
 
-En esta seccion voy a hablar de limitaciones encontradas dentro de los experimentos.
 
-Entre ellas:
+The first contribution of this investigation was a framework to encode classical data into quantum states, which was later used in our proposed experiments to study the effects of differential privacy in quantum simulations.
 
-La dualidad entre C y L para la privacidad. (pros y contras)
-Que limitaciones tiene el experimento (analisis conjunto)
+In the central setting experiment we found how loose $\epsilon_{theo}$ is with respect to the experimental result $\epsilon_{exp}$. As shown in Equation~\eqref{eq:final_bound}, $\epsilon_{exp}$ is a lower bound for the true privacy budget, and thus the actual budget of the dataset lies in $[\epsilon_{exp}, \epsilon_{theo}]$. Since our estimate never reached this upper bound, a curator who sets the privacy budget to $\epsilon_{theo}$ has an assurance of privacy, but may be trading usefulness for privacy that the dataset does not need. The curator cannot use $\epsilon_{exp}$ instead, since it is only a lower bound.
 
-Tambien el analisis de los resultados de los mismos y que implicaciones tienen estos frente a la privacidad diferencial tanto clasica como cuantica.
+In the local setting, where each data subject is responsible for adding noise to their own data, the privacy budget is much bigger (about 1000 times that of the central setting). At first glance this might look like a straight argument to only use the central setting when protecting data; however, as seen in Section~\ref{sec:measurement_release}, this comes with a trade-off. Because of the no-cloning theorem, the analyst needs $N$ independent copies to read the central state, so the smaller $\epsilon$ is spent $N$ times, resulting in a total privacy budget of $N\epsilon$ (Corollary~\ref{cor:composition}). On the other hand, the bigger budget of the local mechanism is spent only once, as each person measures their own state a single time. For the single qubit of \texttt{collateral} under DEP and $N = 1000$ copies (the same number of outcomes the local release gets, one per person), neither method is clearly better: in the central setting $\epsilon_{tot} = 1000 \times 0.000608 = 0.608$, while in the local setting $\epsilon = 1.099$.
+
+Lastly, one might try to apply the noise directly on the full 8-qubit density matrix, as the DEP mechanism allows. However, the resulting $\epsilon$ is about 20 to 27 times bigger than the sum of the per-qubit budgets. This is because in Theorem~\ref{thm:epsilon_dep} $\epsilon$ grows with $D$: in Definition~\ref{def:dep}, a bigger $D$ spreads the identity term over more dimensions, so each direction receives only $p/D$ of the noise, while $\rho$ is still only compressed by a factor of $(1-p)$. Since this is also a central release, the same reasoning about measurement applies, and with $N = 1000$ copies the total budget becomes $\epsilon_{tot} = 1000 \times 0.199849 = 199.849$, which makes this method completely useless to protect the data.
+
+This investigation also provided an approach to understand the true cost of privacy. As seen in Subsection~\ref{subsec:measurement_results}, after the noise and the correction the standard deviation of $\hat{F}$ increases, which means that the released values become more dispersed around the original mean. Both effects come from the same shrinking coefficient $s$: a smaller $s$ lowers $\epsilon_{meas}$, so an attacker has less chance of identifying a single person, but it also widens the standard deviation, so the analyst gets a less precise estimate.
+
+This investigation has two main limitations. First, the experiments were carried out on quantum simulators, where the noise channels are applied exactly through their Kraus operators. On real hardware these operations are more difficult to carry out, since they require extra environment qubits to produce the decoherence and measurement shots to estimate the resulting states. Second, the proposed encoding and the experiments to measure the privacy budget respond to specific choices: the German Credit dataset and a single set of noise parameters (Table~\ref{tab:noise_params}).
+
+All in all, the investigation achieved its objective, which was to compare and contrast the theoretical privacy budget $\epsilon$ of different quantum noise mechanisms with an experimental one in quantum computing simulations. Each experiment yielded results that align with the expectations founded on~\cite{zhou2017differential} and~\cite{dwork2014algorithmic}, among many other works studied to bring this investigation to fruition. As future work we propose implementing the mechanisms on real hardware, parameter sweeps, a comparison with the Lifted QDP of Song et al.~\cite{song2025hybrid}, and joining this investigation with variational quantum circuits to build a private quantum machine learning pipeline.
 
 \clearpage
 \appendices
-% appendix results numbered D.1, D.2, ... instead of 4.1 (IEEEtran keeps \thesection arabic in appendices)
+
 \renewcommand{\thelemma}{\Alph{section}.\arabic{lemma}}
 \renewcommand{\theproposition}{\Alph{section}.\arabic{proposition}}
 
