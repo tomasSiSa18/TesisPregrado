@@ -93,6 +93,14 @@ In this section we introduce the background that the reader might find useful fo
 
 \begin{definition}
     (Quantum states~\cite{watrous_quantum_channels}). A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been placed in correspondence with the classical state set $\Sigma$.
+    In particular, when $\Sigma = \{0, 1\}$ the system is a \textbf{qubit}, and a pure qubit state is a unit vector
+    \[
+      \ket{\psi} = \alpha\ket{0} + \beta\ket{1}, \qquad \alpha, \beta \in \mathbb{C}, \quad \abs{\alpha}^2 + \abs{\beta}^2 = 1,
+    \]
+    whose density matrix is the outer product
+    \[
+      \rho = \ket{\psi}\bra{\psi} = \begin{pmatrix} \abs{\alpha}^2 & \alpha\beta^{*} \\ \alpha^{*}\beta & \abs{\beta}^2 \end{pmatrix}.
+    \]
     \label{def:quantum_state}
 \end{definition}
 
@@ -151,14 +159,14 @@ Quantum channels are important as they are the generalization of an operation ov
       \tau(\rho, \sigma) = \frac{1}{2}Tr\abs{\rho - \sigma}
     \]
 
-    where $Tr(x)$ is the trace of the density matrix $x$.
+    where $Tr(x)$ is the trace of the matrix $x$.
     \label{def:trace_distance}
 \end{definition}
 
 Another useful form to define the trace distance in terms of vectors, by Nielsen \& Chuang~\cite{Nielsen_Chuang_2010}, is 
 
 \begin{definition}
-    (Trace distance~\cite{Nielsen_Chuang_2010}). It is the distance between two qubit vectors $u$ and $v$ defined by:
+    (Trace distance~\cite{Nielsen_Chuang_2010}). It is the distance between the Bloch vectors $u$ and $v$ of two qubit states, defined by:
 
     \[
       \tau(u, v) = \frac{1}{2}\norm{u - v}
@@ -209,7 +217,7 @@ For the purposes of this investigation we are interested in three types of noise
     and the generalized amplitude damping mechanism ($\mathcal{M}_{GAD}$) is the mapping
 
     \[
-      \rho \mapsto \mathcal{M}_{GAD} = \mathcal{E}_{GAD}(\rho)
+      \mathcal{M}_{GAD}(\rho) = \mathcal{E}_{GAD}(\rho)
     \]
     \label{def:gad}
 \end{definition}
@@ -238,7 +246,7 @@ For the purposes of this investigation we are interested in three types of noise
     (Phase-amplitude damping mechanism~\cite{zhou2017differential}). The phase-amplitude damping channel operation ($\mathcal{E}_{PAD}$) over a density matrix $\rho$ in the Hilbert space $\mathcal{H}_2$ is defined as the mapping
 
     \[
-      \rho \mapsto \mathcal{M}_{PAD} = \mathcal{E}_{GAD}(\mathcal{E}_{PD}(\rho))
+      \mathcal{M}_{PAD}(\rho) = \mathcal{E}_{GAD}(\mathcal{E}_{PD}(\rho))
     \]
     \label{def:pad}
 \end{definition}
@@ -255,7 +263,7 @@ For the purposes of this investigation we are interested in three types of noise
   and the depolarizing mechanism ($\mathcal{M}_{DEP}$) is the mapping
 
   \[
-    \rho \mapsto \mathcal{M}_{DEP} = \mathcal{E}_{DEP}(\rho)
+    \mathcal{M}_{DEP}(\rho) = \mathcal{E}_{DEP}(\rho)
   \]
   \label{def:dep}
 \end{definition}
