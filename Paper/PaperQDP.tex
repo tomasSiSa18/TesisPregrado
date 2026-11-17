@@ -24,12 +24,12 @@
 \let\accessps@headings\ps@headings
 \def\ps@headings{\accessps@headings
   \def\@oddfoot{\hfill\raisebox{8pt}{\footerpagefont\thepage}}%
-  \def\@evenfoot{\raisebox{8pt}{\footerpagefont\thepage}\hfill}}
+\def\@evenfoot{\raisebox{8pt}{\footerpagefont\thepage}\hfill}}
 \let\accessps@titlepage\ps@titlepage
 \def\ps@titlepage{\accessps@titlepage
   \def\@oddhead{}\def\@evenhead{}%
   \def\@oddfoot{\hfill\raisebox{3pt}{\footerpagefont\thepage}}%
-  \def\@evenfoot{\raisebox{3pt}{\footerpagefont\thepage}\hfill}}
+\def\@evenfoot{\raisebox{3pt}{\footerpagefont\thepage}\hfill}}
 \pagestyle{headings}
 \patchcmd{\@maketitle}{{\vss\historyfont\@history\vss}\vspace*{2mm}\par}{}{}{}
 \patchcmd{\@maketitle}{{\vss\doifont Digital Object Identifier\space\@doi\vss}\vspace*{7.4mm}\par}{}{}{}
@@ -42,7 +42,7 @@
 \newtheorem{lemma}{Lemma}[section]
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 \history{Date of publication xxxx 00, 0000, date of current version xxxx 00, 0000.}
 \doi{10.1109/TQE.2020.DOI}
@@ -60,12 +60,12 @@
 
 \begin{abstract}
 
-Differential privacy is a promise that a single individual's data cannot be extracted from a study as a whole. This investigation explores whether quantum noise mechanisms can deliver this promise. Zhou and Ying proposed theoretical bounds for the privacy budget of quantum noise mechanisms, as well as an algorithm to estimate it experimentally. Using their work as a base, we study the privacy budget achieved on the German Credit dataset. We propose an encoding methodology to pass the data into quantum simulations and an experimental pipeline that compares the experimental privacy budget with the theoretical bounds of the depolarizing, generalized amplitude damping and phase-amplitude damping mechanisms, in both the central and local settings. We also propose an experiment to understand what the classical release of the quantum private data actually assures. In the central setting, the experimental privacy budget was below the theoretical upper bound in all cases, with the bound exceeding it by a factor of 1.3 to 3.4. In the local setting, the experimental budget reached the theoretical bound for categorical variables with an even number of categories, thanks to characteristics of both the measurement and the encoding. Finally, the measurement experiment showed that the classical release of a categorical variable attains its local privacy budget, and that the cost of privacy appears in the standard deviation of the released estimate, which grew 1.8 to 2.8 times after the noise.
+  Differential privacy is a promise that a single individual's data cannot be extracted from a study as a whole. This investigation explores whether quantum noise mechanisms can deliver this promise. Zhou and Ying proposed theoretical bounds for the privacy budget of quantum noise mechanisms, as well as an algorithm to estimate it experimentally. Using their work as a base, we study the privacy budget achieved on the German Credit dataset. We propose an encoding methodology to pass the data into quantum simulations and an experimental pipeline that compares the experimental privacy budget with the theoretical bounds of the depolarizing, generalized amplitude damping and phase-amplitude damping mechanisms, in both the central and local settings. We also propose an experiment to understand what the classical release of the quantum private data actually assures. In the central setting, the experimental privacy budget was below the theoretical upper bound in all cases, with the bound exceeding it by a factor of 1.3 to 3.4. In the local setting, the experimental budget reached the theoretical bound for categorical variables with an even number of categories, thanks to characteristics of both the measurement and the encoding. Finally, the measurement experiment showed that the classical release of a categorical variable attains its local privacy budget, and that the cost of privacy appears in the standard deviation of the released estimate, which grew 1.8 to 2.8 times after the noise.
 
 \end{abstract}
 
 \begin{keywords}
-Differential privacy, Quantum computing, Quantum noise  
+  Differential privacy, Quantum computing, Quantum noise
 \end{keywords}
 
 \titlepgskip=-15pt
@@ -92,45 +92,47 @@ In this section we introduce the background that the reader might find useful fo
 \subsection{Quantum Information and Computation}
 
 \begin{definition}
-    (Quantum states~\cite{watrous_quantum_channels}). A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been placed in correspondence with the classical state set $\Sigma$.
-    In particular, when $\Sigma = \{0, 1\}$ the system is a \textbf{qubit}, and a pure qubit state is a unit vector
-    \[
-      \ket{\psi} = \alpha\ket{0} + \beta\ket{1}, \qquad \alpha, \beta \in \mathbb{C}, \quad \abs{\alpha}^2 + \abs{\beta}^2 = 1,
-    \]
-    whose density matrix is the outer product
-    \[
-      \rho = \ket{\psi}\bra{\psi} = \begin{pmatrix} \abs{\alpha}^2 & \alpha\beta^{*} \\ \alpha^{*}\beta & \abs{\beta}^2 \end{pmatrix}.
-    \]
-    \label{def:quantum_state}
+  (Quantum states~\cite{watrous_quantum_channels}). A quantum state of the system X is described by a density matrix $\rho$ whose entries are complex numbers and whose indices (for both its rows and columns) have been placed in correspondence with the classical state set $\Sigma$.
+  In particular, when $\Sigma = \{0, 1\}$ the system is a \textbf{qubit}, and a pure qubit state is a unit vector
+  \[
+    \ket{\psi} = \alpha\ket{0} + \beta\ket{1}, \qquad \alpha, \beta \in \mathbb{C}, \quad \abs{\alpha}^2 + \abs{\beta}^2 = 1,
+  \]
+  whose density matrix is the outer product
+  \[
+    \rho = \ket{\psi}\bra{\psi} =
+    \begin{pmatrix} \abs{\alpha}^2 & \alpha\beta^{*} \\ \alpha^{*}\beta & \abs{\beta}^2
+    \end{pmatrix}.
+  \]
+  \label{def:quantum_state}
 \end{definition}
 
 \begin{definition}
-    (Mixed state~\cite{zhou2017differential}). A mixed state of a quantum system is an ensemble
+  (Mixed state~\cite{zhou2017differential}). A mixed state of a quantum system is an ensemble
 
-    \[
-      \mathbb{E} = \{(p_1,\ket{\psi_1}),...,(p_k,\ket{\psi_k})\}
-    \]
+  \[
+    \mathbb{E} = \{(p_1,\ket{\psi_1}),...,(p_k,\ket{\psi_k})\}
+  \]
 
-    which in turn can be represented by the density operator
+  which in turn can be represented by the density operator
 
-    \[
-      \rho_{\mathbb{E}} = \sum_{i}p_i\ket{\psi_i}\bra{\psi_i}
-    \]
+  \[
+    \rho_{\mathbb{E}} = \sum_{i}p_i\ket{\psi_i}\bra{\psi_i}
+  \]
 
-    thus the resulting $\rho_{\mathbb{E}}$ will be the density matrix representation of the ensemble.
-    \label{def:mixed_state}
+  thus the resulting $\rho_{\mathbb{E}}$ will be the density matrix representation of the ensemble.
+  \label{def:mixed_state}
 \end{definition}
 
 \begin{definition}
-    (Quantum channel~\cite{watrous_quantum_channels}). A quantum channel describes a linear mapping over density matrices.
-    \label{def:quantum_channel}
+  (Quantum channel~\cite{watrous_quantum_channels}). A quantum channel describes a linear mapping over density matrices.
+  \label{def:quantum_channel}
 \end{definition}
 
 Quantum channels are important as they are the generalization of an operation over a quantum state, and in the case of this project we need to use operations such as the depolarizing channel, which is defined thanks to this general definition.
 
 \begin{definition}
-    (Bloch sphere~\cite{watrous_quantum_channels}). The Bloch sphere is a useful geometrical representation for a single qubit. 
-    \label{def:bloch_sphere}
+  (Bloch sphere~\cite{watrous_quantum_channels}). The Bloch sphere is a useful geometrical representation for a single qubit.
+  \label{def:bloch_sphere}
 \end{definition}
 
 \begin{definition}
@@ -153,107 +155,119 @@ Quantum channels are important as they are the generalization of an operation ov
 
 
 \begin{definition}
-    (Trace distance~\cite{zhou2017differential}). It is the distance between two density operators and it is defined by:
+  (Trace distance~\cite{zhou2017differential}). It is the distance between two density operators and it is defined by:
 
-    \[
-      \tau(\rho, \sigma) = \frac{1}{2}Tr\abs{\rho - \sigma}
-    \]
+  \[
+    \tau(\rho, \sigma) = \frac{1}{2}Tr\abs{\rho - \sigma}
+  \]
 
-    where $Tr(x)$ is the trace of the matrix $x$.
-    \label{def:trace_distance}
+  where $Tr(x)$ is the trace of the matrix $x$.
+  \label{def:trace_distance}
 \end{definition}
 
-Another useful form to define the trace distance in terms of vectors, by Nielsen \& Chuang~\cite{Nielsen_Chuang_2010}, is 
+Another useful form to define the trace distance in terms of vectors, by Nielsen \& Chuang~\cite{Nielsen_Chuang_2010}, is
 
 \begin{definition}
-    (Trace distance~\cite[Sec.~9.2.1, Eq.~(9.20)]{Nielsen_Chuang_2010}). It is the distance between the Bloch vectors $u$ and $v$ of two qubit states, defined by:
+  (Trace distance~\cite[Sec.~9.2.1, Eq.~(9.20)]{Nielsen_Chuang_2010}). It is the distance between the Bloch vectors $u$ and $v$ of two qubit states, defined by:
 
-    \[
-      \tau(u, v) = \frac{1}{2}\norm{u - v}
-    \]
-    \label{def:trace_distance_vector}
+  \[
+    \tau(u, v) = \frac{1}{2}\norm{u - v}
+  \]
+  \label{def:trace_distance_vector}
 \end{definition}
 
 \begin{definition}
-    (Quantum measurement~\cite{zhou2017differential}). It is the way to extract information from a quantum system. Mathematically, a measurement is modeled as a set of matrices $M = \{K_m\}$ with the condition of
+  (Quantum measurement~\cite{zhou2017differential}). It is the way to extract information from a quantum system. Mathematically, a measurement is modeled as a set of matrices $M = \{K_m\}$ with the condition of
 
-    \[
-      \sum_m K^{\dagger}_{m}K_{m} = I
-    \]
+  \[
+    \sum_m K^{\dagger}_{m}K_{m} = I
+  \]
 
-    with $I$ being the identity of the density operator (i.e., for a qubit, $I$ is the $2\times2$ identity matrix).
-    \label{def:quantum_measurement}
+  with $I$ being the identity of the density operator (i.e., for a qubit, $I$ is the $2\times2$ identity matrix).
+  \label{def:quantum_measurement}
 \end{definition}
 
 When talking about quantum differential privacy below, it will not really matter what the quantum state collapses into. Given this liberty, we can define a POVM (Positive Operator-Valued Measure) which is a simplification over the measurement where we get a set of matrices $M = \{M_m\}$ with $M_m = K^{\dagger}_{m}K_{m}$ $\forall m$. This is possible since we only care about the probabilities, and so $p_m = Tr(K_{m} \rho K^{\dagger}_{m}) = Tr(M_m\rho)$.
 
 \begin{definition}
-    (Quantum noise~\cite{zhou2017differential}). It is an inherent physical process that occurs on the quantum state that causes it to change in some way.
-    \label{def:quantum_noise}
+  (Quantum noise~\cite{zhou2017differential}). It is an inherent physical process that occurs on the quantum state that causes it to change in some way.
+  \label{def:quantum_noise}
 \end{definition}
 
 For the purposes of this investigation we are interested in three types of noise: generalized amplitude damping, phase-amplitude damping and depolarizing noise. Each one of these types represents a unique physical process which is summarized in greater detail in \cite{song2025hybrid} and \cite{zhou2017differential}. The definitions of the noise channels are:
 
 \begin{definition}
-    (Generalized amplitude damping mechanism~\cite{zhou2017differential}). The generalized amplitude damping channel operation ($\mathcal{E}_{GAD}$) over a density matrix $\rho$ is defined as 
+  (Generalized amplitude damping mechanism~\cite{zhou2017differential}). The generalized amplitude damping channel operation ($\mathcal{E}_{GAD}$) over a density matrix $\rho$ is defined as
 
-    \[
-      \mathcal{E}_{GAD}(\rho) = \sum_{k = 0}^{3}E_{k}\rho E_{k}^{\dagger}
-    \]
+  \[
+    \mathcal{E}_{GAD}(\rho) = \sum_{k = 0}^{3}E_{k}\rho E_{k}^{\dagger}
+  \]
 
-    in the 2-dimensional Hilbert space
+  in the 2-dimensional Hilbert space
 
-    where
+  where
 
-    \begin{align*}
-      E_0 &= \sqrt{\eta}\begin{pmatrix} 1 & 0 \\ 0 & \sqrt{1-\gamma} \end{pmatrix}, &
-      E_1 &= \sqrt{\eta}\begin{pmatrix} 0 & \sqrt{\gamma} \\ 0 & 0 \end{pmatrix}, \\
-      E_2 &= \sqrt{1-\eta}\begin{pmatrix} \sqrt{1-\gamma} & 0 \\ 0 & 1 \end{pmatrix}, &
-      E_3 &= \sqrt{1-\eta}\begin{pmatrix} 0 & 0 \\ \sqrt{\gamma} & 0 \end{pmatrix}
-    \end{align*}
+  \begin{align*}
+    E_0 &= \sqrt{\eta}
+    \begin{pmatrix} 1 & 0 \\ 0 & \sqrt{1-\gamma}
+    \end{pmatrix}, &
+    E_1 &= \sqrt{\eta}
+    \begin{pmatrix} 0 & \sqrt{\gamma} \\ 0 & 0
+    \end{pmatrix}, \\
+    E_2 &= \sqrt{1-\eta}
+    \begin{pmatrix} \sqrt{1-\gamma} & 0 \\ 0 & 1
+    \end{pmatrix}, &
+    E_3 &= \sqrt{1-\eta}
+    \begin{pmatrix} 0 & 0 \\ \sqrt{\gamma} & 0
+    \end{pmatrix}
+  \end{align*}
 
-    and $\eta$ and $\gamma$ are two parameters
+  and $\eta$ and $\gamma$ are two parameters
 
-    and the generalized amplitude damping mechanism ($\mathcal{M}_{GAD}$) is the mapping
+  and the generalized amplitude damping mechanism ($\mathcal{M}_{GAD}$) is the mapping
 
-    \[
-      \mathcal{M}_{GAD}(\rho) = \mathcal{E}_{GAD}(\rho)
-    \]
-    \label{def:gad}
+  \[
+    \mathcal{M}_{GAD}(\rho) = \mathcal{E}_{GAD}(\rho)
+  \]
+  \label{def:gad}
 \end{definition}
 
 \begin{definition}
-    (Phase damping channel~\cite{zhou2017differential}). The phase damping channel operation ($\mathcal{E}_{PD}$) over a density matrix $\rho$ is defined as
+  (Phase damping channel~\cite{zhou2017differential}). The phase damping channel operation ($\mathcal{E}_{PD}$) over a density matrix $\rho$ is defined as
 
-    \[
-      \mathcal{E}_{PD}(\rho) = \sum_{k = 0}^{1}E_{k}\rho E_{k}^{\dagger}
-    \]
+  \[
+    \mathcal{E}_{PD}(\rho) = \sum_{k = 0}^{1}E_{k}\rho E_{k}^{\dagger}
+  \]
 
-    in the 2-dimensional Hilbert space 
+  in the 2-dimensional Hilbert space
 
-    where
+  where
 
-    \[
-      E_0 = \begin{pmatrix} 1 & 0 \\ 0 & \sqrt{1-\lambda} \end{pmatrix}, \quad
-      E_1 = \begin{pmatrix} 0 & 0 \\ 0 & \sqrt{\lambda} \end{pmatrix}
-    \]
+  \[
+    E_0 =
+    \begin{pmatrix} 1 & 0 \\ 0 & \sqrt{1-\lambda}
+    \end{pmatrix}, \quad
+    E_1 =
+    \begin{pmatrix} 0 & 0 \\ 0 & \sqrt{\lambda}
+    \end{pmatrix}
+  \]
 
-    with $\lambda$ being a parameter
-    \label{def:phase_damping}
+  with $\lambda$ being a parameter
+  \label{def:phase_damping}
 \end{definition}
 
 \begin{definition}
-    (Phase-amplitude damping mechanism~\cite{zhou2017differential}). The phase-amplitude damping channel operation ($\mathcal{E}_{PAD}$) over a density matrix $\rho$ in the Hilbert space $\mathcal{H}_2$ is defined as the mapping
+  (Phase-amplitude damping mechanism~\cite{zhou2017differential}). The phase-amplitude damping channel operation ($\mathcal{E}_{PAD}$) over a density matrix $\rho$ in the Hilbert space $\mathcal{H}_2$ is defined as the mapping
 
-    \[
-      \mathcal{M}_{PAD}(\rho) = \mathcal{E}_{GAD}(\mathcal{E}_{PD}(\rho))
-    \]
-    \label{def:pad}
+  \[
+    \mathcal{M}_{PAD}(\rho) = \mathcal{E}_{GAD}(\mathcal{E}_{PD}(\rho))
+  \]
+  \label{def:pad}
 \end{definition}
 
 \begin{definition}
   (Depolarizing channel mechanism~\cite{zhou2017differential}). The depolarizing channel operation ($\mathcal{E}_{DEP}$) over a density matrix $\rho$ with a Hilbert space dimension $D$ and $I$ the $D \times D$ identity matrix can be represented by the quantum operation
-  
+
   \[
     \mathcal{E}_{DEP}(\rho) = \frac{pI}{D} + (1-p)\rho
   \]
@@ -274,14 +288,14 @@ For the purposes of this investigation we are interested in three types of noise
 Dwork and Roth~\cite{dwork2014algorithmic} formalize the promise described in Section~\ref{sec:introduction} as
 
 \begin{definition}
-    (Differential privacy~\cite[Def.~2.4]{dwork2014algorithmic}). A randomized algorithm $\mathcal{M}$ with domain $\mathbb{N}^{|\mathcal{X}|}$ is $(\epsilon, \delta)$-differentially private if for all $S \subseteq \mathrm{Range}(\mathcal{M})$ and for all $x, y \in \mathbb{N}^{|\mathcal{X}|}$ such that $\|x - y\|_1 \leq 1$:
-    \[
-      \Pr[\mathcal{M}(x) \in S] \leq \exp(\epsilon) \Pr[\mathcal{M}(y) \in S] + \delta,
-    \]
-    where the probability space is over the coin flips of the mechanism $\mathcal{M}$. If $\delta = 0$, we say that $\mathcal{M}$ is $\epsilon$-differentially private.
+  (Differential privacy~\cite[Def.~2.4]{dwork2014algorithmic}). A randomized algorithm $\mathcal{M}$ with domain $\mathbb{N}^{|\mathcal{X}|}$ is $(\epsilon, \delta)$-differentially private if for all $S \subseteq \mathrm{Range}(\mathcal{M})$ and for all $x, y \in \mathbb{N}^{|\mathcal{X}|}$ such that $\|x - y\|_1 \leq 1$:
+  \[
+    \Pr[\mathcal{M}(x) \in S] \leq \exp(\epsilon) \Pr[\mathcal{M}(y) \in S] + \delta,
+  \]
+  where the probability space is over the coin flips of the mechanism $\mathcal{M}$. If $\delta = 0$, we say that $\mathcal{M}$ is $\epsilon$-differentially private.
 
-    Here a database $x \in \mathbb{N}^{|\mathcal{X}|}$ is represented by its histogram over the universe $\mathcal{X}$ of possible rows ($x_i$ is the number of rows of type $i$), and $\|x - y\|_1 = \sum_{i} |x_i - y_i|$ is the number of records in which $x$ and $y$ differ \cite[Def.~2.3]{dwork2014algorithmic}.
-    \label{def:dp}
+  Here a database $x \in \mathbb{N}^{|\mathcal{X}|}$ is represented by its histogram over the universe $\mathcal{X}$ of possible rows ($x_i$ is the number of rows of type $i$), and $\|x - y\|_1 = \sum_{i} |x_i - y_i|$ is the number of records in which $x$ and $y$ differ \cite[Def.~2.3]{dwork2014algorithmic}.
+  \label{def:dp}
 \end{definition}
 
 In our investigation we are interested in the privacy guarantee $\epsilon$ when $\delta = 0$. The value of $\epsilon$ can be interpreted as a privacy guarantee from the differentially private algorithm as it implies that adding or removing one record (i.e., adding or removing a participant) in the dataset $x$ will change the probability of any output by a factor of at most $e^{\epsilon}$. In other words, an adversary who wants to analyze the dataset will not be able to reliably tell if a person was included in the dataset or not.
@@ -289,11 +303,11 @@ In our investigation we are interested in the privacy guarantee $\epsilon$ when 
 In order to bound this $\epsilon$, Dwork \& Roth define the privacy loss of an output as:
 
 \begin{definition}
-    (Privacy loss~\cite[Sec.~2.3]{dwork2014algorithmic}). Let $x, y \in \mathbb{N}^{|\mathcal{X}|}$ be adjacent databases ($\|x - y\|_1 \leq 1$) and let $\xi$ be an output of $\mathcal{M}$. The privacy loss incurred by observing $\xi$ is
-    \[
-      \mathcal{L}^{(\xi)}_{\mathcal{M}(x) \| \mathcal{M}(y)} = \ln\left(\frac{\Pr[\mathcal{M}(x) = \xi]}{\Pr[\mathcal{M}(y) = \xi]}\right)
-    \]
-    \label{def:privacy_loss}
+  (Privacy loss~\cite[Sec.~2.3]{dwork2014algorithmic}). Let $x, y \in \mathbb{N}^{|\mathcal{X}|}$ be adjacent databases ($\|x - y\|_1 \leq 1$) and let $\xi$ be an output of $\mathcal{M}$. The privacy loss incurred by observing $\xi$ is
+  \[
+    \mathcal{L}^{(\xi)}_{\mathcal{M}(x) \| \mathcal{M}(y)} = \ln\left(\frac{\Pr[\mathcal{M}(x) = \xi]}{\Pr[\mathcal{M}(y) = \xi]}\right)
+  \]
+  \label{def:privacy_loss}
 \end{definition}
 
 This privacy loss will be used throughout this investigation to experimentally measure $\epsilon_{exp}$ in the experiments explained in Section~\ref{sec:finding_epsilon}.
@@ -306,57 +320,57 @@ For the purpose of our investigation we were interested in the two settings that
 As mentioned in Section~\ref{sec:introduction}, the promise of differential privacy does not change in the quantum setting, but the means to reach it do. Zhou and Ying~\cite{zhou2017differential} define quantum differential privacy as follows
 
 \begin{definition}
-    (Quantum differential privacy~\cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
+  (Quantum differential privacy~\cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
 
-    \[
-      Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta
-    \]
-    \label{def:qdp}
+  \[
+    Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta
+  \]
+  \label{def:qdp}
 \end{definition}
 
 There are many ways to obtain $\epsilon$ in theory; however, Zhou and Ying proposed the following algorithm to obtain a quantity called proportional distance which can help obtain $\epsilon$.
 
 \begin{definition}
-    (Proportional Distance~\cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$, their proportional distance is defined as:
+  (Proportional Distance~\cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$, their proportional distance is defined as:
 
-    \[
-      PD(\rho, \sigma) = \sup_{\{M_m\}, m} \max\left(\ln\frac{q_m}{p_m}, \ln\frac{p_m}{q_m}\right)
-    \]
+  \[
+    PD(\rho, \sigma) = \sup_{\{M_m\}, m} \max\left(\ln\frac{q_m}{p_m}, \ln\frac{p_m}{q_m}\right)
+  \]
 
-    where the supremum is over all POVMs $\{M_m\}$ and all possible outcomes $m$,
+  where the supremum is over all POVMs $\{M_m\}$ and all possible outcomes $m$,
 
-    \[
-      p_m \equiv Tr[\rho M_m], \quad q_m \equiv Tr[\sigma M_m]
-    \]
+  \[
+    p_m \equiv Tr[\rho M_m], \quad q_m \equiv Tr[\sigma M_m]
+  \]
 
-    are the probabilities of obtaining outcome $m$ when the measurement is performed on $\rho$, $\sigma$, respectively, and we make the conventions $\frac{0}{0} = 1$, $\frac{1}{0} = +\infty$, $\ln 0 = -\infty$, $\ln{+\infty} = +\infty$.
-    \label{def:proportional_distance}
+  are the probabilities of obtaining outcome $m$ when the measurement is performed on $\rho$, $\sigma$, respectively, and we make the conventions $\frac{0}{0} = 1$, $\frac{1}{0} = +\infty$, $\ln 0 = -\infty$, $\ln{+\infty} = +\infty$.
+  \label{def:proportional_distance}
 \end{definition}
 
 
 
 \begin{proposition}[Zhou and Ying~\cite{zhou2017differential}]
-    \[
-      \mathrm{PD}(\rho, \sigma) = \sup_{\ket{\psi}} \max\left(\ln\frac{\bra{\psi}\rho\ket{\psi}}{\bra{\psi}\sigma\ket{\psi}}, \ln\frac{\bra{\psi}\sigma\ket{\psi}}{\bra{\psi}\rho\ket{\psi}}\right)
-    \]
-    where the supremum is over all pure states.
-    \label{prop:pd_pure_states}
+  \[
+    \mathrm{PD}(\rho, \sigma) = \sup_{\ket{\psi}} \max\left(\ln\frac{\bra{\psi}\rho\ket{\psi}}{\bra{\psi}\sigma\ket{\psi}}, \ln\frac{\bra{\psi}\sigma\ket{\psi}}{\bra{\psi}\rho\ket{\psi}}\right)
+  \]
+  where the supremum is over all pure states.
+  \label{prop:pd_pure_states}
 \end{proposition}
 
 \begin{definition}
-    ($\mathrm{dPD}$~\cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$,
-    \[
-      \mathrm{dPD}(\rho, \sigma) = \sup_{0 < M \leq I} \ln\frac{\Tr(M\rho)}{\Tr(M\sigma)}
-    \]
-    so that
-    \begin{equation}
-      \mathrm{PD}(\rho, \sigma) = \max\left(\mathrm{dPD}(\rho, \sigma), \mathrm{dPD}(\sigma, \rho)\right).
-      \label{eq:pd_dpd}
-    \end{equation}
-    \label{def:dpd}
+  ($\mathrm{dPD}$~\cite{zhou2017differential}). For two density operators $\rho$ and $\sigma$,
+  \[
+    \mathrm{dPD}(\rho, \sigma) = \sup_{0 < M \leq I} \ln\frac{\Tr(M\rho)}{\Tr(M\sigma)}
+  \]
+  so that
+  \begin{equation}
+    \mathrm{PD}(\rho, \sigma) = \max\left(\mathrm{dPD}(\rho, \sigma), \mathrm{dPD}(\sigma, \rho)\right).
+    \label{eq:pd_dpd}
+  \end{equation}
+  \label{def:dpd}
 \end{definition}
 
-As the reader can observe, dPD is nothing more than the privacy loss that~\cite{dwork2014algorithmic} defined, and thus if we find dPD then we can find $\epsilon$. Algorithm~\ref{alg:dpd}~\cite{zhou2017differential} provides a linear programming algorithm in order to compute dPD between two density operators $\sigma$ and $\rho$ with an accuracy of $\mathit{acc}$. 
+As the reader can observe, dPD is nothing more than the privacy loss that~\cite{dwork2014algorithmic} defined, and thus if we find dPD then we can find $\epsilon$. Algorithm~\ref{alg:dpd}~\cite{zhou2017differential} provides a linear programming algorithm in order to compute dPD between two density operators $\sigma$ and $\rho$ with an accuracy of $\mathit{acc}$.
 
 \begin{algorithm}[!t]
   \caption{Computing $\mathrm{dPD}$ \cite{zhou2017differential}}
@@ -365,72 +379,72 @@ As the reader can observe, dPD is nothing more than the privacy loss that~\cite{
     \REQUIRE density operators $\rho$, $\sigma$ in a Hilbert space $\mathcal{H}$ of dimension $D$; desired accuracy $\mathit{acc}$
     \STATE $r \gets 0$, $r_{prev} \gets \infty$
     \WHILE{$|r - r_{prev}| > \mathit{acc}$}
-      \STATE $r_{prev} \gets r$
-      \STATE $r \gets \max_i (\rho_{ii}/\sigma_{ii})$
-      \STATE $A \gets \rho - r\,\sigma$
-      \STATE Diagonalize $A = P \Lambda P^{\dagger}$ ($P$ unitary, $\Lambda$ diagonal)
-      \STATE $\rho \gets P^{\dagger} \rho P$
-      \STATE $\sigma \gets P^{\dagger} \sigma P$
+    \STATE $r_{prev} \gets r$
+    \STATE $r \gets \max_i (\rho_{ii}/\sigma_{ii})$
+    \STATE $A \gets \rho - r\,\sigma$
+    \STATE Diagonalize $A = P \Lambda P^{\dagger}$ ($P$ unitary, $\Lambda$ diagonal)
+    \STATE $\rho \gets P^{\dagger} \rho P$
+    \STATE $\sigma \gets P^{\dagger} \sigma P$
     \ENDWHILE
     \RETURN $\ln r$
   \end{algorithmic}
 \end{algorithm}
 
 \begin{theorem}[Zhou and Ying~\cite{zhou2017differential}]
-    Let $\eta = 0.5$ in $\mathcal{E}_{GAD}$. For all inputs $\rho$ and $\sigma$ with $\tau(\rho, \sigma) \leq d$, the generalized amplitude damping mechanism $\mathcal{M}_{GAD}$ provides $\epsilon$-differential privacy where
-    \[
-      \epsilon = \ln\left[1 + \frac{2d\sqrt{1-\gamma}}{1-\sqrt{1-\gamma}}\right]
-    \]
-    \label{thm:epsilon_gad}
+  Let $\eta = 0.5$ in $\mathcal{E}_{GAD}$. For all inputs $\rho$ and $\sigma$ with $\tau(\rho, \sigma) \leq d$, the generalized amplitude damping mechanism $\mathcal{M}_{GAD}$ provides $\epsilon$-differential privacy where
+  \[
+    \epsilon = \ln\left[1 + \frac{2d\sqrt{1-\gamma}}{1-\sqrt{1-\gamma}}\right]
+  \]
+  \label{thm:epsilon_gad}
 \end{theorem}
 
 \begin{theorem}[Zhou and Ying~\cite{zhou2017differential}]
-    Let $\eta = 0.5$ in $\mathcal{E}_{GAD}$. If the parameter $\gamma$ in $\mathcal{E}_{GAD}$ and $\lambda$ in $\mathcal{E}_{PD}$ satisfy $\lambda \leq \gamma$, then for all inputs $\rho$ and $\sigma$ such that $\tau(\rho, \sigma) \leq d$, the phase-amplitude damping mechanism $\mathcal{M}_{PAD}$ provides $\epsilon$-differential privacy where
-    \[
-      \epsilon = \ln\left[1 + \frac{2d\sqrt{1-\gamma}\sqrt{1-\lambda}}{1-\sqrt{1-\gamma}\sqrt{1-\lambda}}\right]
-    \]
-    \label{thm:epsilon_pad}
+  Let $\eta = 0.5$ in $\mathcal{E}_{GAD}$. If the parameter $\gamma$ in $\mathcal{E}_{GAD}$ and $\lambda$ in $\mathcal{E}_{PD}$ satisfy $\lambda \leq \gamma$, then for all inputs $\rho$ and $\sigma$ such that $\tau(\rho, \sigma) \leq d$, the phase-amplitude damping mechanism $\mathcal{M}_{PAD}$ provides $\epsilon$-differential privacy where
+  \[
+    \epsilon = \ln\left[1 + \frac{2d\sqrt{1-\gamma}\sqrt{1-\lambda}}{1-\sqrt{1-\gamma}\sqrt{1-\lambda}}\right]
+  \]
+  \label{thm:epsilon_pad}
 \end{theorem}
 
 \begin{theorem}[Zhou and Ying~\cite{zhou2017differential}]
-    For all inputs $\rho$ and $\sigma$ such that $\tau(\rho, \sigma) \leq d$, the depolarizing mechanism $\mathcal{M}_{DEP}$ in the $D$-dimension Hilbert space provides $\epsilon$-differential privacy where
-    \[
-      \epsilon = \ln\left[1 + \frac{1-p}{p}\, dD\right]
-    \]
-    \label{thm:epsilon_dep}
+  For all inputs $\rho$ and $\sigma$ such that $\tau(\rho, \sigma) \leq d$, the depolarizing mechanism $\mathcal{M}_{DEP}$ in the $D$-dimension Hilbert space provides $\epsilon$-differential privacy where
+  \[
+    \epsilon = \ln\left[1 + \frac{1-p}{p}\, dD\right]
+  \]
+  \label{thm:epsilon_dep}
 \end{theorem}
 
 \begin{corollary}[Zhou and Ying~\cite{zhou2017differential}]
-    For each $i \in [k]$, let $\mathcal{M}_i : \mathcal{H}_i \to \mathcal{H}'_i$ be an $\epsilon_i$-differentially private quantum algorithm, and assume that they are independent. Their combination
-    \[
-      \mathcal{M}_{[k]} : \bigotimes_{i=1}^{k} \mathcal{H}_i \to \bigotimes_{i=1}^{k} \mathcal{H}'_i
-    \]
-    is defined by
-    \[
-      \mathcal{M}_{[k]}(\rho_1, \rho_2, \dots, \rho_k) = \bigotimes_{i=1}^{k} \mathcal{M}_i(\rho_i)
-    \]
-    for all density operators $\rho_i$ in $\mathcal{H}_i$. Then $\mathcal{M}_{[k]}$ is $\left(\sum_{i=1}^{k} \epsilon_i\right)$-differentially private.
-    \label{cor:composition}
+  For each $i \in [k]$, let $\mathcal{M}_i : \mathcal{H}_i \to \mathcal{H}'_i$ be an $\epsilon_i$-differentially private quantum algorithm, and assume that they are independent. Their combination
+  \[
+    \mathcal{M}_{[k]} : \bigotimes_{i=1}^{k} \mathcal{H}_i \to \bigotimes_{i=1}^{k} \mathcal{H}'_i
+  \]
+  is defined by
+  \[
+    \mathcal{M}_{[k]}(\rho_1, \rho_2, \dots, \rho_k) = \bigotimes_{i=1}^{k} \mathcal{M}_i(\rho_i)
+  \]
+  for all density operators $\rho_i$ in $\mathcal{H}_i$. Then $\mathcal{M}_{[k]}$ is $\left(\sum_{i=1}^{k} \epsilon_i\right)$-differentially private.
+  \label{cor:composition}
 \end{corollary}
 
 \begin{proposition}[Post-processing, Zhou and Ying~\cite{zhou2017differential}]
-    Let $\mathcal{E}$ be a quantum operation that is $(\epsilon, \delta)$-differentially private. Let $\mathcal{F}$ be a quantum operation. Then the composition of $\mathcal{E}$ and $\mathcal{F}$:
-    \[
-      \mathcal{F} \circ \mathcal{E} : \rho \mapsto \mathcal{F}(\mathcal{E}(\rho))
-    \]
-    is $(\epsilon, \delta)$-differentially private too.
-    \label{prop:post_processing}
+  Let $\mathcal{E}$ be a quantum operation that is $(\epsilon, \delta)$-differentially private. Let $\mathcal{F}$ be a quantum operation. Then the composition of $\mathcal{E}$ and $\mathcal{F}$:
+  \[
+    \mathcal{F} \circ \mathcal{E} : \rho \mapsto \mathcal{F}(\mathcal{E}(\rho))
+  \]
+  is $(\epsilon, \delta)$-differentially private too.
+  \label{prop:post_processing}
 \end{proposition}
 
 \section{Related Work}
 \label{sec:related_work}
-It was important to figure out what the current investigative and academic situation was with regard to the fields of quantum information and computation and differential privacy. For this an investigation was made in which different databases were searched and analyzed to find out the number of papers that covered the topics mentioned before. The investigation found 61 relevant papers that focused on the topics and the specific distributions of each one are compiled in Figure~\ref{fig:state_of_qdp}.  
+It was important to figure out what the current investigative and academic situation was with regard to the fields of quantum information and computation and differential privacy. For this an investigation was made in which different databases were searched and analyzed to find out the number of papers that covered the topics mentioned before. The investigation found 61 relevant papers that focused on the topics and the specific distributions of each one are compiled in Figure~\ref{fig:state_of_qdp}.
 
 \begin{figure*}[!t]
-    \centering
-    \includegraphics[width=\textwidth]{state_of_qdp.png}
-    \caption{State of the art of quantum differential privacy (own elaboration, based on the literature review described above).}
-    \label{fig:state_of_qdp}
+  \centering
+  \includegraphics[width=\textwidth]{state_of_qdp.png}
+  \caption{State of the art of quantum differential privacy (own elaboration, based on the literature review described above).}
+  \label{fig:state_of_qdp}
 \end{figure*}
 
 As shown in Figure~\ref{fig:state_of_qdp}, the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the project could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. \cite{yang2023improved} in which an extended analysis was made to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. Finally, in the study of Zhou and Ying~\cite{zhou2017differential}, they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
@@ -438,11 +452,11 @@ As shown in Figure~\ref{fig:state_of_qdp}, the investigation yielded positive re
 \section{Data Processing and Analysis}
 \label{sec:data_processing_and_analysis}
 
-This section details the data processing and analysis methodology that was used in order to prepare the classical Statlog (German Credit Data) dataset~\cite{hofmann1994german, germancredit2026} for use in the quantum setting. Firstly, we outline the dataset characteristics, then the variable selection procedures and, lastly, the quantum encoding procedures for the selected data. 
+This section details the data processing and analysis methodology that was used in order to prepare the classical Statlog (German Credit Data) dataset~\cite{hofmann1994german, germancredit2026} for use in the quantum setting. Firstly, we outline the dataset characteristics, then the variable selection procedures and, lastly, the quantum encoding procedures for the selected data.
 
 \subsection{Dataset description}
 
-The selected dataset for this investigation is the Statlog (German Credit Data) dataset created by Professor Hans Hofmann \cite{hofmann1994german}. This multivariate dataset aims to classify people as a good or bad credit risk. The original dataset is composed of 1000 instances that span 21 variables (7 numerical, 13 categorical, and the target). 
+The selected dataset for this investigation is the Statlog (German Credit Data) dataset created by Professor Hans Hofmann \cite{hofmann1994german}. This multivariate dataset aims to classify people as a good or bad credit risk. The original dataset is composed of 1000 instances that span 21 variables (7 numerical, 13 categorical, and the target).
 
 In the original dataset created by Professor Hofmann, all non-numerical variables use an attribute code to define their characteristics (e.g., the status of a person whose checking account is less than 0 Deutsche Marks (DM) is A11). For that reason, it was decided that the investigation was going to use a curated version of the dataset \cite{germancredit2026} which transforms all the labels to their definition as a means of simplifying the readers' understanding of the dataset by eliminating that intermediate layer of label and category. Every mention of the dataset henceforth will refer to this curated version and not the original compiled by Professor Hofmann.
 
@@ -528,7 +542,7 @@ These are variables which are either ranges of an amount (ordinal) or numerical.
 
 The question that remained, however, was: which variables were going to be encoded together? To answer this question we first created all 15 possible arrangements of the 5 numerical and ordinal variables into two pairs and a single variable. Then, we once again used the PhiK method to analyze the correlation between each pair of variables which is documented in Table~\ref{tab:phik_numerical_ordinal} (Appendix~\ref{ap:phik_numerical_ordinal}). From this small investigation it was concluded that the combination of variables that yielded the smallest correlation in the worst case was \texttt{status\_account} as the lone variable, \texttt{status\_savings} and \texttt{month\_duration} as the first pair, and \texttt{years\_employment} and \texttt{credit\_amount} as the second pair. We chose this combination as the smallest correlation between the worst pair would imply that the qubits carried as little redundant information within each qubit as possible.
 
-Before the encoding definition, we defined a function \textbf{minmax}(min, max, a), which normalizes a value $a \in [min , max]$ to $a \in [0 , \pi ]$. 
+Before the encoding definition, we defined a function \textbf{minmax}(min, max, a), which normalizes a value $a \in [min , max]$ to $a \in [0 , \pi ]$.
 
 \begin{definition}
   (Min-max normalization). Given a value $a \in [min , max]$ with $min, max \in \mathbb{R}$ we define the function \textbf{minmax} as
@@ -543,7 +557,7 @@ With this definition the method to encode numerical and ordinal variables is den
 
 \begin{definition}
   (Method for encoding numerical and ordinal variables with dense angle encoding). For an ordinal variable with $K$ categories and a numerical variable with range $[n_{Min}, n_{Max}]$, when encoding the ordinal variable with label $c \in \{0, \dots, K-1\}$ and the numerical variable with value $n \in [n_{Min}, n_{Max}]$, the resulting dense angle encoding is given by
-  
+
   \begin{align*}
     \ket{\psi} &= RZ(\phi)RY(\theta)\ket{0},\\
     \text{with } \phi &= minmax(n_{Min}, n_{Max}, n),\\
@@ -552,7 +566,7 @@ With this definition the method to encode numerical and ordinal variables is den
   \label{def:encoding_dense_angle}
 \end{definition}
 
-Because of the pairing selection, the definition only needs to cover the case where an ordinal variable is paired with a numerical one. Thus it is important to note that the reason \textbf{minmax} is calibrated from $-0.5$ to $K-0.5$ for the ordinal variables is so that the resulting categories cannot reach the poles, which would result in the gate RZ being invalidated. This calibration then sets each category into the middle of a bin of length $\frac{\pi}{K}$. An exception to this definition is the lone variable \texttt{status\_account}, since it does not need this calibration as there is no RZ gate to invalidate, so the range for \textbf{minmax} is $[0, K-1]$. 
+Because of the pairing selection, the definition only needs to cover the case where an ordinal variable is paired with a numerical one. Thus it is important to note that the reason \textbf{minmax} is calibrated from $-0.5$ to $K-0.5$ for the ordinal variables is so that the resulting categories cannot reach the poles, which would result in the gate RZ being invalidated. This calibration then sets each category into the middle of a bin of length $\frac{\pi}{K}$. An exception to this definition is the lone variable \texttt{status\_account}, since it does not need this calibration as there is no RZ gate to invalidate, so the range for \textbf{minmax} is $[0, K-1]$.
 
 As the reader can observe, thanks to dense angle encoding we can actually reduce the number of qubits necessary for encoding the full 10 variables to 8 which helps reduce the computational toll from the original $2^{10}\times 2^{10}$ matrices with a 1:1 qubit-to-variable encoding to $2^{8}\times 2^{8}$ matrices. The final quantum circuit can be seen in Figure~\ref{fig:quantum_encoding_circuit}.
 
@@ -601,43 +615,43 @@ The first experiment that was carried out was finding the $\epsilon_{theo}$ and 
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
-  \begin{tikzpicture}[
-      font=\small,
-      box/.style={draw, rounded corners, align=center, text width=3.3cm, minimum height=1.2cm},
-      arr/.style={-latex, thick}
-    ]
-    % loop frames
-    \draw[rounded corners] (0.3,1.5) rectangle (18.9,-7.4);
-    \node[anchor=north west] at (0.45,1.45) {For each column $k = 0, \dots, 7$};
-    \draw[rounded corners] (0.5,-1.0) rectangle (18.7,-5.1);
-    \node[anchor=south west] at (0.65,-5.05) {For each row $j = 0, \dots, n-1$};
-    % full dataset
-    \node[box] (enc) at (2.6,0) {\textbf{Encode}\\ $\{\rho_i^k\}_{i=0}^{n-1}$};
-    \node[box] (agg) at (6.5,0) {\textbf{Aggregate}\\ $\rho^k = \frac{1}{n}\sum_{i}\rho_i^k$};
-    \node[box] (noise) at (10.8,0) {\textbf{Noise}\\ $\rho^{\prime k} = \mathcal{M}(\rho^k)$};
-    % neighboring dataset
-    \node[box] (rem) at (2.6,-3.0) {\textbf{Remove row $j$}\\ $\{\rho_i^k\}_{i \neq j}$};
-    \node[box] (aggs) at (6.5,-3.0) {\textbf{Aggregate}\\ $\sigma_j^k = \frac{1}{n-1}\sum_{i \neq j}\rho_i^k$};
-    \node[box] (noises) at (10.8,-2.3) {\textbf{Noise}\\ $\sigma_j^{\prime k} = \mathcal{M}(\sigma_j^k)$};
-    \node[box] (dist) at (10.8,-4.1) {\textbf{Trace distance}\\ $d_j = \tau(\rho^k, \sigma_j^k)$};
-    \node[box, text width=4.9cm] (epsj) at (15.9,-2.3) {\textbf{Experimental $\epsilon$ for row $j$} (Alg.~\ref{alg:dpd})\\ $\epsilon_{exp}^{j} = \max\big(\mathrm{dPD}(\rho^{\prime k}, \sigma_j^{\prime k}),$\\ $\mathrm{dPD}(\sigma_j^{\prime k}, \rho^{\prime k})\big)$};
-    % per-column results
-    \node[box, text width=4.1cm] (theo) at (10.8,-6.5) {\textbf{Theoretical $\epsilon$ for column $k$}\\ $\epsilon_{theo}^{k} = \epsilon_{theo}(\max_j d_j)$};
-    \node[box, text width=4.1cm] (expk) at (15.9,-6.5) {\textbf{Experimental $\epsilon$ for column $k$}\\ $\epsilon_{exp}^{k} = \max_j \epsilon_{exp}^{j}$};
-    % arrows
-    \draw[arr] (enc) -- (agg);
-    \draw[arr] (agg) -- (noise);
-    \draw[arr] (enc) -- (rem);
-    \draw[arr] (rem) -- (aggs);
-    \draw[arr] (noise.east) -| (epsj.north);
-    \draw[arr] (noises) -- (epsj);
-    \draw[arr] (aggs.east) -- (8.45,-3.0) |- (noises.west);
-    \draw[arr] (8.45,-3.0) |- ([yshift=-0.25cm]dist.west);
-    \fill (8.65,0) circle (1.5pt);
-    \draw[arr] (8.65,0) |- ([yshift=0.25cm]dist.west);
-    \draw[arr] (dist) -- (theo);
-    \draw[arr] (epsj) -- (expk);
-  \end{tikzpicture}%
+    \begin{tikzpicture}[
+        font=\small,
+        box/.style={draw, rounded corners, align=center, text width=3.3cm, minimum height=1.2cm},
+        arr/.style={-latex, thick}
+      ]
+      % loop frames
+      \draw[rounded corners] (0.3,1.5) rectangle (18.9,-7.4);
+      \node[anchor=north west] at (0.45,1.45) {For each column $k = 0, \dots, 7$};
+      \draw[rounded corners] (0.5,-1.0) rectangle (18.7,-5.1);
+      \node[anchor=south west] at (0.65,-5.05) {For each row $j = 0, \dots, n-1$};
+      % full dataset
+      \node[box] (enc) at (2.6,0) {\textbf{Encode}\\ $\{\rho_i^k\}_{i=0}^{n-1}$};
+      \node[box] (agg) at (6.5,0) {\textbf{Aggregate}\\ $\rho^k = \frac{1}{n}\sum_{i}\rho_i^k$};
+      \node[box] (noise) at (10.8,0) {\textbf{Noise}\\ $\rho^{\prime k} = \mathcal{M}(\rho^k)$};
+      % neighboring dataset
+      \node[box] (rem) at (2.6,-3.0) {\textbf{Remove row $j$}\\ $\{\rho_i^k\}_{i \neq j}$};
+      \node[box] (aggs) at (6.5,-3.0) {\textbf{Aggregate}\\ $\sigma_j^k = \frac{1}{n-1}\sum_{i \neq j}\rho_i^k$};
+      \node[box] (noises) at (10.8,-2.3) {\textbf{Noise}\\ $\sigma_j^{\prime k} = \mathcal{M}(\sigma_j^k)$};
+      \node[box] (dist) at (10.8,-4.1) {\textbf{Trace distance}\\ $d_j = \tau(\rho^k, \sigma_j^k)$};
+      \node[box, text width=4.9cm] (epsj) at (15.9,-2.3) {\textbf{Experimental $\epsilon$ for row $j$} (Alg.~\ref{alg:dpd})\\ $\epsilon_{exp}^{j} = \max\big(\mathrm{dPD}(\rho^{\prime k}, \sigma_j^{\prime k}),$\\ $\mathrm{dPD}(\sigma_j^{\prime k}, \rho^{\prime k})\big)$};
+      % per-column results
+      \node[box, text width=4.1cm] (theo) at (10.8,-6.5) {\textbf{Theoretical $\epsilon$ for column $k$}\\ $\epsilon_{theo}^{k} = \epsilon_{theo}(\max_j d_j)$};
+      \node[box, text width=4.1cm] (expk) at (15.9,-6.5) {\textbf{Experimental $\epsilon$ for column $k$}\\ $\epsilon_{exp}^{k} = \max_j \epsilon_{exp}^{j}$};
+      % arrows
+      \draw[arr] (enc) -- (agg);
+      \draw[arr] (agg) -- (noise);
+      \draw[arr] (enc) -- (rem);
+      \draw[arr] (rem) -- (aggs);
+      \draw[arr] (noise.east) -| (epsj.north);
+      \draw[arr] (noises) -- (epsj);
+      \draw[arr] (aggs.east) -- (8.45,-3.0) |- (noises.west);
+      \draw[arr] (8.45,-3.0) |- ([yshift=-0.25cm]dist.west);
+      \fill (8.65,0) circle (1.5pt);
+      \draw[arr] (8.65,0) |- ([yshift=0.25cm]dist.west);
+      \draw[arr] (dist) -- (theo);
+      \draw[arr] (epsj) -- (expk);
+    \end{tikzpicture}%
   }
   \caption{Experimental pipeline for finding $\epsilon_{exp}$ and $\epsilon_{theo}$}
   \label{fig:central_setting}
@@ -645,7 +659,7 @@ The first experiment that was carried out was finding the $\epsilon_{theo}$ and 
 
 The pipeline begins by calculating some values that will be used during the leave-one-out loop: encoding the full column using the methodology provided in Section~\ref{sec:data_processing_and_analysis}, which will become our set $\{\rho_i^{k}\}$, containing the states of each person in the dataset for that column. That complete set will be aggregated into a single matrix $\rho^{k}$, which will hold an average of all the participants of the dataset for the column $k$. Then noise from the selected noise mechanism will be applied to that density matrix, resulting in the matrix $\rho'^{k}$. With those two matrices calculated, the pipeline will begin a loop that iterates over each participant of the dataset in order to compare the original against a leave-one-out version of the dataset where the row $j$ is removed.
 
-For each row $j$, the process is as follows: aggregate the set $\{\rho_i^{k}\}$ with the row $j$ removed, which results in the density matrix $\sigma_j^{k}$, the aggregation of all participants except $j$. From $\sigma_j^{k}$ both $\sigma_j^{\prime k}$ and $d_j$ will be calculated. $\sigma_j^{\prime k}$ is the density matrix that results from applying the selected noise mechanism to $\sigma_j^{k}$, and $d_j$ is the trace distance between $\rho^{k}$ and $\sigma_{j}^{k}$, which has to be calculated with the pre-noise matrices as per Theorems~\ref{thm:epsilon_gad} through~\ref{thm:epsilon_dep}. Lastly, it will calculate $\epsilon_{exp}^{j}$, which is the $\epsilon_{exp}$ for the $j$-th row and corresponds to the maximum of the values that Algorithm~\ref{alg:dpd} returns in both directions. 
+For each row $j$, the process is as follows: aggregate the set $\{\rho_i^{k}\}$ with the row $j$ removed, which results in the density matrix $\sigma_j^{k}$, the aggregation of all participants except $j$. From $\sigma_j^{k}$ both $\sigma_j^{\prime k}$ and $d_j$ will be calculated. $\sigma_j^{\prime k}$ is the density matrix that results from applying the selected noise mechanism to $\sigma_j^{k}$, and $d_j$ is the trace distance between $\rho^{k}$ and $\sigma_{j}^{k}$, which has to be calculated with the pre-noise matrices as per Theorems~\ref{thm:epsilon_gad} through~\ref{thm:epsilon_dep}. Lastly, it will calculate $\epsilon_{exp}^{j}$, which is the $\epsilon_{exp}$ for the $j$-th row and corresponds to the maximum of the values that Algorithm~\ref{alg:dpd} returns in both directions.
 
 With all those values, the only remaining step of the pipeline is to input them into each method for finding $\epsilon$. On the theoretical side, the pipeline will input the maximum trace distance and the noise mechanism's parameters into one of the theorems defined in Section~\ref{sec:background} (for the depolarizing mechanism $D=2$, as we are calculating on a per-qubit basis) for the resulting $\epsilon_{theo}$ of the column. In the case of $\epsilon_{exp}$, it is the maximum $\epsilon_{exp}^{j}$ over all rows $j$, as that is the maximum privacy loss that the dataset can offer for that noise mechanism.
 
@@ -658,7 +672,7 @@ Because of Lemma~\ref{lem:product_channel}, this is equal to
   \Big(\bigotimes_{k=0}^{7} \mathcal{M}\Big)\Big(\bigotimes_{k=0}^{7} \rho^{k}\Big) = \mathcal{M}_{[8]}(\rho^{0}, \dots, \rho^{7})
 \]
 which is the combination defined in Corollary~\ref{cor:composition}, and thus the addition is valid.
- 
+
 
 \begin{lemma}
   For $i = 1, \dots, k$, let $\mathcal{E}_i(\rho) = \sum_{a} E_{i,a}\, \rho\, E_{i,a}^{\dagger}$ be a quantum operation on $\mathcal{H}_i$ and $\rho_i$ a density operator on $\mathcal{H}_i$. Then
@@ -682,36 +696,36 @@ In the central setting we defined neighbors as two aggregated density matrices, 
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
-  \begin{tikzpicture}[
-      font=\small,
-      box/.style={draw, rounded corners, align=center, text width=5.6cm, minimum height=1.2cm},
-      arr/.style={-latex, thick}
-    ]
-    % pair-loop frame (same width as Fig.~\ref{fig:central_setting}, so both figures share one scale)
-    \draw[rounded corners] (0.3,-1.0) rectangle (18.9,-4.2);
-    \node[anchor=south west] at (0.45,-4.15) {For each pair $\{c, c'\}$, $c < c'$};
-    % all values of the variable
-    \node[box] (enc) at (6.0,0) {\textbf{Encode all $K$ values} (Sec.~\ref{subsec:encoding_variables})\\[3pt] $\{\rho_c\}_{c=0}^{K-1}$};
-    \node[box] (noise) at (13.2,0) {\textbf{Noise}\\ $\rho^{\prime}_c = \mathcal{M}(\rho_c)$};
-    % pair of values
-    \node[box] (dist) at (6.0,-2.6) {\textbf{Trace distance}\\ $d_{cc'} = \tau(\rho_c, \rho_{c'})$};
-    \node[box] (epsp) at (13.2,-2.6) {\textbf{Experimental $\epsilon$ for pair $\{c, c'\}$} (Alg.~\ref{alg:dpd})\\[2pt] $\epsilon_{exp}^{cc'} = \max\big(\mathrm{dPD}(\rho^{\prime}_c, \rho^{\prime}_{c'}),$\\ $\mathrm{dPD}(\rho^{\prime}_{c'}, \rho^{\prime}_c)\big)$};
-    % results for the variable
-    \node[box] (theo) at (6.0,-5.4) {\textbf{Theoretical $\epsilon$ of the variable}\\ $\epsilon_{theo}(\max_{c,c'} d_{cc'})$};
-    \node[box] (expk) at (13.2,-5.4) {\textbf{Experimental $\epsilon$ of the variable}\\ $\max_{c,c'} \epsilon_{exp}^{cc'}$};
-    % arrows
-    \draw[arr] (enc) -- (noise);
-    \draw[arr] (enc) -- (dist);
-    \draw[arr] (noise) -- (epsp);
-    \draw[arr] (dist) -- (theo);
-    \draw[arr] (epsp) -- (expk);
-  \end{tikzpicture}%
+    \begin{tikzpicture}[
+        font=\small,
+        box/.style={draw, rounded corners, align=center, text width=5.6cm, minimum height=1.2cm},
+        arr/.style={-latex, thick}
+      ]
+      % pair-loop frame (same width as Fig.~\ref{fig:central_setting}, so both figures share one scale)
+      \draw[rounded corners] (0.3,-1.0) rectangle (18.9,-4.2);
+      \node[anchor=south west] at (0.45,-4.15) {For each pair $\{c, c'\}$, $c < c'$};
+      % all values of the variable
+      \node[box] (enc) at (6.0,0) {\textbf{Encode all $K$ values} (Sec.~\ref{subsec:encoding_variables})\\[3pt] $\{\rho_c\}_{c=0}^{K-1}$};
+      \node[box] (noise) at (13.2,0) {\textbf{Noise}\\ $\rho^{\prime}_c = \mathcal{M}(\rho_c)$};
+      % pair of values
+      \node[box] (dist) at (6.0,-2.6) {\textbf{Trace distance}\\ $d_{cc'} = \tau(\rho_c, \rho_{c'})$};
+      \node[box] (epsp) at (13.2,-2.6) {\textbf{Experimental $\epsilon$ for pair $\{c, c'\}$} (Alg.~\ref{alg:dpd})\\[2pt] $\epsilon_{exp}^{cc'} = \max\big(\mathrm{dPD}(\rho^{\prime}_c, \rho^{\prime}_{c'}),$\\ $\mathrm{dPD}(\rho^{\prime}_{c'}, \rho^{\prime}_c)\big)$};
+      % results for the variable
+      \node[box] (theo) at (6.0,-5.4) {\textbf{Theoretical $\epsilon$ of the variable}\\ $\epsilon_{theo}(\max_{c,c'} d_{cc'})$};
+      \node[box] (expk) at (13.2,-5.4) {\textbf{Experimental $\epsilon$ of the variable}\\ $\max_{c,c'} \epsilon_{exp}^{cc'}$};
+      % arrows
+      \draw[arr] (enc) -- (noise);
+      \draw[arr] (enc) -- (dist);
+      \draw[arr] (noise) -- (epsp);
+      \draw[arr] (dist) -- (theo);
+      \draw[arr] (epsp) -- (expk);
+    \end{tikzpicture}%
   }
-  \caption{Pipeline for the local setting experiment for finding $\epsilon$ for a categorical or ordinal variable} 
+  \caption{Pipeline for the local setting experiment for finding $\epsilon$ for a categorical or ordinal variable}
   \label{fig:local_setting}
 \end{figure*}
 
-The experiment begins by defining two sets $\{\rho_c\}$ which are all the density matrices that result from encoding the $c$-th label and $\{\rho_c^{\prime}\}$ which is the set of all the density matrices $\rho_c$ that have been passed over the noise mechanism $\mathcal{M}$. Then, for each pair of labels $\{c, c^{\prime}\}, c < c^{\prime}$, we calculate both the trace distance between the original noiseless density matrices $\rho_c$ and $\rho_{c^{\prime}}$ and the $\epsilon_{exp}$ which is the same procedure as the central setting just with inputs $\rho_c^{\prime}$ and $\rho_{c^{\prime}}^{\prime}$. Then, at the end, we make the same search for the maximum $\epsilon_{theo}$ and $\epsilon_{exp}$ of all the analyzed pairs and that is the final result of the variable. 
+The experiment begins by defining two sets $\{\rho_c\}$ which are all the density matrices that result from encoding the $c$-th label and $\{\rho_c^{\prime}\}$ which is the set of all the density matrices $\rho_c$ that have been passed over the noise mechanism $\mathcal{M}$. Then, for each pair of labels $\{c, c^{\prime}\}, c < c^{\prime}$, we calculate both the trace distance between the original noiseless density matrices $\rho_c$ and $\rho_{c^{\prime}}$ and the $\epsilon_{exp}$ which is the same procedure as the central setting just with inputs $\rho_c^{\prime}$ and $\rho_{c^{\prime}}^{\prime}$. Then, at the end, we make the same search for the maximum $\epsilon_{theo}$ and $\epsilon_{exp}$ of all the analyzed pairs and that is the final result of the variable.
 
 
 \section{Measurement and Classical release of a categorical variable}
@@ -721,53 +735,53 @@ With the previous two experiments we have been able to find $\epsilon_{theo}$ an
 
 To answer this question, we first need to clarify the concept of a \textbf{copy}. For the purposes of this investigation, a copy is one qubit in a specific quantum state, either a pure state $\ket{\psi}$ or a mixed state with density matrix $\rho$. When that copy is measured, it collapses into one of the two states of the measurement basis (i.e., $\ket{+}$ or $\ket{-}$ for the $X$ basis). Because of the no-cloning theorem~\cite{watrous_limitations}, the curator (or anybody, for that matter) cannot save the state prior to the measurement to measure it again, and thus every new measurement requires the state to be fully prepared again.
 
-Figure~\ref{fig:release_designs} shows what happens to the data after the pipelines of Subsections~\ref{subsec:experiment_central_setting} and~\ref{subsec:experiment_local_setting}. In the central setting, the final state is the aggregation of the full dataset, $\rho = \frac{1}{n}\sum_{i=1}^{n}\rho_i$, so by the law of total probability, measuring a copy of $\rho^{\prime}$ is no different from drawing a random person $i$ and then measuring their state. In other words, every person is hidden within the full aggregation, and the privacy of each copy is the $\epsilon$ calculated in Subsection~\ref{subsec:experiment_central_setting}. However, each new copy needed to estimate the distribution is another draw and thus costs another $\epsilon$, resulting in a total of $N\epsilon$ because of Corollary~\ref{cor:composition}, with $N$ being the number of copies measured. In the local setting, on the other hand, each individual only needs a single measurement. Since a measurement (Definition~\ref{def:quantum_measurement}) can be thought of as a quantum operation in itself, Proposition~\ref{prop:post_processing} implies that the final $\epsilon$ is at most the one found in the local setting experiment. 
+Figure~\ref{fig:release_designs} shows what happens to the data after the pipelines of Subsections~\ref{subsec:experiment_central_setting} and~\ref{subsec:experiment_local_setting}. In the central setting, the final state is the aggregation of the full dataset, $\rho = \frac{1}{n}\sum_{i=1}^{n}\rho_i$, so by the law of total probability, measuring a copy of $\rho^{\prime}$ is no different from drawing a random person $i$ and then measuring their state. In other words, every person is hidden within the full aggregation, and the privacy of each copy is the $\epsilon$ calculated in Subsection~\ref{subsec:experiment_central_setting}. However, each new copy needed to estimate the distribution is another draw and thus costs another $\epsilon$, resulting in a total of $N\epsilon$ because of Corollary~\ref{cor:composition}, with $N$ being the number of copies measured. In the local setting, on the other hand, each individual only needs a single measurement. Since a measurement (Definition~\ref{def:quantum_measurement}) can be thought of as a quantum operation in itself, Proposition~\ref{prop:post_processing} implies that the final $\epsilon$ is at most the one found in the local setting experiment.
 
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
-  \begin{tikzpicture}[
-      font=\small,
-      box/.style={draw, rounded corners, align=center, text width=2.8cm, minimum height=1.1cm, fill=white},
-      noisebox/.style={box, fill=gray!20},
-      group/.style={draw, rounded corners, thick},
-      mech/.style={draw, rounded corners, dashed},
-      lbl/.style={font=\footnotesize\itshape, anchor=north east},
-      arr/.style={-latex, thick}
-    ]
-    % ---------- C: central setting (Sec. V-A) ----------
-    \node[anchor=west] at (0.3,2.0) {\textbf{C: central setting}};
-    \draw[group] (0.3,-1.1) rectangle (2.7,1.5);
-    \node[anchor=north west] at (0.4,1.45) {Individual};
-    \node[box, text width=1.2cm] (ci) at (1.5,-0.2) {$\rho_i$};
-    \draw[group] (3.4,-1.1) rectangle (18.9,1.5);
-    \node[anchor=north west] at (3.5,1.45) {Curator};
-    \draw[mech] (3.7,-0.95) rectangle (14.1,0.95);
-    \node[lbl] at (14.05,0.93) {central QDP mechanism (Sec.~\ref{subsec:experiment_central_setting})};
-    \node[box] (call) at (5.4,-0.25) {$\rho_0, \dots, \rho_{n-1}$};
-    \node[box] (cagg) at (8.9,-0.25) {\textbf{Aggregate}\\ $\rho = \frac{1}{n}\sum_i \rho_i$};
-    \node[noisebox] (cnoise) at (12.4,-0.25) {\textbf{Noise}\\ $\rho^{\prime} = \mathcal{M}(\rho)$};
-    \node[box] (cmeas) at (16.4,-0.25) {\textbf{Measure}\\ $N$ copies of $\rho^{\prime}$};
-    \draw[arr] (2.7,-0.2) -- (3.4,-0.2);
-    \draw[arr] (call) -- (cagg);
-    \draw[arr] (cagg) -- (cnoise);
-    \draw[arr] (cnoise) -- (cmeas);
-    \node at (16.4,-1.5) {$\epsilon_{total} = N \cdot \epsilon$ per copy};
-    % ---------- L: local setting (Sec. V-B) ----------
-    \node[anchor=west] at (0.3,-2.6) {\textbf{L: local setting}};
-    \draw[group] (0.3,-5.7) rectangle (13.9,-3.1);
-    \node[anchor=north west] at (0.4,-3.15) {Individual $i$};
-    \draw[mech] (0.6,-5.55) rectangle (8.9,-3.65);
-    \node[lbl] at (8.85,-3.67) {local QDP mechanism (Sec.~\ref{subsec:experiment_local_setting})};
-    \node[box] (li) at (2.4,-4.85) {\textbf{Encode}\\ $\rho_i$};
-    \node[noisebox] (lnoise) at (6.9,-4.85) {\textbf{Own noise}\\ $\rho_i^{\prime} = \mathcal{M}(\rho_i)$};
-    \node[box] (lmeas) at (11.6,-4.85) {\textbf{Measure}\\ one copy of $\rho_i^{\prime}$};
-    \node[box] (lcur) at (16.4,-4.85) {\textbf{Curator}\\ collects the outcomes};
-    \draw[arr] (li) -- (lnoise);
-    \draw[arr] (lnoise) -- (lmeas);
-    \draw[arr] (13.9,-4.85) -- (lcur);
-    \node at (16.4,-6.1) {$\epsilon_{total} = \epsilon$ of one person};
-  \end{tikzpicture}%
+    \begin{tikzpicture}[
+        font=\small,
+        box/.style={draw, rounded corners, align=center, text width=2.8cm, minimum height=1.1cm, fill=white},
+        noisebox/.style={box, fill=gray!20},
+        group/.style={draw, rounded corners, thick},
+        mech/.style={draw, rounded corners, dashed},
+        lbl/.style={font=\footnotesize\itshape, anchor=north east},
+        arr/.style={-latex, thick}
+      ]
+      % ---------- C: central setting (Sec. V-A) ----------
+      \node[anchor=west] at (0.3,2.0) {\textbf{C: central setting}};
+      \draw[group] (0.3,-1.1) rectangle (2.7,1.5);
+      \node[anchor=north west] at (0.4,1.45) {Individual};
+      \node[box, text width=1.2cm] (ci) at (1.5,-0.2) {$\rho_i$};
+      \draw[group] (3.4,-1.1) rectangle (18.9,1.5);
+      \node[anchor=north west] at (3.5,1.45) {Curator};
+      \draw[mech] (3.7,-0.95) rectangle (14.1,0.95);
+      \node[lbl] at (14.05,0.93) {central QDP mechanism (Sec.~\ref{subsec:experiment_central_setting})};
+      \node[box] (call) at (5.4,-0.25) {$\rho_0, \dots, \rho_{n-1}$};
+      \node[box] (cagg) at (8.9,-0.25) {\textbf{Aggregate}\\ $\rho = \frac{1}{n}\sum_i \rho_i$};
+      \node[noisebox] (cnoise) at (12.4,-0.25) {\textbf{Noise}\\ $\rho^{\prime} = \mathcal{M}(\rho)$};
+      \node[box] (cmeas) at (16.4,-0.25) {\textbf{Measure}\\ $N$ copies of $\rho^{\prime}$};
+      \draw[arr] (2.7,-0.2) -- (3.4,-0.2);
+      \draw[arr] (call) -- (cagg);
+      \draw[arr] (cagg) -- (cnoise);
+      \draw[arr] (cnoise) -- (cmeas);
+      \node at (16.4,-1.5) {$\epsilon_{total} = N \cdot \epsilon$ per copy};
+      % ---------- L: local setting (Sec. V-B) ----------
+      \node[anchor=west] at (0.3,-2.6) {\textbf{L: local setting}};
+      \draw[group] (0.3,-5.7) rectangle (13.9,-3.1);
+      \node[anchor=north west] at (0.4,-3.15) {Individual $i$};
+      \draw[mech] (0.6,-5.55) rectangle (8.9,-3.65);
+      \node[lbl] at (8.85,-3.67) {local QDP mechanism (Sec.~\ref{subsec:experiment_local_setting})};
+      \node[box] (li) at (2.4,-4.85) {\textbf{Encode}\\ $\rho_i$};
+      \node[noisebox] (lnoise) at (6.9,-4.85) {\textbf{Own noise}\\ $\rho_i^{\prime} = \mathcal{M}(\rho_i)$};
+      \node[box] (lmeas) at (11.6,-4.85) {\textbf{Measure}\\ one copy of $\rho_i^{\prime}$};
+      \node[box] (lcur) at (16.4,-4.85) {\textbf{Curator}\\ collects the outcomes};
+      \draw[arr] (li) -- (lnoise);
+      \draw[arr] (lnoise) -- (lmeas);
+      \draw[arr] (13.9,-4.85) -- (lcur);
+      \node at (16.4,-6.1) {$\epsilon_{total} = \epsilon$ of one person};
+    \end{tikzpicture}%
   }
   \caption{The two methodologies for measuring each setting of quantum differential privacy}
   \label{fig:release_designs}
@@ -789,7 +803,7 @@ This limitation, however, ties nicely to the value that the experiment will actu
 with $\Omega_c$ being the proportion of category $c$ (i.e., the fraction of people in the original dataset with category $c$). For the selected variable \texttt{collateral},
 \begin{align}
   E[F] &= (0.232 \times 1) + \left(0.282 \times \tfrac{1}{2}\right) \nonumber \\
-       &\quad + (0.332 \times 0) + \left(0.154 \times \tfrac{1}{2}\right) = 0.45,
+  &\quad + (0.332 \times 0) + \left(0.154 \times \tfrac{1}{2}\right) = 0.45,
   \label{eq:expected_F_collateral}
 \end{align}
 which means that, on average, $45\%$ of the measurements give the state $\ket{+}$.
@@ -854,7 +868,7 @@ Relationship~\eqref{eq:expected_shrink}, however, is between expected values, wh
 This estimator is unbiased since, by the linearity of the expected value and \eqref{eq:expected_shrink},
 \begin{align}
   E[\hat{F}] &= \frac{1}{2} + \frac{E[F_C] - \frac{1}{2}}{s} \nonumber \\
-             &= \frac{1}{2} + \frac{s\left(E[F_B] - \frac{1}{2}\right)}{s} = E[F_B].
+  &= \frac{1}{2} + \frac{s\left(E[F_B] - \frac{1}{2}\right)}{s} = E[F_B].
   \label{eq:unbiased}
 \end{align}
 Moreover, since $\hat{F}$ is computed only from the released measurements and the public $s$, it is a classical post-processing of the released data and does not increase $\epsilon$~\cite[Prop.~2.1]{dwork2014algorithmic}.
@@ -880,7 +894,7 @@ Substituting the values of $P_B(+)$ from Table~\ref{tab:collateral_probabilities
     \toprule
     Category & $\phi$ & $P_B(+)$ & $P_C(+)$ & \multicolumn{2}{c}{$\mathrm{Var}(X_i)$} \\
     \cmidrule(l){5-6}
-     & & & & B & C \\
+    & & & & B & C \\
     \midrule
     car (0)         & $0$                & $1$            & $\tfrac{1+s}{2}$ & $0$            & $\tfrac{1-s^2}{4}$ \\
     none (1)        & $\tfrac{\pi}{2}$   & $\tfrac{1}{2}$ & $\tfrac{1}{2}$   & $\tfrac{1}{4}$ & $\tfrac{1}{4}$ \\
@@ -924,7 +938,7 @@ That is to say, the privacy of the participant is set by the pair of categories,
 Using Table~\ref{tab:collateral_probabilities}, we find that the worst pair is car and real estate, since they give the largest ratio of $P_C(+)$. Inputting the values of $P_C(+)$ into \eqref{eq:epsilon_measurement}, we get
 \begin{align}
   \epsilon_{meas} &= \ln\frac{(1+s)/2}{(1-s)/2} \nonumber \\
-                  &= \ln\frac{1+s}{1-s}.
+  &= \ln\frac{1+s}{1-s}.
   \label{eq:epsilon_measurement_replaced}
 \end{align}
 
@@ -935,39 +949,39 @@ With the preliminaries explained, we can use Figure~\ref{fig:measurement_experim
 \begin{figure*}[!t]
   \centering
   \resizebox{\textwidth}{!}{%
-  \begin{tikzpicture}[
-      font=\small,
-      box/.style={draw, rounded corners, align=center, text width=2.8cm, minimum height=1.2cm, fill=white},
-      noisebox/.style={box, fill=gray!20},
-      arr/.style={-latex, thick}
-    ]
-    % repetition frame (same width as Figs. 3--5)
-    \draw[rounded corners] (7.4,1.0) rectangle (18.9,-3.95);
-    \node[anchor=south west] at (7.55,-3.9) {Repeat $R = 2000$ times, with the same random numbers for both branches};
-    % shared steps
-    \node[box] (data) at (1.9,-1.3) {\textbf{Data}\\ \texttt{collateral}\\ $n = 1000$, $K = 4$};
-    \node[box] (enc) at (5.4,-1.3) {\textbf{Encode}\\ one qubit per person\\ (Def.~\ref{def:encoding_categorical})};
-    % branch B
-    \node[box] (nb) at (9.4,0) {\textbf{Baseline B}\\ no noise};
-    \node[box] (mb) at (13.0,0) {\textbf{Measure in $X$}\\ once per person};
-    \node[box] (fb) at (16.6,0) {\textbf{Statistic}\\ $F_B$ = fraction of $+$};
-    % branch C
-    \node[noisebox] (nc) at (9.4,-2.6) {\textbf{Noise}\\ $\rho_i^{\prime} = \mathcal{M}(\rho_i)$\\ (Table~\ref{tab:shrinking_coefficient})};
-    \node[box] (mc) at (13.0,-2.6) {\textbf{Measure in $X$}\\ once per person};
-    \node[box] (fc) at (16.6,-2.6) {\textbf{Correct}\\ $F_C \mapsto \hat{F}$, Eq.~\eqref{eq:estimator}};
-    % arrows
-    \draw[arr] (data) -- (enc);
-    \draw[arr] (enc.east) -- ++(0.45,0) |- (nb.west);
-    \draw[arr] (enc.east) -- ++(0.45,0) |- (nc.west);
-    \draw[arr] (nb) -- (mb);
-    \draw[arr] (mb) -- (fb);
-    \draw[arr] (nc) -- (mc);
-    \draw[arr] (mc) -- (fc);
-    % output
-    \node[anchor=north] at (13.15,-4.15) {$\Rightarrow$ distributions of $F_B$ and $\hat{F}$ over the $R$ repetitions (Section~\ref{sec:experimental_results})};
-  \end{tikzpicture}%
+    \begin{tikzpicture}[
+        font=\small,
+        box/.style={draw, rounded corners, align=center, text width=2.8cm, minimum height=1.2cm, fill=white},
+        noisebox/.style={box, fill=gray!20},
+        arr/.style={-latex, thick}
+      ]
+      % repetition frame (same width as Figs. 3--5)
+      \draw[rounded corners] (7.4,1.0) rectangle (18.9,-3.95);
+      \node[anchor=south west] at (7.55,-3.9) {Repeat $R = 2000$ times, with the same random numbers for both branches};
+      % shared steps
+      \node[box] (data) at (1.9,-1.3) {\textbf{Data}\\ \texttt{collateral}\\ $n = 1000$, $K = 4$};
+      \node[box] (enc) at (5.4,-1.3) {\textbf{Encode}\\ one qubit per person\\ (Def.~\ref{def:encoding_categorical})};
+      % branch B
+      \node[box] (nb) at (9.4,0) {\textbf{Baseline B}\\ no noise};
+      \node[box] (mb) at (13.0,0) {\textbf{Measure in $X$}\\ once per person};
+      \node[box] (fb) at (16.6,0) {\textbf{Statistic}\\ $F_B$ = fraction of $+$};
+      % branch C
+      \node[noisebox] (nc) at (9.4,-2.6) {\textbf{Noise}\\ $\rho_i^{\prime} = \mathcal{M}(\rho_i)$\\ (Table~\ref{tab:shrinking_coefficient})};
+      \node[box] (mc) at (13.0,-2.6) {\textbf{Measure in $X$}\\ once per person};
+      \node[box] (fc) at (16.6,-2.6) {\textbf{Correct}\\ $F_C \mapsto \hat{F}$, Eq.~\eqref{eq:estimator}};
+      % arrows
+      \draw[arr] (data) -- (enc);
+      \draw[arr] (enc.east) -- ++(0.45,0) |- (nb.west);
+      \draw[arr] (enc.east) -- ++(0.45,0) |- (nc.west);
+      \draw[arr] (nb) -- (mb);
+      \draw[arr] (mb) -- (fb);
+      \draw[arr] (nc) -- (mc);
+      \draw[arr] (mc) -- (fc);
+      % output
+      \node[anchor=north] at (13.15,-4.15) {$\Rightarrow$ distributions of $F_B$ and $\hat{F}$ over the $R$ repetitions (Section~\ref{sec:experimental_results})};
+    \end{tikzpicture}%
   }
-  \caption{Experiment to measure the distributions of $F_B$ and $\hat{F}$ for $\texttt{collateral}$} 
+  \caption{Experiment to measure the distributions of $F_B$ and $\hat{F}$ for $\texttt{collateral}$}
   \label{fig:measurement_experiment}
 \end{figure*}
 
@@ -987,14 +1001,14 @@ In this section we detail the results of the three experiments detailed in Secti
 Table~\ref{tab:central_results} compiles the results of the central setting experiment done with all three noise mechanisms. This table also includes the run with the depolarizing noise over the full $256 \times 256$ joint density matrix. On it we compiled three things: the maximum trace distance between the original matrix $\rho$ and the $j$-th leave-one-out matrix $\sigma_j$, the theoretical epsilon $\epsilon_{theo}$ and the found experimental epsilon $\epsilon_{exp}$. To help with the reader's understanding of the table all numbers were multiplied by $10^{3}$.
 
 \begin{table*}[!t]
-  \caption{Results of the $\epsilon_{theo}$ and $\epsilon_{exp}$ for the central setting experiments with all three noise mechanisms.} 
+  \caption{Results of the $\epsilon_{theo}$ and $\epsilon_{exp}$ for the central setting experiments with all three noise mechanisms.}
   \label{tab:central_results}
   \centering
   \begin{tabular}{clccccccc}
     \toprule
-     & & \multicolumn{7}{c}{All values $\times 10^{-3}$} \\
+    & & \multicolumn{7}{c}{All values $\times 10^{-3}$} \\
     \cmidrule(l){3-9}
-     & & & \multicolumn{2}{c}{DEP} & \multicolumn{2}{c}{PAD} & \multicolumn{2}{c}{GAD} \\
+    & & & \multicolumn{2}{c}{DEP} & \multicolumn{2}{c}{PAD} & \multicolumn{2}{c}{GAD} \\
     \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(l){8-9}
     $k$ & Variable(s) & $\max_j d_j$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ \\
     \midrule
@@ -1057,7 +1071,7 @@ and simplifying with \eqref{eq:difference_neighbours} we get
 \begin{equation}
   \begin{aligned}
     d_j &= \frac{1}{2}\Tr\abs{\frac{\rho_j - \sigma_j}{n}} \\
-        &= \frac{1}{n}\cdot\frac{1}{2}\Tr\abs{\rho_j - \sigma_j} = \frac{\tau(\rho_j, \sigma_j)}{n}
+    &= \frac{1}{n}\cdot\frac{1}{2}\Tr\abs{\rho_j - \sigma_j} = \frac{\tau(\rho_j, \sigma_j)}{n}
   \end{aligned}
   \label{eq:d_j_person}
 \end{equation}
@@ -1076,7 +1090,7 @@ Table~\ref{tab:local_results} shows the results of the local experiment for the 
   \centering
   \begin{tabular}{lcccccccc}
     \toprule
-     & & & \multicolumn{2}{c}{DEP} & \multicolumn{2}{c}{PAD} & \multicolumn{2}{c}{GAD} \\
+    & & & \multicolumn{2}{c}{DEP} & \multicolumn{2}{c}{PAD} & \multicolumn{2}{c}{GAD} \\
     \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(l){8-9}
     Variable & $K$ & $\max_{c,c'} d_{cc'}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ & $\epsilon_{theo}$ & $\epsilon_{exp}$ \\
     \midrule
@@ -1098,7 +1112,7 @@ Along that line these results also agree with the fact that as was mentioned in 
 
 In the case of the ordinal variable \texttt{status\_account}, it is here that the true effects of the different encoding can be shown. The reader can recall from Section~\ref{subsec:encoding_variables} that this variable was encoded around the Y axis with a $RY$ gate, which leaves its states in the $x$--$z$ plane. Moreover, not all the mechanisms shrink the value of $x$ in the same proportion (recall Table~\ref{tab:shrinking_coefficient}) which means that, for example, for the worst pair that the experiment found, which is $120^{\circ}$ apart ($d=0.866$), the next thing that is going to matter is the shrinkage in $x$. For DEP these are the same, so the distance wins and the maximum is once again the poles. GAD and PAD agree with DEP on the poles, as there is no $x$ component between them and all three mechanisms shrink $z$ by the same factor of $0.5$, giving $\epsilon_{exp} = \ln 3$. However, since this encoding allows other pairs of categories to have an $x$ component, and GAD and PAD shrink $x$ less than $z$, a pair of categories not completely opposite to each other can give a larger $\epsilon$ ($1.290$ for GAD and $1.117$ for PAD). This is also why neither reaches its $\epsilon_{theo}$: the theorems have to cover the worst-case scenario for a given $d$, which is the pair of states that stays the furthest apart after shrinking. For GAD and PAD, this pair lies on the equator, which a variable like $\texttt{collateral}$ reaches while $\texttt{status\_account}$ does not.
 
-One last observation that has to be mentioned is that the local $\epsilon$ is about 1000 times that of the central $\epsilon$. This might, at first glance, look like the local setting is worse overall. However, the reader might remember the explanation in Section~\ref{sec:measurement_release} about copies and what the analyst has to do to read the information of both methods, and recall that on one the $\epsilon$ is consumed $N$ times per reading while in the local setting it is consumed once. In Section~\ref{sec:discussion_and_conclusion} we will discuss this topic further.  
+One last observation that has to be mentioned is that the local $\epsilon$ is about 1000 times that of the central $\epsilon$. This might, at first glance, look like the local setting is worse overall. However, the reader might remember the explanation in Section~\ref{sec:measurement_release} about copies and what the analyst has to do to read the information of both methods, and recall that on one the $\epsilon$ is consumed $N$ times per reading while in the local setting it is consumed once. In Section~\ref{sec:discussion_and_conclusion} we will discuss this topic further.
 
 \subsection{Measurement and Classical release of categorical variables}
 \label{subsec:measurement_results}
@@ -1111,7 +1125,7 @@ The last results we are going to explore are the ones for the experiment of the 
   \centering
   \begin{tabular}{lcccccccccc}
     \toprule
-     & & & \multicolumn{2}{c}{$E[F_C]$} & \multicolumn{2}{c}{Std.\ dev.\ of $F_C$} & \multicolumn{2}{c}{$E[\hat{F}]$} & \multicolumn{2}{c}{Std.\ dev.\ of $\hat{F}$} \\
+    & & & \multicolumn{2}{c}{$E[F_C]$} & \multicolumn{2}{c}{Std.\ dev.\ of $F_C$} & \multicolumn{2}{c}{$E[\hat{F}]$} & \multicolumn{2}{c}{Std.\ dev.\ of $\hat{F}$} \\
     \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9} \cmidrule(l){10-11}
     Mechanism & $s$ & $\epsilon_{meas}$ & Theo. & Sim. & Theo. & Sim. & Theo. & Sim. & Theo. & Sim. \\
     \midrule
@@ -1202,39 +1216,39 @@ Table~\ref{tab:label_categorical} compiles the labels given to each variable's c
     Variable & Category & Label \\
     \midrule
     \multirow{4}{*}{\texttt{collateral}}
-      & car & 0 \\
-      & none & 1 \\
-      & real estate & 2 \\
-      & savings agreement/life insurance & 3 \\
+    & car & 0 \\
+    & none & 1 \\
+    & real estate & 2 \\
+    & savings agreement/life insurance & 3 \\
     \midrule
     \multirow{10}{*}{\texttt{purpose}}
-      & business & 0 \\
-      & car (new) & 1 \\
-      & car (used) & 2 \\
-      & domestic appliances & 3 \\
-      & education & 4 \\
-      & furniture/equipment & 5 \\
-      & others & 6 \\
-      & radio/television & 7 \\
-      & repairs & 8 \\
-      & retraining & 9 \\
+    & business & 0 \\
+    & car (new) & 1 \\
+    & car (used) & 2 \\
+    & domestic appliances & 3 \\
+    & education & 4 \\
+    & furniture/equipment & 5 \\
+    & others & 6 \\
+    & radio/television & 7 \\
+    & repairs & 8 \\
+    & retraining & 9 \\
     \midrule
     \multirow{5}{*}{\texttt{credit\_history}}
-      & all credits at this bank paid back duly & 0 \\
-      & critical account/ other credits existing (not at this bank) & 1 \\
-      & delay in paying off in the past & 2 \\
-      & existing credits paid back duly till now & 3 \\
-      & no credits taken/ all credits paid back duly & 4 \\
+    & all credits at this bank paid back duly & 0 \\
+    & critical account/ other credits existing (not at this bank) & 1 \\
+    & delay in paying off in the past & 2 \\
+    & existing credits paid back duly till now & 3 \\
+    & no credits taken/ all credits paid back duly & 4 \\
     \midrule
     \multirow{3}{*}{\texttt{housing}}
-      & for free & 0 \\
-      & own & 1 \\
-      & rent & 2 \\
+    & for free & 0 \\
+    & own & 1 \\
+    & rent & 2 \\
     \midrule
     \multirow{3}{*}{\texttt{other\_installment\_plans}}
-      & bank & 0 \\
-      & none & 1 \\
-      & stores & 2 \\
+    & bank & 0 \\
+    & none & 1 \\
+    & stores & 2 \\
     \bottomrule
   \end{tabular}
 \end{table*}
@@ -1250,27 +1264,27 @@ Table~\ref{tab:phik_numerical_ordinal} shows the $\phi_{K}$ correlation results 
   \centering
   \setlength{\tabcolsep}{4pt}
   \begin{tabular}{@{}lllrrr@{}}
-  \toprule
-   & & & \multicolumn{3}{c}{$\phi_K$} \\
-  \cmidrule(l){4-6}
-  Alone & First pair & Second pair & First pair & Second pair & Worst \\
-  \midrule
-  \texttt{status\_account} & \texttt{status\_savings}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.000 & 0.043 & 0.043 \\
-  \texttt{credit\_amount} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{month\_duration} & 0.088 & 0.000 & 0.088 \\
-  \texttt{status\_savings} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.091 & 0.043 & 0.091 \\
-  \texttt{status\_account} & \texttt{status\_savings}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.092 & 0.065 & 0.092 \\
-  \texttt{years\_employment} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.091 & 0.092 & 0.092 \\
-  \texttt{month\_duration} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.088 & 0.092 & 0.092 \\
-  \texttt{status\_savings} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.114 & 0.065 & 0.114 \\
-  \texttt{years\_employment} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{month\_duration} & 0.114 & 0.000 & 0.114 \\
-  \texttt{credit\_amount} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{years\_employment} & 0.091 & 0.150 & 0.150 \\
-  \texttt{month\_duration} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{years\_employment} & 0.114 & 0.150 & 0.150 \\
-  \texttt{credit\_amount} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{month\_duration} & 0.200 & 0.065 & 0.200 \\
-  \texttt{month\_duration} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.200 & 0.043 & 0.200 \\
-  \texttt{status\_account} & \texttt{status\_savings}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.150 & 0.689 & 0.689 \\
-  \texttt{status\_savings} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.088 & 0.689 & 0.689 \\
-  \texttt{years\_employment} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.200 & 0.689 & 0.689 \\
-  \bottomrule
+    \toprule
+    & & & \multicolumn{3}{c}{$\phi_K$} \\
+    \cmidrule(l){4-6}
+    Alone & First pair & Second pair & First pair & Second pair & Worst \\
+    \midrule
+    \texttt{status\_account} & \texttt{status\_savings}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.000 & 0.043 & 0.043 \\
+    \texttt{credit\_amount} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{month\_duration} & 0.088 & 0.000 & 0.088 \\
+    \texttt{status\_savings} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.091 & 0.043 & 0.091 \\
+    \texttt{status\_account} & \texttt{status\_savings}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.092 & 0.065 & 0.092 \\
+    \texttt{years\_employment} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.091 & 0.092 & 0.092 \\
+    \texttt{month\_duration} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{status\_savings}, \texttt{credit\_amount} & 0.088 & 0.092 & 0.092 \\
+    \texttt{status\_savings} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{years\_employment}, \texttt{month\_duration} & 0.114 & 0.065 & 0.114 \\
+    \texttt{years\_employment} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{month\_duration} & 0.114 & 0.000 & 0.114 \\
+    \texttt{credit\_amount} & \texttt{status\_account}, \texttt{month\_duration} & \texttt{status\_savings}, \texttt{years\_employment} & 0.091 & 0.150 & 0.150 \\
+    \texttt{month\_duration} & \texttt{status\_account}, \texttt{credit\_amount} & \texttt{status\_savings}, \texttt{years\_employment} & 0.114 & 0.150 & 0.150 \\
+    \texttt{credit\_amount} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{month\_duration} & 0.200 & 0.065 & 0.200 \\
+    \texttt{month\_duration} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{years\_employment}, \texttt{credit\_amount} & 0.200 & 0.043 & 0.200 \\
+    \texttt{status\_account} & \texttt{status\_savings}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.150 & 0.689 & 0.689 \\
+    \texttt{status\_savings} & \texttt{status\_account}, \texttt{years\_employment} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.088 & 0.689 & 0.689 \\
+    \texttt{years\_employment} & \texttt{status\_account}, \texttt{status\_savings} & \texttt{credit\_amount}, \texttt{month\_duration} & 0.200 & 0.689 & 0.689 \\
+    \bottomrule
   \end{tabular}
 \end{table*}
 
@@ -1292,9 +1306,9 @@ In this appendix we prove Lemma~\ref{lem:product_channel} which is used in Secti
   Therefore
   \begin{align*}
     \Big(\bigotimes_{i} X_i\Big)\Big(\bigotimes_{i} U_i\Big)\Big(\bigotimes_{i} e_i\Big)
-      &= \Big(\bigotimes_{i} X_i\Big)\Big(\bigotimes_{i} U_i e_i\Big) \\
-      &= \bigotimes_{i} X_i U_i e_i \\
-      &= \Big(\bigotimes_{i} X_i U_i\Big)\Big(\bigotimes_{i} e_i\Big),
+    &= \Big(\bigotimes_{i} X_i\Big)\Big(\bigotimes_{i} U_i e_i\Big) \\
+    &= \bigotimes_{i} X_i U_i e_i \\
+    &= \Big(\bigotimes_{i} X_i U_i\Big)\Big(\bigotimes_{i} e_i\Big),
   \end{align*}
   so both operators agree on every product vector, and hence on all of $\bigotimes_i \mathcal{H}_i$.
 \end{IEEEproof}
@@ -1303,7 +1317,7 @@ In this appendix we prove Lemma~\ref{lem:product_channel} which is used in Secti
   Let $A_i$ be a linear operator and $\rho_i$ a density operator on $\mathcal{H}_i$, for $i = 1, \dots, k$. Then
   \begin{align*}
     \Big(\bigotimes_{i=1}^{k} A_i\Big)\Big(\bigotimes_{i=1}^{k} \rho_i\Big)&\Big(\bigotimes_{i=1}^{k} A_i\Big)^{\dagger} \\
-      &= \bigotimes_{i=1}^{k} A_i \rho_i A_i^{\dagger}.
+    &= \bigotimes_{i=1}^{k} A_i \rho_i A_i^{\dagger}.
   \end{align*}
   \label{prop:product_operation}
 \end{proposition}
@@ -1313,10 +1327,11 @@ In this appendix we prove Lemma~\ref{lem:product_channel} which is used in Secti
   Applying Lemma~\ref{lem:mixed_product} twice,
   \begin{align*}
     \Big(\bigotimes_{i} A_i\Big)\Big(\bigotimes_{i} \rho_i\Big)\Big(\bigotimes_{i} A_i^{\dagger}\Big)
-      &= \Big(\bigotimes_{i} A_i\Big)\Big(\bigotimes_{i} \rho_i A_i^{\dagger}\Big) \\
-      &= \bigotimes_{i} A_i \rho_i A_i^{\dagger}.
+    &= \Big(\bigotimes_{i} A_i\Big)\Big(\bigotimes_{i} \rho_i A_i^{\dagger}\Big) \\
+    &= \bigotimes_{i} A_i \rho_i A_i^{\dagger}.
   \end{align*}
 \end{IEEEproof}
+
 
 \begin{IEEEproof}[Proof of Lemma~\ref{lem:product_channel}]
   The operation $\bigotimes_i \mathcal{E}_i$ has Kraus operators $E_{1,a_1} \otimes \dots \otimes E_{k,a_k}$, one for each choice of indices $a_1, \dots, a_k$. Applying Proposition~\ref{prop:product_operation} to each term, and then the distributivity (bilinearity) of the tensor product over sums,
@@ -1325,7 +1340,7 @@ In this appendix we prove Lemma~\ref{lem:product_channel} which is used in Secti
     &\quad= \sum_{a_1, \dots, a_k} \Big(\bigotimes_{i} E_{i,a_i}\Big)\Big(\bigotimes_{i} \rho_i\Big)\Big(\bigotimes_{i} E_{i,a_i}\Big)^{\dagger} \\
     &\quad= \sum_{a_1, \dots, a_k} \bigotimes_{i} E_{i,a_i}\, \rho_i\, E_{i,a_i}^{\dagger} \\
     &\quad= \bigotimes_{i} \sum_{a_i} E_{i,a_i}\, \rho_i\, E_{i,a_i}^{\dagger}
-       = \bigotimes_{i} \mathcal{E}_i(\rho_i).
+    = \bigotimes_{i} \mathcal{E}_i(\rho_i).
   \end{align*}
 \end{IEEEproof}
 
@@ -1340,6 +1355,6 @@ Esta seccion solo para la tesis o no se si pueda ir en el paper tambien
 \bibliography{references}
 
 
-\EOD 
+\EOD
 
 \end{document}
