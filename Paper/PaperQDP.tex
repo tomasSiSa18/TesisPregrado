@@ -166,7 +166,7 @@ Quantum channels are important as they are the generalization of an operation ov
 Another useful form to define the trace distance in terms of vectors, by Nielsen \& Chuang~\cite{Nielsen_Chuang_2010}, is 
 
 \begin{definition}
-    (Trace distance~\cite{Nielsen_Chuang_2010}). It is the distance between the Bloch vectors $u$ and $v$ of two qubit states, defined by:
+    (Trace distance~\cite[Sec.~9.2.1, Eq.~(9.20)]{Nielsen_Chuang_2010}). It is the distance between the Bloch vectors $u$ and $v$ of two qubit states, defined by:
 
     \[
       \tau(u, v) = \frac{1}{2}\norm{u - v}
@@ -1309,7 +1309,7 @@ In this appendix we prove Lemma~\ref{lem:product_channel} which is used in Secti
 \end{proposition}
 
 \begin{IEEEproof}
-  The adjoint of a tensor product is the tensor product of the adjoints, $(\bigotimes_i A_i)^{\dagger} = \bigotimes_i A_i^{\dagger}$~\cite{Nielsen_Chuang_2010}. % TODO: add the section number once read
+  The adjoint of a tensor product is the tensor product of the adjoints, $(\bigotimes_i A_i)^{\dagger} = \bigotimes_i A_i^{\dagger}$~\cite[Sec.~1.1.2, Eq.~(1.75)]{watrous2018theory}.
   Applying Lemma~\ref{lem:mixed_product} twice,
   \begin{align*}
     \Big(\bigotimes_{i} A_i\Big)\Big(\bigotimes_{i} \rho_i\Big)\Big(\bigotimes_{i} A_i^{\dagger}\Big)
