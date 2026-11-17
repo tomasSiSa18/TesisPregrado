@@ -16,8 +16,10 @@
 \let\year\accessyear
 \definecolor{accessblue}{cmyk}{1,0.3,0,0.2} % class defines it as a spot color, which xcolor (loaded by TikZ) can't use
 \definecolor{greycolor}{cmyk}{0,0,0,.8}
+\newlength\qdpabstractwidth\setlength\qdpabstractwidth{\dimexpr\titlewidth-.5em-1.5mm\relax}\let\abstractwidth\qdpabstractwidth
+\raggedbottom
 \def\xfigwd{0pt} % class captions expect \xfigwd, normally set only by its \Figure macro
-\def\headerlogo{}\def\headerlogoall{} % university draft: no journal logo in the header
+\def\headerlogoall{\raisebox{-2pt}{\includegraphics[height=12pt]{FLAG.png}}}\let\headerlogo\headerlogoall
 % university draft: footer shows only the page number, title block drops the history/DOI lines
 \usepackage{etoolbox}
 \makeatletter
@@ -27,7 +29,6 @@
 \def\@evenfoot{\raisebox{8pt}{\footerpagefont\thepage}\hfill}}
 \let\accessps@titlepage\ps@titlepage
 \def\ps@titlepage{\accessps@titlepage
-  \def\@oddhead{}\def\@evenhead{}%
   \def\@oddfoot{\hfill\raisebox{3pt}{\footerpagefont\thepage}}%
 \def\@evenfoot{\raisebox{3pt}{\footerpagefont\thepage}\hfill}}
 \pagestyle{headings}
@@ -223,7 +224,6 @@ For the purposes of this investigation we are interested in three types of noise
   \end{align*}
 
   and $\eta$ and $\gamma$ are two parameters
-
   and the generalized amplitude damping mechanism ($\mathcal{M}_{GAD}$) is the mapping
 
   \[
@@ -285,27 +285,25 @@ For the purposes of this investigation we are interested in three types of noise
 
 \subsection{Differential Privacy}
 
-Dwork and Roth~\cite{dwork2014algorithmic} formalize the promise described in Section~\ref{sec:introduction} as
+In their investigation Dwork and Roth~\cite{dwork2014algorithmic} formalize the promise described in Section~\ref{sec:introduction}. However, for the scope of this investigation we thought it better to use the definition posed by \cite{zhou2017differential}
 
 \begin{definition}
-  (Differential privacy~\cite[Def.~2.4]{dwork2014algorithmic}). A randomized algorithm $\mathcal{M}$ with domain $\mathbb{N}^{|\mathcal{X}|}$ is $(\epsilon, \delta)$-differentially private if for all $S \subseteq \mathrm{Range}(\mathcal{M})$ and for all $x, y \in \mathbb{N}^{|\mathcal{X}|}$ such that $\|x - y\|_1 \leq 1$:
+  (Differential privacy~\cite[Def.~1]{zhou2017differential}). A randomized function $\mathcal{K}$ gives $(\epsilon, \delta)$-differential privacy if for all data sets $D$ and $D^{\prime}$ differing on one single participant, and for any set of possible outcomes $S \in Range(\mathcal{K})$:
   \[
-    \Pr[\mathcal{M}(x) \in S] \leq \exp(\epsilon) \Pr[\mathcal{M}(y) \in S] + \delta,
+    \Pr[\mathcal{K}(D) \in S] \leq e^{\epsilon} \Pr[\mathcal{K}(D^{\prime}) \in S] + \delta,
   \]
-  where the probability space is over the coin flips of the mechanism $\mathcal{M}$. If $\delta = 0$, we say that $\mathcal{M}$ is $\epsilon$-differentially private.
-
-  Here a database $x \in \mathbb{N}^{|\mathcal{X}|}$ is represented by its histogram over the universe $\mathcal{X}$ of possible rows ($x_i$ is the number of rows of type $i$), and $\|x - y\|_1 = \sum_{i} |x_i - y_i|$ is the number of records in which $x$ and $y$ differ \cite[Def.~2.3]{dwork2014algorithmic}.
+  If $\delta = 0$, we say that $\mathcal{K}$ is $\epsilon$-differentially private.
   \label{def:dp}
 \end{definition}
 
 In our investigation we are interested in the privacy guarantee $\epsilon$ when $\delta = 0$. The value of $\epsilon$ can be interpreted as a privacy guarantee from the differentially private algorithm as it implies that adding or removing one record (i.e., adding or removing a participant) in the dataset $x$ will change the probability of any output by a factor of at most $e^{\epsilon}$. In other words, an adversary who wants to analyze the dataset will not be able to reliably tell if a person was included in the dataset or not.
 
-In order to bound this $\epsilon$, Dwork \& Roth define the privacy loss of an output as:
+In order to bound this $\epsilon$, we define the privacy loss of an output as:
 
 \begin{definition}
-  (Privacy loss~\cite[Sec.~2.3]{dwork2014algorithmic}). Let $x, y \in \mathbb{N}^{|\mathcal{X}|}$ be adjacent databases ($\|x - y\|_1 \leq 1$) and let $\xi$ be an output of $\mathcal{M}$. The privacy loss incurred by observing $\xi$ is
+  (Privacy loss~\cite[Sec.~2.3]{dwork2014algorithmic}). Let $D$ and $D^{\prime}$ be data sets differing on one single participant and let $\xi$ be an output of $\mathcal{K}$. The privacy loss incurred by observing $\xi$ is
   \[
-    \mathcal{L}^{(\xi)}_{\mathcal{M}(x) \| \mathcal{M}(y)} = \ln\left(\frac{\Pr[\mathcal{M}(x) = \xi]}{\Pr[\mathcal{M}(y) = \xi]}\right)
+    \mathcal{L}^{(\xi)}_{\mathcal{K}(D) \| \mathcal{K}(D^{\prime})} = \ln\left(\frac{\Pr[\mathcal{K}(D) = \xi]}{\Pr[\mathcal{K}(D^{\prime}) = \xi]}\right)
   \]
   \label{def:privacy_loss}
 \end{definition}
@@ -1345,12 +1343,12 @@ In this appendix we prove Lemma~\ref{lem:product_channel} which is used in Secti
 \end{IEEEproof}
 
 \clearpage
-\raggedbottom
 \section*{Acknowledgments}
 \label{sec:acknowledgment}
 
 Esta seccion solo para la tesis o no se si pueda ir en el paper tambien
 
+\raggedright
 \bibliographystyle{IEEEtran}
 \bibliography{references}
 

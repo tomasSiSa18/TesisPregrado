@@ -4,9 +4,6 @@
 \RequirePackage{xkeyval}
 
 \ifpdf
- \pdfmapfile{+ t1-times.map}
- \pdfmapfile{+ t1-formata.map}
- \pdfmapfile{+ t1-giovannistd.map}
 \fi
 
 \newif\iflineno\linenofalse
@@ -55,42 +52,42 @@
 
 \def\textit#1{{\it #1}}%
 \def\textbf#1{{\bf #1}}%
-\def\historyfont{\sffamily\fontencoding{T1}\fontseries{n}\fontshape{n}\fontsize{7}{8.4}\selectfont}%formata reg 7pt
-\def\doifont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{6}{7.2}\selectfont\it}%giovannistd-bookitalic 6pt
+\def\historyfont{\sffamily\fontencoding{T1}\fontseries{m}\fontshape{n}\fontsize{7}{8.4}\selectfont}%formata reg 7pt
+\def\doifont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{6}{7.2}\selectfont\it}%giovannistd-bookitalic 6pt
 \def\titlefont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{22}{25.4}\selectfont}%formata condmed 22pt
 \def\authorfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{9.9}{12}\selectfont}%formata medium 9.9pt
 \def\membershipfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{9.9}{12}\selectfont}%formata medium italic 9.9pt
-\def\addressfont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{6.6}{8}\selectfont}%times roman 6.6pt
-\def\correspfont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{7.7}{9.24}\selectfont}%times roman 7.7pt
-\def\tfootnotefont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{7.7}{9.24}\selectfont}%times roman 7.7pt
-\def\abstractfont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{10}{12}\selectfont}%times roman 10pt
-\def\indexfont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{10}{12}\selectfont}%times roman 10pt
-\def\bodyfont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{10}{12}\selectfont}%times roman 10pt
+\def\addressfont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{6.6}{8}\selectfont}%times roman 6.6pt
+\def\correspfont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{7.7}{9.24}\selectfont}%times roman 7.7pt
+\def\tfootnotefont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{7.7}{9.24}\selectfont}%times roman 7.7pt
+\def\abstractfont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{10}{12}\selectfont}%times roman 10pt
+\def\indexfont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{10}{12}\selectfont}%times roman 10pt
+\def\bodyfont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{10}{12}\selectfont}%times roman 10pt
 \def\abstractheadfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{10}{12}\selectfont}%formata bold 9pt
 \def\indexheadfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{10}{12}\selectfont}%formata bold 9pt
 \def\sectionAfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{9}{12}\selectfont}%formata bold 9pt
 \def\sectionBfont{\sffamily\fontencoding{T1}\fontseries{b}\fontshape{sl}\fontsize{9}{12}\selectfont}%formata mediumitalic 9pt
-\def\sectionCfont{\sffamily\fontencoding{T1}\fontseries{n}\fontsize{9}{12}\selectfont}%formata regular 9pt
-\def\sectionDfont{\sffamily\fontencoding{T1}\fontseries{n}\fontshape{sl}\fontsize{9}{12}\selectfont}%formata italic 9pt
+\def\sectionCfont{\sffamily\fontencoding{T1}\fontseries{m}\fontsize{9}{12}\selectfont}%formata regular 9pt
+\def\sectionDfont{\sffamily\fontencoding{T1}\fontseries{m}\fontshape{sl}\fontsize{9}{12}\selectfont}%formata italic 9pt
 \def\figcapheadfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{7}{8.4}\selectfont}%formata bold 7pt
 \def\figcapfont{\def\textit##1{{\sffamily\selectfont\itshape##1}}\sffamily\fontencoding{T1}\fontseries{m}\fontsize{7}{8.4}\selectfont      }%formata medium 7pt
 \def\tablecapheadfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{7}{8.4}\selectfont}%formata bold 7pt
 \def\tableheadfont{\sffamily\fontencoding{T1}\fontseries{m}\fontsize{7}{8.4}\selectfont}%formata medium 7pt
 \def\tablecapfont{\def\textit##1{{\sffamily\selectfont\itshape##1}}\sffamily\fontencoding{T1}\fontseries{m}\fontsize{7}{8.4}\selectfont}%formata medium 7pt
-\def\tablebodyfont{\def\textit##1{{\sffamily\selectfont\itshape##1}}\sffamily\fontencoding{T1}\fontseries{n}\fontsize{7}{8.4}\selectfont}%formata regular 7 pt
+\def\tablebodyfont{\def\textit##1{{\sffamily\selectfont\itshape##1}}\sffamily\fontencoding{T1}\fontseries{m}\fontsize{7}{8.4}\selectfont}%formata regular 7 pt
 \def\tablefootfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{7}{8.4}\selectfont}%formata regular 7 pt
-\def\footervolfont{\sffamily\fontencoding{T1}\fontseries{n}\fontsize{6}{7}\selectfont}%formata regular 6pt
-\def\footerpagefont{\sffamily\fontencoding{T1}\fontseries{n}\fontsize{7}{7}\selectfont}%formata regular 7pt
-\def\headerfont{\sffamily\fontencoding{T1}\fontseries{n}\fontsize{7}{7}\selectfont}%formata regular 7pt
+\def\footervolfont{\sffamily\fontencoding{T1}\fontseries{m}\fontsize{6}{7}\selectfont}%formata regular 6pt
+\def\footerpagefont{\sffamily\fontencoding{T1}\fontseries{m}\fontsize{7}{7}\selectfont}%formata regular 7pt
+\def\headerfont{\sffamily\fontencoding{T1}\fontseries{m}\fontsize{7}{7}\selectfont}%formata regular 7pt
 \def\nheaderfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{9}{9}\selectfont}%formata regular 7pt
 \def\iheaderfont{\sffamily\fontencoding{T1}\fontseries{m}\fontshape{sl}\fontsize{7}{7}\selectfont}%formata mediumitalic 9pt
-\def\referencefont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{7.61}{9}\selectfont}%times roman 7.61pt
+\def\referencefont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{7.61}{9}\selectfont}%times roman 7.61pt
 \def\biographyheadfont{\sffamily\fontencoding{T1}\fontseries{m}\fontsize{8}{9.6}\selectfont}%times roman 8pt
-\def\biographyfont{\rmfamily\fontencoding{T1}\fontseries{n}\fontsize{8}{9.6}\selectfont}%times roman 8pt
+\def\biographyfont{\rmfamily\fontencoding{T1}\fontseries{m}\fontsize{8}{9.6}\selectfont}%times roman 8pt
 
 \ifjtehm
-\def\correspfont{\sffamily\fontencoding{T1}\fontseries{n}\fontsize{7}{8}\selectfont}%times roman 7.7pt
-\def\tfootnotefont{\sffamily\fontencoding{T1}\fontseries{n}\fontsize{7}{8}\selectfont}%times roman 7.7pt
+\def\correspfont{\sffamily\fontencoding{T1}\fontseries{m}\fontsize{7}{8}\selectfont}%times roman 7.7pt
+\def\tfootnotefont{\sffamily\fontencoding{T1}\fontseries{m}\fontsize{7}{8}\selectfont}%times roman 7.7pt
 \def\abstractheadfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{9}{12}\selectfont}%formata bold 9pt
 \def\indexheadfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{9}{12}\selectfont}%formata bold 9pt
 \def\titlepageheaderfont{\sffamily\fontencoding{T1}\fontseries{b}\fontsize{9}{12}\selectfont}%formata bold 9pt
