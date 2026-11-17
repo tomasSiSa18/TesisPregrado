@@ -663,15 +663,15 @@ For each row $j$, the process is as follows: aggregate the set $\{\rho_i^{k}\}$ 
 
 With all those values, the only remaining step of the pipeline is to input them into each method for finding $\epsilon$. On the theoretical side, the pipeline will input the maximum trace distance and the noise mechanism's parameters into one of the theorems defined in Section~\ref{sec:background} (for the depolarizing mechanism $D=2$, as we are calculating on a per-qubit basis) for the resulting $\epsilon_{theo}$ of the column. In the case of $\epsilon_{exp}$, it is the maximum $\epsilon_{exp}^{j}$ over all rows $j$, as that is the maximum privacy loss that the dataset can offer for that noise mechanism.
 
-With the $\epsilon_{exp}^{k}$ and $\epsilon_{theo}^{k}$ calculated for each column $k$ of the dataset, the only thing that remains is to add them to find the upper bound of $\epsilon_{exp}$ and $\epsilon_{theo}$ of the dataset. In the pipeline, the curator would release the noisy density matrices for the 8 qubits
+With the $\epsilon_{exp}^{k}$ and $\epsilon_{theo}^{k}$ calculated for each column $k$ of the dataset, the only thing that remains is to add them to find the upper bound of $\epsilon_{exp}$ and $\epsilon_{theo}$ of the dataset. In the pipeline, the curator would hold the 8 qubits as a single state $\bigotimes_{k=0}^{7} \rho^{k}$ and apply the noise mechanism to each one of them, which is the operation
 \[
-  \bigotimes_{k=0}^{7} \rho^{\prime k} = \bigotimes_{k=0}^{7} \mathcal{M}(\rho^{k}).
+  \Big(\bigotimes_{k=0}^{7} \mathcal{M}\Big)\Big(\bigotimes_{k=0}^{7} \rho^{k}\Big).
 \]
 Because of Lemma~\ref{lem:product_channel}, this is equal to
 \[
-  \Big(\bigotimes_{k=0}^{7} \mathcal{M}\Big)\Big(\bigotimes_{k=0}^{7} \rho^{k}\Big) = \mathcal{M}_{[8]}(\rho^{0}, \dots, \rho^{7})
+  \bigotimes_{k=0}^{7} \mathcal{M}(\rho^{k}) = \bigotimes_{k=0}^{7} \rho^{\prime k},
 \]
-which is the combination defined in Corollary~\ref{cor:composition}, and thus the addition is valid.
+which is the combination $\mathcal{M}_{[8]}(\rho^{0}, \dots, \rho^{7})$ defined in Corollary~\ref{cor:composition}, and thus the addition is valid.
 
 
 \begin{lemma}
@@ -684,7 +684,7 @@ which is the combination defined in Corollary~\ref{cor:composition}, and thus th
 
 For readability, the proof of Lemma~\ref{lem:product_channel} is deferred to Appendix~\ref{ap:composition_proof}.
 
-In the case of the depolarizing mechanism, we can actually modify the pipeline by removing the need to encode each column individually and applying the noise to the full 8 columns, since Theorem~\ref{thm:epsilon_dep} allows it. This, however, is classified as a separate experiment, since both the aggregation and the release that the curator would perform are over the full 8-qubit matrix (not per qubit, as was explained), thus not allowing for a comparison against the original pipeline. Later on, in Section~\ref{sec:discussion_and_conclusion}, we will discuss how these methods yield very different privacy results.
+In the case of the depolarizing mechanism, we can actually modify the pipeline by removing the need to encode each column individually and applying the noise to the full 8 columns, since Theorem~\ref{thm:epsilon_dep} allows it. This, however, is classified as a separate experiment, since both the aggregation and the release that the curator would perform are over the full 8-qubit matrix (a single channel with $D = 256$ instead of one channel per qubit, so Lemma~\ref{lem:product_channel} does not apply), thus not allowing for a comparison against the original pipeline. Later on, in Section~\ref{sec:discussion_and_conclusion}, we will discuss how these methods yield very different privacy results.
 
 
 \subsection{Local Setting}
@@ -1334,7 +1334,7 @@ In this appendix we prove Lemma~\ref{lem:product_channel} which is used in Secti
 
 
 \begin{IEEEproof}[Proof of Lemma~\ref{lem:product_channel}]
-  The operation $\bigotimes_i \mathcal{E}_i$ has Kraus operators $E_{1,a_1} \otimes \dots \otimes E_{k,a_k}$, one for each choice of indices $a_1, \dots, a_k$. Applying Proposition~\ref{prop:product_operation} to each term, and then the distributivity (bilinearity) of the tensor product over sums,
+  The operation $\bigotimes_i \mathcal{E}_i$ has Kraus operators $E_{1,a_1} \otimes \dots \otimes E_{k,a_k}$, one for each choice of indices $a_1, \dots, a_k$. Applying Proposition~\ref{prop:product_operation} to each term, and then the distributivity (multilinearity) of the tensor product over sums,
   \begin{align*}
     &\Big(\bigotimes_{i} \mathcal{E}_i\Big)\Big(\bigotimes_{i} \rho_i\Big) \\
     &\quad= \sum_{a_1, \dots, a_k} \Big(\bigotimes_{i} E_{i,a_i}\Big)\Big(\bigotimes_{i} \rho_i\Big)\Big(\bigotimes_{i} E_{i,a_i}\Big)^{\dagger} \\
