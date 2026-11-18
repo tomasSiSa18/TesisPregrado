@@ -318,7 +318,7 @@ For the purpose of our investigation we were interested in the two settings that
 As mentioned in Section~\ref{sec:introduction}, the promise of differential privacy does not change in the quantum setting, but the means to reach it do. Zhou and Ying~\cite{zhou2017differential} define quantum differential privacy as follows
 
 \begin{definition}
-  (Quantum differential privacy~\cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta > 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
+  (Quantum differential privacy~\cite{zhou2017differential}). Let $d \in (0,1]$ and $\epsilon,\delta \geq 0$ be three constants. A quantum operation $\mathcal{E}$ is $(\epsilon, \delta)$-differentially private if for every POVM $M = \{M_m\}$, for all outputs $S \subseteq Out(M)$ and for all inputs $\rho, \sigma$ such that $\tau(\rho, \sigma)\leq d$, it holds that:
 
   \[
     Pr[\mathcal{E}(\rho)\in_{M}S] \leq e^{\epsilon} Pr[\mathcal{E}(\sigma)\in_{M}S] + \delta
@@ -436,16 +436,47 @@ As the reader can observe, dPD is nothing more than the privacy loss that~\cite{
 
 \section{Related Work}
 \label{sec:related_work}
-It was important to figure out what the current investigative and academic situation was with regard to the fields of quantum information and computation and differential privacy. For this an investigation was made in which different databases were searched and analyzed to find out the number of papers that covered the topics mentioned before. The investigation found 61 relevant papers that focused on the topics and the specific distributions of each one are compiled in Figure~\ref{fig:state_of_qdp}.
+To be able to propose an investigation which was useful and relevant we first needed to narrow down the related investigation and possible research topics in the area of quantum differential privacy. In order to achieve this we searched through different databases with topics such as: Differential privacy, quantum differential privacy, quantum machine learning, quantum differential privacy mechanism, among others to get a general view of previous investigations in these areas. The search found 55 relevant papers that focused on different topics whose distributions and count of each are compiled in Figure~\ref{fig:state_of_qdp}.
 
 \begin{figure*}[!t]
   \centering
-  \includegraphics[width=\textwidth]{state_of_qdp.png}
-  \caption{State of the art of quantum differential privacy (own elaboration, based on the literature review described above).}
+  \resizebox{\textwidth}{!}{%
+    \begin{tikzpicture}[
+        font=\small,
+        box/.style={draw, rounded corners, align=center, text width=4.4cm, minimum height=1.0cm, anchor=north},
+        kept/.style={box, fill=gray!20},
+        arr/.style={-latex, thick}
+      ]
+      \node[box] (priv) at (9.6,0) {\textbf{Privacy}};
+      \node[kept] (cdp) at (2.7,-1.6) {\textbf{Classical DP (17)}};
+      \node[box] (qp) at (16.5,-1.6) {\textbf{Quantum Privacy (38)}};
+      \node[box, text width=6cm] (qdp) at (9.6,-3.2) {\textbf{Quantum Differential Privacy (22)}};
+      \node[kept] (found) at (2.7,-4.8) {\textbf{QDP Foundations (11)}\\ Information Theory\\ Privacy Amplification\\ Composition};
+      \node[kept] (mech) at (9.6,-4.8) {\textbf{QDP Mechanisms (9)}\\ Depolarizing / Shot Noise\\ Bit-Flip / Phase-Flip\\ Hybrid Mechanisms};
+      \node[box] (ver) at (16.5,-4.8) {\textbf{QDP Verification (2)}};
+      \node[box] (app) at (9.6,-7.6) {\textbf{Applications (16)}};
+      \node[kept] (qml) at (6.15,-9.2) {\textbf{QML + QDP (10)}\\ DP-QML\\ QDP-GAN\\ QCNN\\ QPATE};
+      \node[box] (qfl) at (13.05,-9.2) {\textbf{QFL + Privacy (6)}\\ Federated QML\\ QFL + DP\\ Gradient Hiding\\ Tensor Networks};
+      \draw[arr] (priv.south) -- ++(0,-0.3) -| (cdp.north);
+      \draw[arr] (priv.south) -- ++(0,-0.3) -| (qp.north);
+      \draw[arr] (qp.south) |- (qdp.east);
+      \draw[arr] (qdp.south) -- ++(0,-0.3) -| (found.north);
+      \draw[arr] (qdp.south) -- (mech.north);
+      \draw[arr] (qdp.south) -- ++(0,-0.3) -| (ver.north);
+      \draw[arr] (mech.south) -- (app.north);
+      \draw[arr] (app.south) -- ++(0,-0.3) -| (qml.north);
+      \draw[arr] (app.south) -- ++(0,-0.3) -| (qfl.north);
+    \end{tikzpicture}%
+  }
+  \caption{State of the art of quantum differential privacy (own elaboration, based on the literature review described above). Shaded boxes mark the branches studied further.}
   \label{fig:state_of_qdp}
 \end{figure*}
 
-As shown in Figure~\ref{fig:state_of_qdp}, the investigation yielded positive results as there were many academic papers that not only mentioned the topic but gave valuable research and insight on possible angles the project could leap into. Among the most interesting ones are: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy in the model. \cite{song2025hybrid} which tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. \cite{yang2023improved} in which an extended analysis was made to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. Finally, in the study of Zhou and Ying~\cite{zhou2017differential}, they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$.
+We had 17 papers with theory on the classical theory and applications of differential privacy which gave us an idea of the basics and the theory behind the investigation we were developing. From this branch we chose to focus on papers such as \cite{dwork2014algorithmic} which gave the mathematical foundations and motivation of classical differential privacy.
+
+On the other hand, we had another branch of papers which were focused on different levels of quantum privacy. Since we wanted to focus our investigation on quantum differential privacy mechanisms, we chose to skip the 6 papers of Quantum federated learning and 2 of QDP verification as the former is another topic entirely and the latter was based on the verification of the mechanisms themselves. In that regard, we chose a subset of papers on the topics of QDP foundations, QDP mechanisms and some applications of QDP and quantum machine learning (QML).
+
+Among the most interesting ones we chose to investigate further and their contributions to our own investigation were: \cite{watkins2023quantum} in which a hybrid quantum machine learning framework was proposed to allow differential privacy to be used during training. This paper was interesting as it gave us insights on the practical applications that QDP could have. \cite{song2025hybrid} tested different quantum differential privacy mechanisms along with proposing its own \textbf{Lifted} quantum differential privacy, which enhanced the randomness induced in the quantum states. This paper was important as it gave us a detailed explanation on the different quantum noise mechanisms that could be used to provide differential privacy in the quantum setting. \cite{yang2023improved} made an extended analysis to characterize the protection quantum noise can offer in the setting of quantum-classical algorithms. This one was important as it gave us the most and least likely noise mechanisms to give positive QDP results. Finally, in the study of Zhou and Ying~\cite{zhou2017differential}, they define a framework of differential privacy in the quantum setting and examine how different noise mechanisms change the protection of a privacy budget $\epsilon$. This paper became the cornerstone of our investigation as it gave us theoretical bounds and an algorithm to measure and analyze differential privacy with quantum noise mechanisms.
 
 \section{Data Processing and Analysis}
 \label{sec:data_processing_and_analysis}
