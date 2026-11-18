@@ -619,11 +619,11 @@ As the reader can observe, thanks to dense angle encoding we can actually reduce
 \section{Finding the experimental privacy budget}
 \label{sec:finding_epsilon}
 
-Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters chosen for all the different mechanisms mentioned in Section~\ref{sec:background}; these are compiled in Table~\ref{tab:noise_params}. All of these parameters are just that, parameters, so the selection was made mainly as a way to, firstly, execute all the tests with the same parameters and thus allow for a comparison between experiments and, secondly, abide by the restrictions imposed on $\lambda$ and $\gamma$ by Theorem~\ref{thm:epsilon_pad} and on $\eta$ by Theorem~\ref{thm:epsilon_gad}. Furthermore, due to the nature of the PAD mechanism, it was important to choose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP.
+Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters chosen for all the different mechanisms mentioned in Section~\ref{sec:background} as well as the accuracy selected for the dPD algorithm $\theta$. All of these parameters are just that, parameters, so the selection was made mainly as a way to, firstly, execute all the tests with the same parameters and thus allow for a comparison between experiments. And, secondly, abide by the restrictions imposed on $\lambda$ and $\gamma$ by Theorem~\ref{thm:epsilon_pad} and on $\eta$ by Theorem~\ref{thm:epsilon_gad}. Furthermore, due to the nature of the PAD mechanism, it was important to choose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP. The selection of parameters is compiled in Table~\ref{tab:parameters_experiments}.
 
 \begin{table}[H]
-  \caption{Selection of parameters for noise mechanisms}
-  \label{tab:noise_params}
+  \caption{Selection of parameters for noise mechanisms and accuracy}
+  \label{tab:parameters_experiments}
   \centering
   \begin{tabular}{ll}
     \toprule
@@ -632,6 +632,8 @@ Before starting with the in-depth explanation of each experiment it is important
     Depolarizing & $p = 0.5$ \\
     Generalized Amplitude Damping & $\eta = 0.5$, $\gamma = 0.5$ \\
     Phase-Amplitude Damping & $\eta = 0.5$, $\gamma = 0.5$, $\lambda = 0.25$ \\
+    \midrule
+    dPD & $\theta = 0.001$\\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -852,7 +854,7 @@ However, after the noise the state vector is shortened by a factor $s$, which we
   \centering
   \begin{tabular}{lll}
     \toprule
-    Mechanism & $s$ & $s$ with Table~\ref{tab:noise_params} \\
+    Mechanism & $s$ & $s$ with Table~\ref{tab:parameters_experiments} \\
     \midrule
     $\mathcal{M}_{DEP}$ (Def.~\ref{def:dep}) & $1 - p$ & $0.5$ \\
     $\mathcal{M}_{GAD}$ (Def.~\ref{def:gad}) & $\sqrt{1 - \gamma}$ & $\approx 0.707$ \\
@@ -1194,7 +1196,7 @@ Lastly, one might try to apply the noise directly on the full 8-qubit density ma
 
 This investigation also provided an approach to understand the true cost of privacy. As seen in Subsection~\ref{subsec:measurement_results}, after the noise and the correction the standard deviation of $\hat{F}$ increases, which means that the released values become more dispersed around the original mean. Both effects come from the same shrinking coefficient $s$: a smaller $s$ lowers $\epsilon_{meas}$, so an attacker has less chance of identifying a single person, but it also widens the standard deviation, so the analyst gets a less precise estimate.
 
-This investigation has two main limitations. First, the experiments were carried out on quantum simulators, where the noise channels are applied exactly through their Kraus operators. On real hardware these operations are more difficult to carry out, since they require extra environment qubits to produce the decoherence and measurement shots to estimate the resulting states. Second, the proposed encoding and the experiments to measure the privacy budget respond to specific choices: the German Credit dataset and a single set of noise parameters (Table~\ref{tab:noise_params}).
+This investigation has two main limitations. First, the experiments were carried out on quantum simulators, where the noise channels are applied exactly through their Kraus operators. On real hardware these operations are more difficult to carry out, since they require extra environment qubits to produce the decoherence and measurement shots to estimate the resulting states. Second, the proposed encoding and the experiments to measure the privacy budget respond to specific choices: the German Credit dataset and a single set of noise parameters (Table~\ref{tab:parameters_experiments}).
 
 All in all, the investigation achieved its objective, which was to compare and contrast the theoretical privacy budget $\epsilon$ of different quantum noise mechanisms with an experimental one in quantum computing simulations. Each experiment yielded results that align with the expectations founded on~\cite{zhou2017differential} and~\cite{dwork2014algorithmic}, among many other works studied to bring this investigation to fruition. As future work we propose implementing the mechanisms on real hardware, parameter sweeps, a comparison with the Lifted QDP of Song et al.~\cite{song2025hybrid}, and joining this investigation with variational quantum circuits to build a private quantum machine learning pipeline.
 
