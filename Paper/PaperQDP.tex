@@ -618,7 +618,7 @@ As the reader can observe, thanks to dense angle encoding we can actually reduce
 \section{Finding the experimental privacy budget}
 \label{sec:finding_epsilon}
 
-Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters chosen for all the different mechanisms mentioned in Section~\ref{sec:background} as well as the accuracy selected for the dPD algorithm $\theta$. All of these parameters are just that, parameters, so the selection was made mainly as a way to, firstly, execute all the tests with the same parameters and thus allow for a comparison between experiments. And, secondly, abide by the restrictions imposed on $\lambda$ and $\gamma$ by Theorem~\ref{thm:epsilon_pad} and on $\eta$ by Theorem~\ref{thm:epsilon_gad}. Furthermore, due to the nature of the PAD mechanism, it was important to choose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP. The selection of parameters is compiled in Table~\ref{tab:parameters_experiments}.
+Before starting with the in-depth explanation of each experiment it is important to mention the noise parameters chosen for all the different mechanisms mentioned in Section~\ref{sec:background} as well as the accuracy selected for the dPD algorithm $\mathit{acc}$. All of these parameters are just that, parameters, so the selection was made mainly as a way to, firstly, execute all the tests with the same parameters and thus allow for a comparison between experiments. And, secondly, abide by the restrictions imposed on $\lambda$ and $\gamma$ by Theorem~\ref{thm:epsilon_pad} and on $\eta$ by Theorem~\ref{thm:epsilon_gad}. Furthermore, due to the nature of the PAD mechanism, it was important to choose a $\lambda \in (0, 0.5)$ to allow the mechanism to behave differently from GAD and DEP. The selection of parameters is compiled in Table~\ref{tab:parameters_experiments}.
 
 \begin{table}[H]
   \caption{Selection of parameters for noise mechanisms and accuracy}
@@ -632,7 +632,7 @@ Before starting with the in-depth explanation of each experiment it is important
     Generalized Amplitude Damping & $\eta = 0.5$, $\gamma = 0.5$ \\
     Phase-Amplitude Damping & $\eta = 0.5$, $\gamma = 0.5$, $\lambda = 0.25$ \\
     \midrule
-    dPD & $\theta = 0.001$\\
+    dPD & $\mathit{acc} = 0.001$\\
     \bottomrule
   \end{tabular}
 \end{table}
