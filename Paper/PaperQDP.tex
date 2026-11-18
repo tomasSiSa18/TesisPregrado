@@ -368,7 +368,7 @@ There are many ways to obtain $\epsilon$ in theory; however, Zhou and Ying propo
   \label{def:dpd}
 \end{definition}
 
-As the reader can observe, dPD is nothing more than the privacy loss that~\cite{dwork2014algorithmic} defined, and thus if we find dPD then we can find $\epsilon$. Algorithm~\ref{alg:dpd}~\cite{zhou2017differential} provides a linear programming algorithm in order to compute dPD between two density operators $\sigma$ and $\rho$ with an accuracy of $\mathit{acc}$.
+As the reader can observe, dPD is the quantum counterpart of the privacy loss of Definition~\ref{def:privacy_loss}, where $\Tr(M\rho)$ plays the role of the $PR[\mathcal{K}(x) = \xi]$, but instead of a single output it takes the largest privacy loss over all outputs of all possible measurements. Now since Definition~\ref{def:qdp} with $\delta = 0$ requires $e^{\epsilon}$ to bound this ratio for every output and in both directions, the smallest $\epsilon$ for a pair of noisy states is exactly their PD~\eqref{eq:pd_dpd}, and thus if we can find dPD in both directions, we can find $\epsilon$. Algorithm~\ref{alg:dpd}~\cite{zhou2017differential} provides a linear programming algorithm in order to compute dPD between two density operators $\sigma$ and $\rho$ with an accuracy of $\mathit{acc}$.
 
 \begin{algorithm}[!t]
   \caption{Computing $\mathrm{dPD}$ \cite{zhou2017differential}}
