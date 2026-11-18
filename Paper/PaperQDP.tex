@@ -285,12 +285,12 @@ For the purposes of this investigation we are interested in three types of noise
 
 \subsection{Differential Privacy}
 
-In their investigation Dwork and Roth~\cite{dwork2014algorithmic} formalize the promise described in Section~\ref{sec:introduction}. However, for the scope of this investigation we thought it better to use the definition posed by \cite{zhou2017differential}
+In their investigation Dwork and Roth~\cite{dwork2014algorithmic} formalize the promise described in Section~\ref{sec:introduction}. However, for the scope of this investigation we thought it better to use the definition posed by \cite{zhou2017differential}:
 
 \begin{definition}
-  (Differential privacy~\cite[Def.~1]{zhou2017differential}). A randomized function $\mathcal{K}$ gives $(\epsilon, \delta)$-differential privacy if for all data sets $D$ and $D^{\prime}$ differing on one single participant, and for any set of possible outcomes $S \in Range(\mathcal{K})$:
+  (Differential privacy~\cite[Def.~1]{zhou2017differential}). A randomized function $\mathcal{K}$ gives $(\epsilon, \delta)$-differential privacy if for all data sets $x$ and $x^{\prime}$ differing on one single participant, and for any set of possible outcomes $S \subseteq \mathrm{Range}(\mathcal{K})$:
   \[
-    \Pr[\mathcal{K}(D) \in S] \leq e^{\epsilon} \Pr[\mathcal{K}(D^{\prime}) \in S] + \delta,
+    \Pr[\mathcal{K}(x) \in S] \leq e^{\epsilon} \Pr[\mathcal{K}(x^{\prime}) \in S] + \delta.
   \]
   If $\delta = 0$, we say that $\mathcal{K}$ is $\epsilon$-differentially private.
   \label{def:dp}
@@ -301,9 +301,9 @@ In our investigation we are interested in the privacy guarantee $\epsilon$ when 
 In order to bound this $\epsilon$, we define the privacy loss of an output as:
 
 \begin{definition}
-  (Privacy loss~\cite[Sec.~2.3]{dwork2014algorithmic}). Let $D$ and $D^{\prime}$ be data sets differing on one single participant and let $\xi$ be an output of $\mathcal{K}$. The privacy loss incurred by observing $\xi$ is
+  (Privacy loss~\cite[Sec.~2.3]{dwork2014algorithmic}). Let $x$ and $x^{\prime}$ be data sets differing on one single participant and let $\xi$ be an output of $\mathcal{K}$. The privacy loss incurred by observing $\xi$ is
   \[
-    \mathcal{L}^{(\xi)}_{\mathcal{K}(D) \| \mathcal{K}(D^{\prime})} = \ln\left(\frac{\Pr[\mathcal{K}(D) = \xi]}{\Pr[\mathcal{K}(D^{\prime}) = \xi]}\right)
+    \mathcal{L}^{(\xi)}_{\mathcal{K}(x) \| \mathcal{K}(x^{\prime})} = \ln\left(\frac{\Pr[\mathcal{K}(x) = \xi]}{\Pr[\mathcal{K}(x^{\prime}) = \xi]}\right)
   \]
   \label{def:privacy_loss}
 \end{definition}
